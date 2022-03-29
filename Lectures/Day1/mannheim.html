@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>STA141B Spring 2022 - Day 1 Challenge </title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# STA141B Spring 2022
+
+## Day 1  Challenge
+
+### Duncan Temple Lang
+### Professor, Statistics
+### Associate Dean, Graduate Studies
+
+
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+layout: true
+<div style="float:right"><i>STA141B-S22</i></div>
+
+---
+# Recap of R
+
+
++ I'm using R in a terminal
+   + technically in a terminal within an editor within a terminal.
++ Same R as in RStudio - base R.   
++ 
+
+---
+# Complex Data Format
+
+
+```
+# timestamp=2006-02-11 08:31:58
+# usec=250
+# minReadings=110
+t=1139643118358;id=00:02:2D:21:0F:33;pos=0.0,0.0,0.0;degree=0.0;00:14:bf:b1:97:8a=-38,2437000000,3;00:14:bf:b1:97:90=-56,2427000000,3;00:0f:a3:39:e1:c0=-53,2462000000,3;00:14:bf:b1:97:8d=-65,2442000000,3;00:14:bf:b1:97:81=-65,2422000000,3;00:14:bf:3b:c7:c6=-66,2432000000,3;00:0f:a3:39:dd:cd=-75,2412000000,3;00:0f:a3:39:e0:4b=-78,2462000000,3;00:0f:a3:39:e2:10=-87,2437000000,3;02:64:fb:68:52:e6=-88,2447000000,1;02:00:42:55:31:00=-84,2457000000,1
+t=1139643118744;id=00:02:2D:21:0F:33;pos=0.0,0.0,0.0;degree=0.0;00:14:bf:b1:97:8a=-38,2437000000,3;00:0f:a3:39:e1:c0=-54,2462000000,3;00:14:bf:b1:97:90=-56,2427000000,3;00:14:bf:3b:c7:c6=-67,2432000000,3;00:14:bf:b1:97:81=-66,2422000000,3;00:14:bf:b1:97:8d=-70,2442000000,3;00:0f:a3:39:e0:4b=-79,2462000000,3;00:0f:a3:39:dd:cd=-73,2412000000,3;00:0f:a3:39:e2:10=-83,2437000000,3;02:00:42:55:31:00=-85,2457000000,1
+```
+
+---
+
+# Background Context
+
++ Predict geolocation of mobile device based on signal strength to Wifi routers in building
+  + Understand effect of body being between device and router, reducing signal.
+
++ Build signal-strength map in building.
+  + Researchers went through building measuring strength of router signals at each location on a 1 meter grid.
+  + Measure signal strength then rotate/turn and repeat
+  + Signals for all 360 degrees
+  + Move to next point on grid.
+
++ Signal strength reduced by distance from router, walls, ...
+
+---
+
+# Simplified Data Record
+
+```
+# timestamp=2006-02-11 08:31:58
+# usec=250
+# minReadings=110
+t=1139643118358;id=00:02:2D:21:0F:33;pos=0.0,0.0,0.0;degree=0.0;00:14:bf:b1:97:8a=-38,2437000000,3;00:14:bf:b1:97:90=-56,2427000000,3;
+```
+
++ Data for all of record 
+    + t - time of measurement (milliseconds from Jan 1, 1970)
+    + id - MAC (media access control) address of researcher's hand-held device.
+        + Same throughout
+    + pos - x, y, z (elevation) coordinates of researcher's device
+    + degree - rotation of device
+
+
++ Detected devices and signal strengths
+```
+00:14:bf:b1:97:8a=-38,2437000000,3
+```
+
++ 00:14... -  MAC of detected device
++ -38  - signal strength 
++ 24370.. - broadcast channel
++ 3  - mobile or fixed location.
+---
+
+# Multiple Detected Devices per Record
+
++ There may be many devices detected at any time
++ Different number for each record
+
++ How do arrange these into a data.frame we can 
+
+
+---
+
+# Representing this Data
+
++ Before reading, need to determine how we want to represent the data.
+
++ Wide form
+
+  + time, x, y, z, degree, MAC1 signal, channel, type, MAC2 signal, channel, type, MAC3 ....
+    + don't know the number or MAC values of detected devices.
+    + different number for each time value
+    + lots of NAs when not detected
+
+---
+
+# Long and narrow form
+
++ Repeat time, x, y, z, degree for each MAC detected along with signal, channel, type
+```
+time x  y z
+```
+
+
+---
+
+# Reading the data
+
+
+<!--
+Vectorization
+
+ -->
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
