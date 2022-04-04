@@ -1,0 +1,277 @@
+campus-107-050[Day1-51]>R
+
+R Under development (unstable) (2017-09-22 r73334) -- "Unsuffered Consequences"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin16.7.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 82980 
+Time = 2022-03-29 18:26:22 
+Dir = /Users/duncan/141b/Public/Lectures/Day1 
+Warning message:
+In as.POSIXlt.POSIXct(x, tz) :
+  unknown timezone 'zone/tz/2021a.3.0/zoneinfo/America/Los_Angeles'
+1> source("read.R")
+[25:39] 2> d = readData("online")
+Error in readData("online") : 
+  (list) object cannot be coerced to type 'double'
+
+Enter a frame number, or 0 to exit   
+
+1: readData("online")
+
+Selection: 0
+[25:39] 2> d = readRDS("online.rds")
+Error in readRDS("online.rds") : 
+  cannot read workspace version 3 written by R 4.2.0; need R 3.5.0 or newer
+
+Enter a frame number, or 0 to exit   
+
+1: readRDS("online.rds")
+
+Selection: 0
+[25:39] 2> source("read.R")
+[39:20] 3> d = readData("online")
+[39:28] 4> saveRDS(d, "online3.rds")
+[39:38] 5> plot(d$x, d$y)
+[40:13] 6> o = readData("~/Data/Mannheim/offline")
+Error in strsplit(unlist(strsplit(x[-(1:4)], "=")), ",") : 
+  non-character argument
+
+Enter a frame number, or 0 to exit   
+
+1: readData("~/Data/Mannheim/offline")
+2: read.R#28: lapply(parts, function(x) matrix(unlist(strsplit(unlis
+3: FUN(X[[i]], ...)
+4: read.R#28: matrix(unlist(strsplit(unlist(strsplit(x[-(1:4)], "=")
+5: read.R#28: unlist(strsplit(unlist(strsplit(x[-(1:4)], "=")), ",")
+6: read.R#28: strsplit(unlist(strsplit(x[-(1:4)], "=")), ",")
+
+Selection: 0
+[40:13] 6> source("readFix.R")
+[42:19] 7> o = readData("~/Data/Mannheim/offline")
+[42:39] 8> saveRDS(o, "offline.rds")
+[43:09] 9> source("AccessPointLocations.R")
+[56:39] 10> AP
+                     x    y
+00:14:bf:b1:97:90  1.0 14.0
+00:14:bf:b1:97:8a  2.5 -0.8
+00:0f:a3:39:e1:c0  7.5  6.5
+00:14:bf:3b:c7:c6 13.0 -2.8
+00:14:bf:b1:97:81 33.5  2.8
+00:14:bf:b1:97:8d 33.5  8.3
+[56:40] 11> names(o)
+[1] "t"       "degree"  "x"       "y"       "z"       "mac"    
+[7] "signal"  "channel" "devType"
+[56:54] 12> rownames(AP) %in% o$mac
+*** output flushed ***
+[56:57] 13> d = readRDS("online3.rds")
+[24:37] 14> save(d, "foo.rds")
+Error in save(d, "foo.rds") : object ‘foo.rds’ not found
+
+Enter a frame number, or 0 to exit   
+
+1: save(d, "foo.rds")
+
+Selection: 0
+[24:37] 14> saveRDS(d, "foo.rds")
+[25:07] 15> class(d)
+[1] "data.frame"
+[30:29] 16> typeof(d)
+[1] "list"
+[31:58] 17> z = Sys.Date()
+[32:59] 18> class(z)
+[1] "Date"
+[33:09] 19> typeof(z)
+[1] "double"
+[33:14] 20> str(z)
+ Date[1:1], format: "2022-03-30"
+[37:10] 21> str(d)
+'data.frame':	53303 obs. of  9 variables:
+ $ t      : POSIXct, format: "2006-02-11 21:14:37" ...
+ $ degree : num  130 130 130 130 130 ...
+ $ x      : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ y      : num  0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 ...
+ $ z      : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ mac    : Factor w/ 14 levels "00:04:0e:5c:23:fc",..: 8 4 6 7 9 10 3 5 2 12 ...
+ $ signal : num  -43 -52 -62 -58 -62 -57 -79 -88 -64 -87 ...
+ $ channel: Factor w/ 10 levels "2412000000","2422000000",..: 5 9 4 2 6 3 9 5 1 7 ...
+ $ devType: Factor w/ 2 levels "fixed","mobile": 2 2 2 2 2 2 2 2 2 1 ...
+[37:15] 22> dim(d)
+[1] 53303     9
+[37:51] 23> length(readLines("~/Data/Mannheim/offline"))
+[1] 151392
+[38:38] 24> length(readLines("online"))
+[1] 6832
+[38:52] 25> ncol(d)
+[1] 9
+[39:13] 26> names(d)
+[1] "t"       "degree"  "x"       "y"       "z"       "mac"    
+[7] "signal"  "channel" "devType"
+[40:02] 27> summary(d)
+       t                           degree            x        
+ Min.   :2006-02-11 21:14:37   Min.   :  5.8   Min.   : 0.00  
+ 1st Qu.:2006-02-11 21:40:57   1st Qu.: 94.4   1st Qu.: 1.86  
+ Median :2006-02-23 18:12:13   Median :169.4   Median :11.39  
+ Mean   :2006-02-19 01:39:34   Mean   :178.9   Mean   :13.10  
+ 3rd Qu.:2006-02-23 18:39:02   3rd Qu.:289.5   3rd Qu.:22.76  
+ Max.   :2006-03-09 18:26:31   Max.   :348.3   Max.   :32.54  
+                                                              
+       y               z                    mac       
+ Min.   : 0.05   Min.   :0   00:0f:a3:39:dd:cd: 6598  
+ 1st Qu.: 5.25   1st Qu.:0   00:0f:a3:39:e1:c0: 6561  
+ Median : 7.34   Median :0   00:14:bf:b1:97:8a: 6171  
+ Mean   : 6.61   Mean   :0   00:14:bf:b1:97:90: 5648  
+ 3rd Qu.: 7.64   3rd Qu.:0   00:14:bf:3b:c7:c6: 5573  
+ Max.   :12.19   Max.   :0   00:14:bf:b1:97:8d: 5450  
+                             (Other)          :17302  
+     signal             channel        devType     
+ Min.   :-97.00   2462000000: 8346   fixed : 9446  
+ 1st Qu.:-73.00   2437000000: 6859   mobile:43857  
+ Median :-62.00   2412000000: 6598                 
+ Mean   :-63.81   2427000000: 5648                 
+ 3rd Qu.:-55.00   2432000000: 5573                 
+ Max.   :-29.00   2442000000: 5450                 
+                  (Other)   :14829                 
+[40:17] 28> summary(d$t)
+                 Min.               1st Qu.                Median 
+"2006-02-11 21:14:37" "2006-02-11 21:40:57" "2006-02-23 18:12:13" 
+                 Mean               3rd Qu.                  Max. 
+"2006-02-19 01:39:34" "2006-02-23 18:39:02" "2006-03-09 18:26:31" 
+[41:37] 29> c(TRUE, 3.1415)
+[1] 1.0000 3.1415
+[51:00] 30> list(TRUE, 3.1415)
+[[1]]
+[1] TRUE
+
+[[2]]
+[1] 3.1415
+
+[51:25] 31> d = readRDS("online3.rds")
+[22:35] 32> class(d)
+[1] "data.frame"
+[24:44] 33> typeof(d)
+[1] "list"
+[25:58] 34> z = Sys.Date()
+[30:22] 35> class(z)
+[1] "Date"
+[30:35] 36> typeof(z)
+[1] "double"
+[31:11] 37> dim(d)
+[1] 53303     9
+[31:57] 38> names(d)
+[1] "t"       "degree"  "x"       "y"       "z"       "mac"    
+[7] "signal"  "channel" "devType"
+[33:32] 39> class(d$x)
+[1] "numeric"
+[37:02] 40> summary(d$x)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00    1.86   11.39   13.10   22.76   32.54 
+[37:28] 41> z = is.na(d$x)
+[38:38] 42> class(z)
+[1] "logical"
+[38:44] 43> table(z)
+z
+FALSE 
+53303 
+[39:04] 44> summary(d)
+       t                           degree            x        
+ Min.   :2006-02-11 21:14:37   Min.   :  5.8   Min.   : 0.00  
+ 1st Qu.:2006-02-11 21:40:57   1st Qu.: 94.4   1st Qu.: 1.86  
+ Median :2006-02-23 18:12:13   Median :169.4   Median :11.39  
+ Mean   :2006-02-19 01:39:34   Mean   :178.9   Mean   :13.10  
+ 3rd Qu.:2006-02-23 18:39:02   3rd Qu.:289.5   3rd Qu.:22.76  
+ Max.   :2006-03-09 18:26:31   Max.   :348.3   Max.   :32.54  
+                                                              
+       y               z                    mac       
+ Min.   : 0.05   Min.   :0   00:0f:a3:39:dd:cd: 6598  
+ 1st Qu.: 5.25   1st Qu.:0   00:0f:a3:39:e1:c0: 6561  
+ Median : 7.34   Median :0   00:14:bf:b1:97:8a: 6171  
+ Mean   : 6.61   Mean   :0   00:14:bf:b1:97:90: 5648  
+ 3rd Qu.: 7.64   3rd Qu.:0   00:14:bf:3b:c7:c6: 5573  
+ Max.   :12.19   Max.   :0   00:14:bf:b1:97:8d: 5450  
+                             (Other)          :17302  
+     signal             channel        devType     
+ Min.   :-97.00   2462000000: 8346   fixed : 9446  
+ 1st Qu.:-73.00   2437000000: 6859   mobile:43857  
+ Median :-62.00   2412000000: 6598                 
+ Mean   :-63.81   2427000000: 5648                 
+ 3rd Qu.:-55.00   2432000000: 5573                 
+ Max.   :-29.00   2442000000: 5450                 
+                  (Other)   :14829                 
+[40:08] 45> lapply(d[2:5], class)
+$degree
+[1] "numeric"
+
+$x
+[1] "numeric"
+
+$y
+[1] "numeric"
+
+$z
+[1] "numeric"
+
+[47:44] 46> sapply(d[2:5], class)
+   degree         x         y         z 
+"numeric" "numeric" "numeric" "numeric" 
+[48:19] 47> sapply(d, class)
+$t
+[1] "POSIXct" "POSIXt" 
+
+$degree
+[1] "numeric"
+
+$x
+[1] "numeric"
+
+$y
+[1] "numeric"
+
+$z
+[1] "numeric"
+
+$mac
+[1] "factor"
+
+$signal
+[1] "numeric"
+
+$channel
+[1] "factor"
+
+$devType
+[1] "factor"
+
+[50:52] 48> typeof(d$t)
+[1] "double"
+[52:11] 49> tmp = lapply(d, is.na)
+[54:07] 50> sapply(tmp, sum)
+      t  degree       x       y       z     mac  signal channel 
+      0       0       0       0       0       0       0       0 
+devType 
+      0 
+[55:04] 51> sapply(d, function(x) sum(is.na(x)))
+      t  degree       x       y       z     mac  signal channel 
+      0       0       0       0       0       0       0       0 
+devType 
+      0 
+[56:31] 52> names(d)
+[1] "t"       "degree"  "x"       "y"       "z"       "mac"    
+[7] "signal"  "channel" "devType"
+[59:42] 53> q()
+Save workspace image? [y/n/c]: n
+campus-107-050[Day1-52]>
