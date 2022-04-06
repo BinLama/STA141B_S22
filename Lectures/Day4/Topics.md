@@ -1,9 +1,153 @@
+# Day 4
 
++ Finishing up the geolocation data.
+
+# Topics
 + Default value for readData() function
 + Breaking function into smaller, reusable, functions.
 + Debugging
-+ Vectorized operations
++ Vectorized operations and improved speed/performance.
 
+
+## Default values
+We wrote
+
+We considered writing our function as 
+```r
+readData = 
+function(filename = "online")
+{
+ ll = readLines(filename)
+  ...
+}
+```
+
+What if we wrote it as 
+```r
+readData = 
+function(filename = "online", ll = readLines(filename))
+{
+    ...
+}
+```
+Almost exactly the same.
+
+However, we can 
++ read the lines once, not each time
++ we can call readData() with a subset
+  + smaller number of lines to check working
+  + specific lines that are likely to show problems.
+
+```r
+ll = readLines("../Day3/online")
+ans = readData(ll = ll[1:10])
+```
+
++ Makes testing the code faster - less delay.
+
++ Generally good to allow caller customize the function
+  + especially if the default  value allows them not to specify an argument.
+
+
+# Decompose into Smaller Functions
+
++ Or build smaller functions first 
+  + bottom up
+
++ Consider [line2DF](../Day3/mine.R) and [readData](../Day3/mine.R) we wrote on Tuesday
+
++ readData()
+  + remove comment lines
+    + make a separate function
+	  + can use it ourselves interactively when reading the file
+
+```
+removeCommentLines =
+function(x)
+  x[ substring(x, 1, 1) != "#" ]
+```
+
++ General idea
+  + Separate blocks of related code doing different tasks
+  + Move to separate functions
+
++ In `line2DF()`
+  + split the line into parts
+  + get the fixed parts
+  + get the detected device parts
+  + for the detected device parts  (A)
+     + split the strings by =
+	 + get the MAC address
+	 + split the second element of each device by ,
+	 + get the signal, channel, type values
+	 + combine into a data.frame
+	 
+  + for fixed part  (B)
+     + get the values for t, id, pos and degree
+	 + split the pos into x, y, z
+  + add each fixed value as a column to data.frame
+
++ For each item in the list above with sub-items (A and B)
+   + make separate functions to perform the sub-steps
+   + return the result
+   
+```r
+mkDetectedDeviceDF =
+function(ddev)
+{
+    els = strsplit(ddev, '=')
+    mac = sapply(els, `[`, 1) # sapply(els, function(x) x[1])
+
+    els2 = sapply(els, `[`, 2)
+    els3 = strsplit(els2, ",")
+
+    signal = sapply(els3, `[`, 1)
+    channel = sapply(els3, `[`, 2)
+    type = sapply(els3, `[`, 3)
+
+    data.frame(mac, signal, channel, type, stringsAsFactors = FALSE)
+}
+```
+
+```r
+getFixed = 
+function(fixed, devDF)
+{
+    fixed = substring(fixed, c(3, 4, 5, 8))
+    pos.xyz = strsplit(fixed[3], ",")[[1]]
+	
+	structure(c(fixed[c(1, 3, 4)], pos.xyz), names = c("t", "id", "degree", "x", "y", "z"))
+}
+```
+
+Then we can write line2DF() as 
+```r
+line2DF =
+function(x)
+{
+    parts = strsplit(x, ";")[[1]]
+	ans = mkDetectedDeviceDF(parts[ - (1:4) ])
+	fxd = getFixed(parts[ 1:4 ])	
+	ans[ names(fxd) ] = as.list(fxd)
+# OR	
+#	for(v in names(fxd))
+#	   ans[[v]] = fxd[v]
+    ans
+}
+```
+
++ Each is much easier to read and more focused
++ The names indicate what they do, not how they do it.
++ We can test each function individually/separately.
+
+
+### Note how we append the fixed part to the device data.frame
++ Why does `ans[ names(fxd) ] = as.list(fxd)` work?
++ If we used the for loop approach, why can we not use lapply()/sapply() instead ?
+
+
+
+# Vectorization
 
 Consider transforming the detected device "parts"
 for a given line in the file into a data.frame/matrix.
@@ -18,6 +162,7 @@ for a given line in the file into a data.frame/matrix.
 Instead, what if we could arrange the values into matrix/data.frame/tabular structure
 "directly"
 
+```r
 ddev = c("00:14:bf:b1:97:8a=-43,2437000000,3", "00:0f:a3:39:e1:c0=-52,2462000000,3", 
 "00:14:bf:3b:c7:c6=-62,2432000000,3", "00:14:bf:b1:97:81=-58,2422000000,3", 
 "00:14:bf:b1:97:8d=-62,2442000000,3", "00:14:bf:b1:97:90=-57,2427000000,3", 
@@ -30,17 +175,20 @@ ivals = unlist(strsplit(unlist(strsplit(ddev, "=")), ","))
 
 d = matrix(ivals, , 4, byrow = TRUE)
 d = as.data.frame(d, stringsAsFactors = FALSE)
+```
 
 
-What if we could do this for all lines - only on the detected device parts.
 
++ What if we could do this for all lines - only on the detected device parts.
+
+```r
 ll = readLines("../Day3/online")
 ll = ll[!grepl("^#", ll)]
 parts = strsplit(ll, ";")
 
 addev = lapply(parts, `[`, -(1:4))
 
-     check result is meaningful/as we expect
+    # check result is meaningful/as we expect
 nddev = sapply(addev, length)
 table(nddev)
 
@@ -53,50 +201,124 @@ identical(tmp, tmp2)
 ddev = matrix(tmp, , 4, byrow = TRUE)
 
 dim(ddev)
-   Exactly the number of rows we got with our original function.
-   
+```
+  + Exactly the number of rows we got with our original function.
+ 
++ Now deal with all of the fixed data and combine those into a 
+  matrix with as many rows as there are (non-comment) lines in the file.
 
+```r
 fixed = lapply(parts, `[`, 1:4)
 fx = matrix(unlist(strsplit(unlist(fixed), "[=,]")), , 10, byrow = TRUE)
-
 fx = fx[, c(2, 4, 6, 7, 8, 10)]
+```
+   + we extracted the values and omitted the names t, id, pos, degree
 
+
++ Next, map each fixed to the corresponding rows in the ddev data.frame/matrix
+   + repeating each row as many times as there are detected devices on that line of the file
+   
+```
 i = rep(seq(along.with = parts), nddev)
 
 length(i)
 
 ans = cbind(fx[i,], ddev)
+```
 
 
-
++ Check if this works
+```r
+source("../Day3/mine.R")
+a1 = readData("../Day3/online")
+source("vectorize.R")
+a2 = readData("../Day3/online")
+```
 
 ```r
-source("vectorize.R")
+identical(a1, a2)
+```
+
+```r
+all.equal(a1, a2)
+ [1] "Names: 10 string mismatches"          
+ [2] "Component 1: 53303 string mismatches" 
+ [3] "Component 2: 53303 string mismatches" 
+ [4] "Component 3: 53303 string mismatches" 
+ [5] "Component 4: 53303 string mismatches" 
+ [6] "Component 5: 53303 string mismatches" 
+ [7] "Component 6: 53303 string mismatches" 
+ [8] "Component 7: 53303 string mismatches" 
+ [9] "Component 8: 53303 string mismatches" 
+[10] "Component 9: 53303 string mismatches" 
+[11] "Component 10: 53303 string mismatches"
+```
+
++ Columns are in different order.
+  + No names on result from vectorize.R.
+  
++ See vectorize1.R
+```r
+source("vectorize1.R")
+a2 = readData("../Day3/online")
+
+identical(a1, a2[names(a1)])
+```
+
+
+
++ How fast?
+
+```r
+source("../Day3/mine.R")
+tm1 = replicate(5, system.time(readData("../Day3/online")))
+source("vectorize1.R")
+tm2 = replicate(5, system.time(readData("../Day3/online")))
+```
+
+```
+median(tm1[3,])/median(tm2[3,])
+boxplot(list(tm1["elapsed",], tm2["elapsed",]))
+```
+   + So speed up of about 8.67
+
++ Can we do better?
+
++ Find out where at is taking time
+
+```r
 Rprof("tm.prof")
 invisible(replicate(5, readData("../Day3/online")))
 Rprof(NULL)
 ```
-
+   + changes each time.
+   + Run more replications, e.g., 25
+   
 ```r
 head(summaryRprof("tm.prof")$by.self, 20)
-            self.time self.pct total.time total.pct
-"strsplit"       1.90    81.90       1.90     81.90
-"lapply"         0.10     4.31       2.32    100.00
-"readLines"      0.10     4.31       0.12      5.17
-"unlist"         0.08     3.45       1.30     56.03
-"as.vector"      0.06     2.59       0.06      2.59
-"matrix"         0.04     1.72       0.34     14.66
-"$"              0.02     0.86       0.02      0.86
-"file"           0.02     0.86       0.02      0.86
+                 self.time self.pct total.time total.pct
+"strsplit"            9.58    85.08       9.60     85.26
+"readLines"           0.46     4.09       0.50      4.44
+"as.vector"           0.32     2.84       0.32      2.84
+"unlist"              0.24     2.13       6.40     56.84
+"lapply"              0.20     1.78      11.26    100.00
+"cbind"               0.18     1.60       0.18      1.60
+"matrix"              0.10     0.89       1.34     11.90
+"removeComments"      0.04     0.36       0.56      4.97
+"colnames<-"          0.04     0.36       0.04      0.36
+"unique.default"      0.04     0.36       0.04      0.36
+"%in%"                0.02     0.18       0.04      0.36
+"options"             0.02     0.18       0.02      0.18
+"substring"           0.02     0.18       0.02      0.18
 ```
 
-+ So strsplit is taking 82% of the time.
-+ 3 calls to strsplit
++ So strsplit is taking 85% of the time.
++ 3 calls to strsplit(), when we look at the code.
 
 
 
 
-
+# Splitting values in one call to `strsplit()`
 
 What if we split the fixed and detected devices in one call to strsplit?
 Result is more complicated but can we then extract the pieces we want for
@@ -110,3 +332,22 @@ What if we can  make one call to strsplit
 + extract and assemble the detected devices
 
 
++ see vectorize2.R
+
+```r
+source("vectorize2.R")
+tm3 = replicate(5, system.time(readData("../Day3/online")))
+```
+
++ Speedup?
+```
+median(tm2[3,])/median(tm3[3,])
+```
+ +  About 72% as long, speedup factor of 1.37
+
+```r
+tm = data.frame(elapsedTime = c(tm1[3,], tm2[3, ], tm3[3,]), 
+                version = factor(rep(c("mine", "vectorize1", "vectorize2"), each = ncol(tm1))))
+
+boxplot(elapsedTime ~ version, tm)
+```
