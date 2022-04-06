@@ -1,13 +1,67 @@
-# Day 4
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>STA141B Spring 2022 - Day 1 Challenge </title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# STA141B Spring 2022
+
+## Day 4
+
+### Duncan Temple Lang
+### Professor, Statistics
 
 
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+layout: true
+<div style="float:right"><i>STA141B-S22</i></div>
+
+---
+# Accessing the Lecture Materials
+
++ via git
+
+# Finishing up the geolocation data.
+
++ Default value for readData() function
++ Breaking function into smaller, reusable, functions.
++ Debugging
++ Vectorized operations and improved speed/performance.
+
+---
 ## Accessing the Lecture Materials
 
 + git repository
 + git is a version control system
   + like "track changes" in word processors, but much more general and powerful
-  
-### From Command line in terminal
+
++ Easier way to
+  + update than downloading files
+  + or track changes to your own code or general files
+---
+
+## From Command line in terminal
 ```
 git clone https://github.com/duncantl/STA141B_S22
 ```
@@ -20,19 +74,18 @@ git pull
   + This gets new files and also updates any existing files with any changes
 
 
-### Graphical Interfaces
+---
+# Git Graphical Interfaces
 
-# Finishing up the geolocation data.
++ [GitHub Desktop](https://desktop.github.com)
++ [sourcetree](https://www.sourcetreeapp.com)
++ [fork]()  Used to be free.
++ [List of others](https://www.fossmint.com/gui0git-cliennts-for-mac/)
 
-## Topics
-+ Default value for readData() function
-+ Breaking function into smaller, reusable, functions.
-+ Debugging
-+ Vectorized operations and improved speed/performance.
+---
 
 
-## Default values
-We wrote
+## Default values for Function parameters
 
 We considered writing our function as 
 ```r
@@ -44,6 +97,8 @@ function(filename = "online")
 }
 ```
 
+---
+
 What if we wrote it as 
 ```r
 readData = 
@@ -52,6 +107,8 @@ function(filename = "online", ll = readLines(filename))
     ...
 }
 ```
+--
+
 Almost exactly the same.
 
 However, we can 
@@ -70,6 +127,7 @@ ans = readData(ll = ll[1:10])
 + Generally good to allow caller customize the function
   + especially if the default  value allows them not to specify an argument.
 
+---
 
 # Decompose into Smaller Functions
 
@@ -89,9 +147,11 @@ function(x)
   x[ substring(x, 1, 1) != "#" ]
 ```
 
-+ General idea
-  + Separate blocks of related code doing different tasks
-  + Move to separate functions
+---
+# General idea
+
++ Separate blocks of related code doing different tasks
++ Move to separate functions
 
 + In `line2DF()`
   + split the line into parts
@@ -109,7 +169,8 @@ function(x)
 	 + split the pos into x, y, z
   + add each fixed value as a column to data.frame
 
-+ For each item in the list above with sub-items (A and B)
+---
+# For each item in the list above with sub-items (A and B)
    + make separate functions to perform the sub-steps
    + return the result
    
@@ -131,6 +192,12 @@ function(ddev)
 }
 ```
 
+---
+# Fixed part
+
++ extract the t, id, pos and degree values
++ split the pos into x, y, z
+
 ```r
 getFixed = 
 function(fixed, devDF)
@@ -138,22 +205,23 @@ function(fixed, devDF)
     fixed = substring(fixed, c(3, 4, 5, 8))
     pos.xyz = strsplit(fixed[3], ",")[[1]]
 	
-	structure(c(fixed[c(1, 3, 4)], pos.xyz), names = c("t", "id", "degree", "x", "y", "z"))
+    structure(c(fixed[c(1, 3, 4)], pos.xyz),
+              names = c("t", "id", "degree", "x", "y", "z"))
 }
 ```
 
-Then we can write line2DF() as 
+---
+# Simplified line2DF()
+
++ Now we can write line2DF() as 
 ```r
 line2DF =
 function(x)
 {
     parts = strsplit(x, ";")[[1]]
-	ans = mkDetectedDeviceDF(parts[ - (1:4) ])
-	fxd = getFixed(parts[ 1:4 ])	
-	ans[ names(fxd) ] = as.list(fxd)
-# OR	
-#	for(v in names(fxd))
-#	   ans[[v]] = fxd[v]
+    ans = mkDetectedDeviceDF(parts[ - (1:4) ])
+    fxd = getFixed(parts[ 1:4 ])	
+    ans[ names(fxd) ] = as.list(fxd)
     ans
 }
 ```
@@ -162,36 +230,52 @@ function(x)
 + The names indicate what they do, not how they do it.
 + We can test each function individually/separately.
 
+---
+# Note
 
-### Note how we append the fixed part to the device data.frame
-+ Why does `ans[ names(fxd) ] = as.list(fxd)` work?
++ Note how we append the fixed part to the device data.frame
+```r
+ans[ names(fxd) ] = as.list(fxd)
+```
+
++ Why does this work?
+
+
++ Alternative for adding fixed columns
+```r
+for(v in names(fxd))
+	ans[[v]] = fxd[v]
+```
+
 + If we used the for loop approach, why can we not use lapply()/sapply() instead ?
 
-
-
+---
 # Vectorization
 
-Consider transforming the detected device "parts"
-for a given line in the file into a data.frame/matrix.
++ Consider transforming the detected device "parts"
+   + for a given line in the file into a data.frame/matrix.
 
-+ We split by =
-+ then got the mac address (`sapply(els, `[`, 1)
+
++ We split by `=`
++ then got the mac address - `sapply(els, "[", 1)`
 + then got the second part - "signal, channel, type" as a string
 + then split this
 + then got the signal, then the channe, then the type.
-+ combine into a data.frame via data.frame()/cbind() 
++ combine into a data.frame via `data.frame()`/`cbind()`
 
-Instead, what if we could arrange the values into matrix/data.frame/tabular structure
-"directly"
+
+---
+# Alternative Approach
+
++ Instead, what if we could arrange the values into matrix/data.frame/tabular structure "directly"
 
 ```r
 ddev = c("00:14:bf:b1:97:8a=-43,2437000000,3", "00:0f:a3:39:e1:c0=-52,2462000000,3", 
-"00:14:bf:3b:c7:c6=-62,2432000000,3", "00:14:bf:b1:97:81=-58,2422000000,3", 
-"00:14:bf:b1:97:8d=-62,2442000000,3", "00:14:bf:b1:97:90=-57,2427000000,3", 
-"00:0f:a3:39:e0:4b=-79,2462000000,3", "00:0f:a3:39:e2:10=-88,2437000000,3", 
-"00:0f:a3:39:dd:cd=-64,2412000000,3", "02:64:fb:68:52:e6=-87,2447000000,1", 
-"02:00:42:55:31:00=-85,2457000000,1")
-
+         "00:14:bf:3b:c7:c6=-62,2432000000,3", "00:14:bf:b1:97:81=-58,2422000000,3", 
+         "00:14:bf:b1:97:8d=-62,2442000000,3", "00:14:bf:b1:97:90=-57,2427000000,3", 
+         "00:0f:a3:39:e0:4b=-79,2462000000,3", "00:0f:a3:39:e2:10=-88,2437000000,3", 
+         "00:0f:a3:39:dd:cd=-64,2412000000,3", "02:64:fb:68:52:e6=-87,2447000000,1", 
+         "02:00:42:55:31:00=-85,2457000000,1")
 
 ivals = unlist(strsplit(unlist(strsplit(ddev, "=")), ","))
 
@@ -199,7 +283,8 @@ d = matrix(ivals, , 4, byrow = TRUE)
 d = as.data.frame(d, stringsAsFactors = FALSE)
 ```
 
-
+---
+# Process All Detected Devices in a Single Step?
 
 + What if we could do this for all lines - only on the detected device parts.
 
@@ -224,7 +309,11 @@ ddev = matrix(tmp, , 4, byrow = TRUE)
 
 dim(ddev)
 ```
-  + Exactly the number of rows we got with our original function.
+
++ Exactly the number of rows we got with our original function.
+
+---
+# Processing the Fixed Part in One Step
  
 + Now deal with all of the fixed data and combine those into a 
   matrix with as many rows as there are (non-comment) lines in the file.
@@ -234,8 +323,11 @@ fixed = lapply(parts, `[`, 1:4)
 fx = matrix(unlist(strsplit(unlist(fixed), "[=,]")), , 10, byrow = TRUE)
 fx = fx[, c(2, 4, 6, 7, 8, 10)]
 ```
-   + we extracted the values and omitted the names t, id, pos, degree
++ we extracted the values and omitted the names t, id, pos, degree
 
+
+---
+# Combine the Fixed and Detected Device
 
 + Next, map each fixed to the corresponding rows in the ddev data.frame/matrix
    + repeating each row as many times as there are detected devices on that line of the file
@@ -248,6 +340,8 @@ length(i)
 ans = cbind(fx[i,], ddev)
 ```
 
+---
+# Validate/Verify Results
 
 + Check if this works
 ```r
@@ -260,6 +354,10 @@ a2 = readData("../Day3/online")
 ```r
 identical(a1, a2)
 ```
++ FALSE
+
+---
+# In what way not the same?
 
 ```r
 all.equal(a1, a2)
@@ -287,9 +385,11 @@ a2 = readData("../Day3/online")
 identical(a1, a2[names(a1)])
 ```
 
+---
+# Speed/Performance
 
 
-+ How fast?
++ How fast are the functions
 
 ```r
 source("../Day3/mine.R")
@@ -304,7 +404,8 @@ boxplot(list(tm1["elapsed",], tm2["elapsed",]))
 ```
    + So speed up of about 8.67
 
-+ Can we do better?
+
+# Can we do better?
 
 + Find out where at is taking time
 
@@ -337,9 +438,7 @@ head(summaryRprof("tm.prof")$by.self, 20)
 + So strsplit is taking 85% of the time.
 + 3 calls to strsplit(), when we look at the code.
 
-
-
-
+---
 # Splitting values in one call to `strsplit()`
 
 What if we split the fixed and detected devices in one call to strsplit?
@@ -354,7 +453,10 @@ What if we can  make one call to strsplit
 + extract and assemble the detected devices
 
 
-+ see vectorize2.R
++ see [vectorize2.R](vectorize2.R)
+
+---
+# Timings
 
 ```r
 source("vectorize2.R")
@@ -373,3 +475,20 @@ tm = data.frame(elapsedTime = c(tm1[3,], tm2[3, ], tm3[3,]),
 
 boxplot(elapsedTime ~ version, tm)
 ```
+
+---
+# Timings
+
+![timings](timings.png)
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
