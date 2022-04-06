@@ -481,6 +481,40 @@ boxplot(elapsedTime ~ version, tm)
 
 ![timings](timings.png)
 
+
+
+---
+# Debugging
+
++ Go back to
+```r
+source("../Day3/mine.R")
+```
+
++ Then run
+```r
+readData("../Day3/onlineProblem")
+```
+
+```
+Error in strsplit(els2, ",") : non-character argument
+
+Enter a frame number, or 0 to exit   
+
+1: readData("../Day3/onlineProblem")
+2: mine.R#7: lapply(ll, line2DF)
+3: FUN(X[[i]], ...)
+4: mine.R#22: strsplit(els2, ",")
+
+Selection: 
+```
+
++ Jump between the call frames and examine the variables
+  
++ Which variables have values you did not expect?
+
+
+
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>
