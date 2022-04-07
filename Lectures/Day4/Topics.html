@@ -405,6 +405,8 @@ boxplot(list(tm1["elapsed",], tm2["elapsed",]))
    + So speed up of about 8.67
 
 
+---
+
 # Can we do better?
 
 + Find out where at is taking time
@@ -416,6 +418,9 @@ Rprof(NULL)
 ```
    + changes each time.
    + Run more replications, e.g., 25
+
+---
+# Profile Results
    
 ```r
 head(summaryRprof("tm.prof")$by.self, 20)
