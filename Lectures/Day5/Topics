@@ -1,0 +1,70 @@
+grep
+grepl
+gsub, sub
+gregexpr
+
+agrep, adist
+
+
+# Applications
+
++ cleaning up words
+   + 113.2W, 52.3N
++ splitting terms/values
+   +  = and , and ; in the gelocation data
+   + splitting words - white space, punctuation
++ finding literal matches
+   + title/header in a document that identifies start of 
++ removing punctuation at end of word
++ finding URLs, email addresses, phone numbers
++ read Web logs
+   + break each line into parts
+   + not comma-separated
++ decompose email message into header, body attachments.
+
+
+
++ reading Cherry Blossom tabular data.
+  ~/Data/CherryBlossom
+
+  + very table-like structure to data
+  + but three terms in name will cause confusion
+
+
+d = read.table("~/Data/CherryBlossom/men10Mile_1999", skip = 8)
+# error
+
+d = read.table("~/Data/CherryBlossom/men10Mile_1999", skip = 8, fill = TRUE)
+
+
+read.fwf
+
+dash = readLines("~/Data/CherryBlossom/men10Mile_1999", n = 8)[8]
+dash = trimws(dash)
+parts = strsplit(dash, " ")[[1]]
+nchar(parts)
+
+d2 = read.fwf("~/Data/CherryBlossom/men10Mile_1999", nchar(parts)+1L, skip = 8)
+
+
+
+
+
+
+
+
+
+
+# Don't need regular expressions.
+## Robot logs
+
+ll = readLines("JRSPdata_2010_03_10_12_12_50.log")
+els = strsplit(ll, " +")
+iface = sapply(els, `[`, 4)
+
+i = which(iface == "laser")
+w = iface[i - 1] == "position2d"
+table(sapply(els[ i[w] ] , length))
+
+Want laser lines with immediately following position2d lines
+
