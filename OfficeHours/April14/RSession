@@ -1,0 +1,1449 @@
+dtl[NASAWeather-51]>R
+
+R Under development (unstable) (2017-09-22 r73334) -- "Unsuffered Consequences"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin16.7.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 31141 
+Time = 2022-04-14 19:07:16 
+Dir = /Users/duncan/Data/NASAWeather 
+Warning message:
+In as.POSIXlt.POSIXct(x, tz) :
+  unknown timezone 'zone/tz/2021a.3.0/zoneinfo/America/Los_Angeles'
+1> ff = list.files(pattern = "txt")
+[07:27] 2> var = gsub("[0-9].*", "", ff)
+[07:48] 3> var
+*** output flushed ***
+[07:49] 4> raw.file.paths = data.frame(filename = var, filepath = ff)
+[08:06] 5> ff[,2]
+Error in ff[, 2] : incorrect number of dimensions
+No suitable frames for recover()
+[08:06] 5> raw.file.paths[,2]
+*** output flushed ***
+[08:25] 6> raw.file.paths = data.frame(filename = var, filepath = ff, stringsAsFactors = FALSE)
+[08:33] 7> raw.file.paths[,2]
+*** output flushed ***
+[08:34] 8> split(raw.file.paths[,2], raw.file.paths[,1])
+*** output flushed ***
+[08:52] 9> 
+[08:52] 9> filesByVar = split(raw.file.paths[,2], raw.file.paths[,1])
+[11:48] 10> filesByVar$cloudhigh
+ [1] "cloudhigh1.txt"  "cloudhigh10.txt" "cloudhigh11.txt"
+ [4] "cloudhigh12.txt" "cloudhigh13.txt" "cloudhigh14.txt"
+ [7] "cloudhigh15.txt" "cloudhigh16.txt" "cloudhigh17.txt"
+[10] "cloudhigh18.txt" "cloudhigh19.txt" "cloudhigh2.txt" 
+[13] "cloudhigh20.txt" "cloudhigh21.txt" "cloudhigh22.txt"
+[16] "cloudhigh23.txt" "cloudhigh24.txt" "cloudhigh25.txt"
+[19] "cloudhigh26.txt" "cloudhigh27.txt" "cloudhigh28.txt"
+[22] "cloudhigh29.txt" "cloudhigh3.txt"  "cloudhigh30.txt"
+[25] "cloudhigh31.txt" "cloudhigh32.txt" "cloudhigh33.txt"
+[28] "cloudhigh34.txt" "cloudhigh35.txt" "cloudhigh36.txt"
+[31] "cloudhigh37.txt" "cloudhigh38.txt" "cloudhigh39.txt"
+[34] "cloudhigh4.txt"  "cloudhigh40.txt" "cloudhigh41.txt"
+[37] "cloudhigh42.txt" "cloudhigh43.txt" "cloudhigh44.txt"
+[40] "cloudhigh45.txt" "cloudhigh46.txt" "cloudhigh47.txt"
+[43] "cloudhigh48.txt" "cloudhigh49.txt" "cloudhigh5.txt" 
+[46] "cloudhigh50.txt" "cloudhigh51.txt" "cloudhigh52.txt"
+[49] "cloudhigh53.txt" "cloudhigh54.txt" "cloudhigh55.txt"
+[52] "cloudhigh56.txt" "cloudhigh57.txt" "cloudhigh58.txt"
+[55] "cloudhigh59.txt" "cloudhigh6.txt"  "cloudhigh60.txt"
+[58] "cloudhigh61.txt" "cloudhigh62.txt" "cloudhigh63.txt"
+[61] "cloudhigh64.txt" "cloudhigh65.txt" "cloudhigh66.txt"
+[64] "cloudhigh67.txt" "cloudhigh68.txt" "cloudhigh69.txt"
+[67] "cloudhigh7.txt"  "cloudhigh70.txt" "cloudhigh71.txt"
+[70] "cloudhigh72.txt" "cloudhigh8.txt"  "cloudhigh9.txt" 
+[11:56] 11> source("jin.R")
+[13:19] 12> cl =filesByVar$cloudhigh
+[13:27] 13> debug(readData)
+[13:37] 14> sapply(cl, readData)
+debugging in: FUN(X[[i]], ...)
+debug at jin.R#2: {
+    l.10 = lapply(x, function(x) x[2])
+}
+Browse[2]> x
+[1] "cloudhigh1.txt"
+Browse[2]> n
+debug at jin.R#4: l.10 = lapply(x, function(x) x[2])
+Browse[2]> l.10 = lapply(x, function(x) x[2])
+Browse[2]> l.10
+[[1]]
+[1] NA
+
+Browse[2]> Q
+[14:06] 17> source("jin.R")
+[15:25] 18> tm = readData(cl)
+[15:53] 19> tm
+*** output flushed ***
+[15:54] 20> cl
+ [1] "cloudhigh1.txt"  "cloudhigh10.txt" "cloudhigh11.txt"
+ [4] "cloudhigh12.txt" "cloudhigh13.txt" "cloudhigh14.txt"
+ [7] "cloudhigh15.txt" "cloudhigh16.txt" "cloudhigh17.txt"
+[10] "cloudhigh18.txt" "cloudhigh19.txt" "cloudhigh2.txt" 
+[13] "cloudhigh20.txt" "cloudhigh21.txt" "cloudhigh22.txt"
+[16] "cloudhigh23.txt" "cloudhigh24.txt" "cloudhigh25.txt"
+[19] "cloudhigh26.txt" "cloudhigh27.txt" "cloudhigh28.txt"
+[22] "cloudhigh29.txt" "cloudhigh3.txt"  "cloudhigh30.txt"
+[25] "cloudhigh31.txt" "cloudhigh32.txt" "cloudhigh33.txt"
+[28] "cloudhigh34.txt" "cloudhigh35.txt" "cloudhigh36.txt"
+[31] "cloudhigh37.txt" "cloudhigh38.txt" "cloudhigh39.txt"
+[34] "cloudhigh4.txt"  "cloudhigh40.txt" "cloudhigh41.txt"
+[37] "cloudhigh42.txt" "cloudhigh43.txt" "cloudhigh44.txt"
+[40] "cloudhigh45.txt" "cloudhigh46.txt" "cloudhigh47.txt"
+[43] "cloudhigh48.txt" "cloudhigh49.txt" "cloudhigh5.txt" 
+[46] "cloudhigh50.txt" "cloudhigh51.txt" "cloudhigh52.txt"
+[49] "cloudhigh53.txt" "cloudhigh54.txt" "cloudhigh55.txt"
+[52] "cloudhigh56.txt" "cloudhigh57.txt" "cloudhigh58.txt"
+[55] "cloudhigh59.txt" "cloudhigh6.txt"  "cloudhigh60.txt"
+[58] "cloudhigh61.txt" "cloudhigh62.txt" "cloudhigh63.txt"
+[61] "cloudhigh64.txt" "cloudhigh65.txt" "cloudhigh66.txt"
+[64] "cloudhigh67.txt" "cloudhigh68.txt" "cloudhigh69.txt"
+[67] "cloudhigh7.txt"  "cloudhigh70.txt" "cloudhigh71.txt"
+[70] "cloudhigh72.txt" "cloudhigh8.txt"  "cloudhigh9.txt" 
+[16:04] 21> file.exists(cl)
+ [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[14] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[27] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[40] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[53] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[66] TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[16:09] 22> cl
+ [1] "cloudhigh1.txt"  "cloudhigh10.txt" "cloudhigh11.txt"
+ [4] "cloudhigh12.txt" "cloudhigh13.txt" "cloudhigh14.txt"
+ [7] "cloudhigh15.txt" "cloudhigh16.txt" "cloudhigh17.txt"
+[10] "cloudhigh18.txt" "cloudhigh19.txt" "cloudhigh2.txt" 
+[13] "cloudhigh20.txt" "cloudhigh21.txt" "cloudhigh22.txt"
+[16] "cloudhigh23.txt" "cloudhigh24.txt" "cloudhigh25.txt"
+[19] "cloudhigh26.txt" "cloudhigh27.txt" "cloudhigh28.txt"
+[22] "cloudhigh29.txt" "cloudhigh3.txt"  "cloudhigh30.txt"
+[25] "cloudhigh31.txt" "cloudhigh32.txt" "cloudhigh33.txt"
+[28] "cloudhigh34.txt" "cloudhigh35.txt" "cloudhigh36.txt"
+[31] "cloudhigh37.txt" "cloudhigh38.txt" "cloudhigh39.txt"
+[34] "cloudhigh4.txt"  "cloudhigh40.txt" "cloudhigh41.txt"
+[37] "cloudhigh42.txt" "cloudhigh43.txt" "cloudhigh44.txt"
+[40] "cloudhigh45.txt" "cloudhigh46.txt" "cloudhigh47.txt"
+[43] "cloudhigh48.txt" "cloudhigh49.txt" "cloudhigh5.txt" 
+[46] "cloudhigh50.txt" "cloudhigh51.txt" "cloudhigh52.txt"
+[49] "cloudhigh53.txt" "cloudhigh54.txt" "cloudhigh55.txt"
+[52] "cloudhigh56.txt" "cloudhigh57.txt" "cloudhigh58.txt"
+[55] "cloudhigh59.txt" "cloudhigh6.txt"  "cloudhigh60.txt"
+[58] "cloudhigh61.txt" "cloudhigh62.txt" "cloudhigh63.txt"
+[61] "cloudhigh64.txt" "cloudhigh65.txt" "cloudhigh66.txt"
+[64] "cloudhigh67.txt" "cloudhigh68.txt" "cloudhigh69.txt"
+[67] "cloudhigh7.txt"  "cloudhigh70.txt" "cloudhigh71.txt"
+[70] "cloudhigh72.txt" "cloudhigh8.txt"  "cloudhigh9.txt" 
+[16:23] 23> readLines(cl[1])
+*** output flushed ***
+[16:48] 24> readLines(cl[1])[5]
+[1] "             TIME     : 16-JAN-1995 00:00"
+[16:52] 25> source("jin.R")
+[16:59] 26> tm = readData(cl)
+[17:05] 27> tm
+                             cloudhigh1.txt 
+"             TIME     : 16-JAN-1995 00:00" 
+                            cloudhigh10.txt 
+"             TIME     : 16-OCT-1995 00:00" 
+                            cloudhigh11.txt 
+"             TIME     : 16-NOV-1995 00:00" 
+                            cloudhigh12.txt 
+"             TIME     : 16-DEC-1995 00:00" 
+                            cloudhigh13.txt 
+"             TIME     : 16-JAN-1996 00:00" 
+                            cloudhigh14.txt 
+"             TIME     : 16-FEB-1996 00:00" 
+                            cloudhigh15.txt 
+"             TIME     : 16-MAR-1996 00:00" 
+                            cloudhigh16.txt 
+"             TIME     : 16-APR-1996 00:00" 
+                            cloudhigh17.txt 
+"             TIME     : 16-MAY-1996 00:00" 
+                            cloudhigh18.txt 
+"             TIME     : 16-JUN-1996 00:00" 
+                            cloudhigh19.txt 
+"             TIME     : 16-JUL-1996 00:00" 
+                             cloudhigh2.txt 
+"             TIME     : 16-FEB-1995 00:00" 
+                            cloudhigh20.txt 
+"             TIME     : 16-AUG-1996 00:00" 
+                            cloudhigh21.txt 
+"             TIME     : 16-SEP-1996 00:00" 
+                            cloudhigh22.txt 
+"             TIME     : 16-OCT-1996 00:00" 
+                            cloudhigh23.txt 
+"             TIME     : 16-NOV-1996 00:00" 
+                            cloudhigh24.txt 
+"             TIME     : 16-DEC-1996 00:00" 
+                            cloudhigh25.txt 
+"             TIME     : 16-JAN-1997 00:00" 
+                            cloudhigh26.txt 
+"             TIME     : 16-FEB-1997 00:00" 
+                            cloudhigh27.txt 
+"             TIME     : 16-MAR-1997 00:00" 
+                            cloudhigh28.txt 
+"             TIME     : 16-APR-1997 00:00" 
+                            cloudhigh29.txt 
+"             TIME     : 16-MAY-1997 00:00" 
+                             cloudhigh3.txt 
+"             TIME     : 16-MAR-1995 00:00" 
+                            cloudhigh30.txt 
+"             TIME     : 16-JUN-1997 00:00" 
+                            cloudhigh31.txt 
+"             TIME     : 16-JUL-1997 00:00" 
+                            cloudhigh32.txt 
+"             TIME     : 16-AUG-1997 00:00" 
+                            cloudhigh33.txt 
+"             TIME     : 16-SEP-1997 00:00" 
+                            cloudhigh34.txt 
+"             TIME     : 16-OCT-1997 00:00" 
+                            cloudhigh35.txt 
+"             TIME     : 16-NOV-1997 00:00" 
+                            cloudhigh36.txt 
+"             TIME     : 16-DEC-1997 00:00" 
+                            cloudhigh37.txt 
+"             TIME     : 16-JAN-1998 00:00" 
+                            cloudhigh38.txt 
+"             TIME     : 16-FEB-1998 00:00" 
+                            cloudhigh39.txt 
+"             TIME     : 16-MAR-1998 00:00" 
+                             cloudhigh4.txt 
+"             TIME     : 16-APR-1995 00:00" 
+                            cloudhigh40.txt 
+"             TIME     : 16-APR-1998 00:00" 
+                            cloudhigh41.txt 
+"             TIME     : 16-MAY-1998 00:00" 
+                            cloudhigh42.txt 
+"             TIME     : 16-JUN-1998 00:00" 
+                            cloudhigh43.txt 
+"             TIME     : 16-JUL-1998 00:00" 
+                            cloudhigh44.txt 
+"             TIME     : 16-AUG-1998 00:00" 
+                            cloudhigh45.txt 
+"             TIME     : 16-SEP-1998 00:00" 
+                            cloudhigh46.txt 
+"             TIME     : 16-OCT-1998 00:00" 
+                            cloudhigh47.txt 
+"             TIME     : 16-NOV-1998 00:00" 
+                            cloudhigh48.txt 
+"             TIME     : 16-DEC-1998 00:00" 
+                            cloudhigh49.txt 
+"             TIME     : 16-JAN-1999 00:00" 
+                             cloudhigh5.txt 
+"             TIME     : 16-MAY-1995 00:00" 
+                            cloudhigh50.txt 
+"             TIME     : 16-FEB-1999 00:00" 
+                            cloudhigh51.txt 
+"             TIME     : 16-MAR-1999 00:00" 
+                            cloudhigh52.txt 
+"             TIME     : 16-APR-1999 00:00" 
+                            cloudhigh53.txt 
+"             TIME     : 16-MAY-1999 00:00" 
+                            cloudhigh54.txt 
+"             TIME     : 16-JUN-1999 00:00" 
+                            cloudhigh55.txt 
+"             TIME     : 16-JUL-1999 00:00" 
+                            cloudhigh56.txt 
+"             TIME     : 16-AUG-1999 00:00" 
+                            cloudhigh57.txt 
+"             TIME     : 16-SEP-1999 00:00" 
+                            cloudhigh58.txt 
+"             TIME     : 16-OCT-1999 00:00" 
+                            cloudhigh59.txt 
+"             TIME     : 16-NOV-1999 00:00" 
+                             cloudhigh6.txt 
+"             TIME     : 16-JUN-1995 00:00" 
+                            cloudhigh60.txt 
+"             TIME     : 16-DEC-1999 00:00" 
+                            cloudhigh61.txt 
+"             TIME     : 16-JAN-2000 00:00" 
+                            cloudhigh62.txt 
+"             TIME     : 16-FEB-2000 00:00" 
+                            cloudhigh63.txt 
+"             TIME     : 16-MAR-2000 00:00" 
+                            cloudhigh64.txt 
+"             TIME     : 16-APR-2000 00:00" 
+                            cloudhigh65.txt 
+"             TIME     : 16-MAY-2000 00:00" 
+                            cloudhigh66.txt 
+"             TIME     : 16-JUN-2000 00:00" 
+                            cloudhigh67.txt 
+"             TIME     : 16-JUL-2000 00:00" 
+                            cloudhigh68.txt 
+"             TIME     : 16-AUG-2000 00:00" 
+                            cloudhigh69.txt 
+"             TIME     : 16-SEP-2000 00:00" 
+                             cloudhigh7.txt 
+"             TIME     : 16-JUL-1995 00:00" 
+                            cloudhigh70.txt 
+"             TIME     : 16-OCT-2000 00:00" 
+                            cloudhigh71.txt 
+"             TIME     : 16-NOV-2000 00:00" 
+                            cloudhigh72.txt 
+"             TIME     : 16-DEC-2000 00:00" 
+                             cloudhigh8.txt 
+"             TIME     : 16-AUG-1995 00:00" 
+                             cloudhigh9.txt 
+"             TIME     : 16-SEP-1995 00:00" 
+[17:06] 28> allDFs = lapply(split(raw.file.paths[,2], raw.file.paths[,1]), readData)
+[17:45] 29> ff = list.files(pattern = "txt")
+[25:50] 30> ff
+  [1] "cloudhigh1.txt"    "cloudhigh10.txt"   "cloudhigh11.txt"  
+  [4] "cloudhigh12.txt"   "cloudhigh13.txt"   "cloudhigh14.txt"  
+  [7] "cloudhigh15.txt"   "cloudhigh16.txt"   "cloudhigh17.txt"  
+ [10] "cloudhigh18.txt"   "cloudhigh19.txt"   "cloudhigh2.txt"   
+ [13] "cloudhigh20.txt"   "cloudhigh21.txt"   "cloudhigh22.txt"  
+ [16] "cloudhigh23.txt"   "cloudhigh24.txt"   "cloudhigh25.txt"  
+ [19] "cloudhigh26.txt"   "cloudhigh27.txt"   "cloudhigh28.txt"  
+ [22] "cloudhigh29.txt"   "cloudhigh3.txt"    "cloudhigh30.txt"  
+ [25] "cloudhigh31.txt"   "cloudhigh32.txt"   "cloudhigh33.txt"  
+ [28] "cloudhigh34.txt"   "cloudhigh35.txt"   "cloudhigh36.txt"  
+ [31] "cloudhigh37.txt"   "cloudhigh38.txt"   "cloudhigh39.txt"  
+ [34] "cloudhigh4.txt"    "cloudhigh40.txt"   "cloudhigh41.txt"  
+ [37] "cloudhigh42.txt"   "cloudhigh43.txt"   "cloudhigh44.txt"  
+ [40] "cloudhigh45.txt"   "cloudhigh46.txt"   "cloudhigh47.txt"  
+ [43] "cloudhigh48.txt"   "cloudhigh49.txt"   "cloudhigh5.txt"   
+ [46] "cloudhigh50.txt"   "cloudhigh51.txt"   "cloudhigh52.txt"  
+ [49] "cloudhigh53.txt"   "cloudhigh54.txt"   "cloudhigh55.txt"  
+ [52] "cloudhigh56.txt"   "cloudhigh57.txt"   "cloudhigh58.txt"  
+ [55] "cloudhigh59.txt"   "cloudhigh6.txt"    "cloudhigh60.txt"  
+ [58] "cloudhigh61.txt"   "cloudhigh62.txt"   "cloudhigh63.txt"  
+ [61] "cloudhigh64.txt"   "cloudhigh65.txt"   "cloudhigh66.txt"  
+ [64] "cloudhigh67.txt"   "cloudhigh68.txt"   "cloudhigh69.txt"  
+ [67] "cloudhigh7.txt"    "cloudhigh70.txt"   "cloudhigh71.txt"  
+ [70] "cloudhigh72.txt"   "cloudhigh8.txt"    "cloudhigh9.txt"   
+ [73] "cloudlow1.txt"     "cloudlow10.txt"    "cloudlow11.txt"   
+ [76] "cloudlow12.txt"    "cloudlow13.txt"    "cloudlow14.txt"   
+ [79] "cloudlow15.txt"    "cloudlow16.txt"    "cloudlow17.txt"   
+ [82] "cloudlow18.txt"    "cloudlow19.txt"    "cloudlow2.txt"    
+ [85] "cloudlow20.txt"    "cloudlow21.txt"    "cloudlow22.txt"   
+ [88] "cloudlow23.txt"    "cloudlow24.txt"    "cloudlow25.txt"   
+ [91] "cloudlow26.txt"    "cloudlow27.txt"    "cloudlow28.txt"   
+ [94] "cloudlow29.txt"    "cloudlow3.txt"     "cloudlow30.txt"   
+ [97] "cloudlow31.txt"    "cloudlow32.txt"    "cloudlow33.txt"   
+[100] "cloudlow34.txt"    "cloudlow35.txt"    "cloudlow36.txt"   
+[103] "cloudlow37.txt"    "cloudlow38.txt"    "cloudlow39.txt"   
+[106] "cloudlow4.txt"     "cloudlow40.txt"    "cloudlow41.txt"   
+[109] "cloudlow42.txt"    "cloudlow43.txt"    "cloudlow44.txt"   
+[112] "cloudlow45.txt"    "cloudlow46.txt"    "cloudlow47.txt"   
+[115] "cloudlow48.txt"    "cloudlow49.txt"    "cloudlow5.txt"    
+[118] "cloudlow50.txt"    "cloudlow51.txt"    "cloudlow52.txt"   
+[121] "cloudlow53.txt"    "cloudlow54.txt"    "cloudlow55.txt"   
+[124] "cloudlow56.txt"    "cloudlow57.txt"    "cloudlow58.txt"   
+[127] "cloudlow59.txt"    "cloudlow6.txt"     "cloudlow60.txt"   
+[130] "cloudlow61.txt"    "cloudlow62.txt"    "cloudlow63.txt"   
+[133] "cloudlow64.txt"    "cloudlow65.txt"    "cloudlow66.txt"   
+[136] "cloudlow67.txt"    "cloudlow68.txt"    "cloudlow69.txt"   
+[139] "cloudlow7.txt"     "cloudlow70.txt"    "cloudlow71.txt"   
+[142] "cloudlow72.txt"    "cloudlow8.txt"     "cloudlow9.txt"    
+[145] "cloudmid1.txt"     "cloudmid10.txt"    "cloudmid11.txt"   
+[148] "cloudmid12.txt"    "cloudmid13.txt"    "cloudmid14.txt"   
+[151] "cloudmid15.txt"    "cloudmid16.txt"    "cloudmid17.txt"   
+[154] "cloudmid18.txt"    "cloudmid19.txt"    "cloudmid2.txt"    
+[157] "cloudmid20.txt"    "cloudmid21.txt"    "cloudmid22.txt"   
+[160] "cloudmid23.txt"    "cloudmid24.txt"    "cloudmid25.txt"   
+[163] "cloudmid26.txt"    "cloudmid27.txt"    "cloudmid28.txt"   
+[166] "cloudmid29.txt"    "cloudmid3.txt"     "cloudmid30.txt"   
+[169] "cloudmid31.txt"    "cloudmid32.txt"    "cloudmid33.txt"   
+[172] "cloudmid34.txt"    "cloudmid35.txt"    "cloudmid36.txt"   
+[175] "cloudmid37.txt"    "cloudmid38.txt"    "cloudmid39.txt"   
+[178] "cloudmid4.txt"     "cloudmid40.txt"    "cloudmid41.txt"   
+[181] "cloudmid42.txt"    "cloudmid43.txt"    "cloudmid44.txt"   
+[184] "cloudmid45.txt"    "cloudmid46.txt"    "cloudmid47.txt"   
+[187] "cloudmid48.txt"    "cloudmid49.txt"    "cloudmid5.txt"    
+[190] "cloudmid50.txt"    "cloudmid51.txt"    "cloudmid52.txt"   
+[193] "cloudmid53.txt"    "cloudmid54.txt"    "cloudmid55.txt"   
+[196] "cloudmid56.txt"    "cloudmid57.txt"    "cloudmid58.txt"   
+[199] "cloudmid59.txt"    "cloudmid6.txt"     "cloudmid60.txt"   
+[202] "cloudmid61.txt"    "cloudmid62.txt"    "cloudmid63.txt"   
+[205] "cloudmid64.txt"    "cloudmid65.txt"    "cloudmid66.txt"   
+[208] "cloudmid67.txt"    "cloudmid68.txt"    "cloudmid69.txt"   
+[211] "cloudmid7.txt"     "cloudmid70.txt"    "cloudmid71.txt"   
+[214] "cloudmid72.txt"    "cloudmid8.txt"     "cloudmid9.txt"    
+[217] "ozone1.txt"        "ozone10.txt"       "ozone11.txt"      
+[220] "ozone12.txt"       "ozone13.txt"       "ozone14.txt"      
+[223] "ozone15.txt"       "ozone16.txt"       "ozone17.txt"      
+[226] "ozone18.txt"       "ozone19.txt"       "ozone2.txt"       
+[229] "ozone20.txt"       "ozone21.txt"       "ozone22.txt"      
+[232] "ozone23.txt"       "ozone24.txt"       "ozone25.txt"      
+[235] "ozone26.txt"       "ozone27.txt"       "ozone28.txt"      
+[238] "ozone29.txt"       "ozone3.txt"        "ozone30.txt"      
+[241] "ozone31.txt"       "ozone32.txt"       "ozone33.txt"      
+[244] "ozone34.txt"       "ozone35.txt"       "ozone36.txt"      
+[247] "ozone37.txt"       "ozone38.txt"       "ozone39.txt"      
+[250] "ozone4.txt"        "ozone40.txt"       "ozone41.txt"      
+[253] "ozone42.txt"       "ozone43.txt"       "ozone44.txt"      
+[256] "ozone45.txt"       "ozone46.txt"       "ozone47.txt"      
+[259] "ozone48.txt"       "ozone49.txt"       "ozone5.txt"       
+[262] "ozone50.txt"       "ozone51.txt"       "ozone52.txt"      
+[265] "ozone53.txt"       "ozone54.txt"       "ozone55.txt"      
+[268] "ozone56.txt"       "ozone57.txt"       "ozone58.txt"      
+[271] "ozone59.txt"       "ozone6.txt"        "ozone60.txt"      
+[274] "ozone61.txt"       "ozone62.txt"       "ozone63.txt"      
+[277] "ozone64.txt"       "ozone65.txt"       "ozone66.txt"      
+[280] "ozone67.txt"       "ozone68.txt"       "ozone69.txt"      
+[283] "ozone7.txt"        "ozone70.txt"       "ozone71.txt"      
+[286] "ozone72.txt"       "ozone8.txt"        "ozone9.txt"       
+[289] "pressure1.txt"     "pressure10.txt"    "pressure11.txt"   
+[292] "pressure12.txt"    "pressure13.txt"    "pressure14.txt"   
+[295] "pressure15.txt"    "pressure16.txt"    "pressure17.txt"   
+[298] "pressure18.txt"    "pressure19.txt"    "pressure2.txt"    
+[301] "pressure20.txt"    "pressure21.txt"    "pressure22.txt"   
+[304] "pressure23.txt"    "pressure24.txt"    "pressure25.txt"   
+[307] "pressure26.txt"    "pressure27.txt"    "pressure28.txt"   
+[310] "pressure29.txt"    "pressure3.txt"     "pressure30.txt"   
+[313] "pressure31.txt"    "pressure32.txt"    "pressure33.txt"   
+[316] "pressure34.txt"    "pressure35.txt"    "pressure36.txt"   
+[319] "pressure37.txt"    "pressure38.txt"    "pressure39.txt"   
+[322] "pressure4.txt"     "pressure40.txt"    "pressure41.txt"   
+[325] "pressure42.txt"    "pressure43.txt"    "pressure44.txt"   
+[328] "pressure45.txt"    "pressure46.txt"    "pressure47.txt"   
+[331] "pressure48.txt"    "pressure49.txt"    "pressure5.txt"    
+[334] "pressure50.txt"    "pressure51.txt"    "pressure52.txt"   
+[337] "pressure53.txt"    "pressure54.txt"    "pressure55.txt"   
+[340] "pressure56.txt"    "pressure57.txt"    "pressure58.txt"   
+[343] "pressure59.txt"    "pressure6.txt"     "pressure60.txt"   
+[346] "pressure61.txt"    "pressure62.txt"    "pressure63.txt"   
+[349] "pressure64.txt"    "pressure65.txt"    "pressure66.txt"   
+[352] "pressure67.txt"    "pressure68.txt"    "pressure69.txt"   
+[355] "pressure7.txt"     "pressure70.txt"    "pressure71.txt"   
+[358] "pressure72.txt"    "pressure8.txt"     "pressure9.txt"    
+[361] "surftemp1.txt"     "surftemp10.txt"    "surftemp11.txt"   
+[364] "surftemp12.txt"    "surftemp13.txt"    "surftemp14.txt"   
+[367] "surftemp15.txt"    "surftemp16.txt"    "surftemp17.txt"   
+[370] "surftemp18.txt"    "surftemp19.txt"    "surftemp2.txt"    
+[373] "surftemp20.txt"    "surftemp21.txt"    "surftemp22.txt"   
+[376] "surftemp23.txt"    "surftemp24.txt"    "surftemp25.txt"   
+[379] "surftemp26.txt"    "surftemp27.txt"    "surftemp28.txt"   
+[382] "surftemp29.txt"    "surftemp3.txt"     "surftemp30.txt"   
+[385] "surftemp31.txt"    "surftemp32.txt"    "surftemp33.txt"   
+[388] "surftemp34.txt"    "surftemp35.txt"    "surftemp36.txt"   
+[391] "surftemp37.txt"    "surftemp38.txt"    "surftemp39.txt"   
+[394] "surftemp4.txt"     "surftemp40.txt"    "surftemp41.txt"   
+[397] "surftemp42.txt"    "surftemp43.txt"    "surftemp44.txt"   
+[400] "surftemp45.txt"    "surftemp46.txt"    "surftemp47.txt"   
+[403] "surftemp48.txt"    "surftemp49.txt"    "surftemp5.txt"    
+[406] "surftemp50.txt"    "surftemp51.txt"    "surftemp52.txt"   
+[409] "surftemp53.txt"    "surftemp54.txt"    "surftemp55.txt"   
+[412] "surftemp56.txt"    "surftemp57.txt"    "surftemp58.txt"   
+[415] "surftemp59.txt"    "surftemp6.txt"     "surftemp60.txt"   
+[418] "surftemp61.txt"    "surftemp62.txt"    "surftemp63.txt"   
+[421] "surftemp64.txt"    "surftemp65.txt"    "surftemp66.txt"   
+[424] "surftemp67.txt"    "surftemp68.txt"    "surftemp69.txt"   
+[427] "surftemp7.txt"     "surftemp70.txt"    "surftemp71.txt"   
+[430] "surftemp72.txt"    "surftemp8.txt"     "surftemp9.txt"    
+[433] "temperature1.txt"  "temperature10.txt" "temperature11.txt"
+[436] "temperature12.txt" "temperature13.txt" "temperature14.txt"
+[439] "temperature15.txt" "temperature16.txt" "temperature17.txt"
+[442] "temperature18.txt" "temperature19.txt" "temperature2.txt" 
+[445] "temperature20.txt" "temperature21.txt" "temperature22.txt"
+[448] "temperature23.txt" "temperature24.txt" "temperature25.txt"
+[451] "temperature26.txt" "temperature27.txt" "temperature28.txt"
+[454] "temperature29.txt" "temperature3.txt"  "temperature30.txt"
+[457] "temperature31.txt" "temperature32.txt" "temperature33.txt"
+[460] "temperature34.txt" "temperature35.txt" "temperature36.txt"
+[463] "temperature37.txt" "temperature38.txt" "temperature39.txt"
+[466] "temperature4.txt"  "temperature40.txt" "temperature41.txt"
+[469] "temperature42.txt" "temperature43.txt" "temperature44.txt"
+[472] "temperature45.txt" "temperature46.txt" "temperature47.txt"
+[475] "temperature48.txt" "temperature49.txt" "temperature5.txt" 
+[478] "temperature50.txt" "temperature51.txt" "temperature52.txt"
+[481] "temperature53.txt" "temperature54.txt" "temperature55.txt"
+[484] "temperature56.txt" "temperature57.txt" "temperature58.txt"
+[487] "temperature59.txt" "temperature6.txt"  "temperature60.txt"
+[490] "temperature61.txt" "temperature62.txt" "temperature63.txt"
+[493] "temperature64.txt" "temperature65.txt" "temperature66.txt"
+[496] "temperature67.txt" "temperature68.txt" "temperature69.txt"
+[499] "temperature7.txt"  "temperature70.txt" "temperature71.txt"
+[502] "temperature72.txt" "temperature8.txt"  "temperature9.txt" 
+[25:51] 31> fileVarNames = gsub("[0-9]", "", ff)
+[26:39] 32> fileVarNames
+  [1] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+  [4] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+  [7] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [10] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [13] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [16] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [19] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [22] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [25] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [28] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [31] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [34] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [37] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [40] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [43] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [46] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [49] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [52] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [55] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [58] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [61] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [64] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [67] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [70] "cloudhigh.txt"   "cloudhigh.txt"   "cloudhigh.txt"  
+ [73] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [76] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [79] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [82] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [85] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [88] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [91] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [94] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+ [97] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[100] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[103] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[106] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[109] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[112] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[115] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[118] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[121] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[124] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[127] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[130] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[133] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[136] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[139] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[142] "cloudlow.txt"    "cloudlow.txt"    "cloudlow.txt"   
+[145] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[148] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[151] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[154] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[157] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[160] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[163] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[166] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[169] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[172] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[175] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[178] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[181] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[184] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[187] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[190] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[193] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[196] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[199] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[202] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[205] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[208] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[211] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[214] "cloudmid.txt"    "cloudmid.txt"    "cloudmid.txt"   
+[217] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[220] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[223] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[226] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[229] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[232] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[235] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[238] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[241] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[244] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[247] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[250] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[253] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[256] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[259] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[262] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[265] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[268] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[271] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[274] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[277] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[280] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[283] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[286] "ozone.txt"       "ozone.txt"       "ozone.txt"      
+[289] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[292] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[295] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[298] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[301] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[304] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[307] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[310] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[313] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[316] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[319] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[322] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[325] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[328] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[331] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[334] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[337] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[340] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[343] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[346] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[349] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[352] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[355] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[358] "pressure.txt"    "pressure.txt"    "pressure.txt"   
+[361] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[364] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[367] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[370] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[373] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[376] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[379] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[382] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[385] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[388] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[391] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[394] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[397] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[400] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[403] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[406] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[409] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[412] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[415] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[418] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[421] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[424] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[427] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[430] "surftemp.txt"    "surftemp.txt"    "surftemp.txt"   
+[433] "temperature.txt" "temperature.txt" "temperature.txt"
+[436] "temperature.txt" "temperature.txt" "temperature.txt"
+[439] "temperature.txt" "temperature.txt" "temperature.txt"
+[442] "temperature.txt" "temperature.txt" "temperature.txt"
+[445] "temperature.txt" "temperature.txt" "temperature.txt"
+[448] "temperature.txt" "temperature.txt" "temperature.txt"
+[451] "temperature.txt" "temperature.txt" "temperature.txt"
+[454] "temperature.txt" "temperature.txt" "temperature.txt"
+[457] "temperature.txt" "temperature.txt" "temperature.txt"
+[460] "temperature.txt" "temperature.txt" "temperature.txt"
+[463] "temperature.txt" "temperature.txt" "temperature.txt"
+[466] "temperature.txt" "temperature.txt" "temperature.txt"
+[469] "temperature.txt" "temperature.txt" "temperature.txt"
+[472] "temperature.txt" "temperature.txt" "temperature.txt"
+[475] "temperature.txt" "temperature.txt" "temperature.txt"
+[478] "temperature.txt" "temperature.txt" "temperature.txt"
+[481] "temperature.txt" "temperature.txt" "temperature.txt"
+[484] "temperature.txt" "temperature.txt" "temperature.txt"
+[487] "temperature.txt" "temperature.txt" "temperature.txt"
+[490] "temperature.txt" "temperature.txt" "temperature.txt"
+[493] "temperature.txt" "temperature.txt" "temperature.txt"
+[496] "temperature.txt" "temperature.txt" "temperature.txt"
+[499] "temperature.txt" "temperature.txt" "temperature.txt"
+[502] "temperature.txt" "temperature.txt" "temperature.txt"
+[26:42] 33> fileVarNames = gsub("[0-9].*", "", ff)
+[26:47] 34> fileVarNames
+*** output flushed ***
+[26:57] 35> table(fileVarNames)
+fileVarNames
+  cloudhigh    cloudlow    cloudmid       ozone    pressure 
+         72          72          72          72          72 
+   surftemp temperature 
+         72          72 
+[27:06] 36> readOneFile =
+    # returns a data.frame for one variable and one time
+    # 24*24 4 columns  - lat, long, time values.
+function(f)
+{
+  read.table(f, skip = 7)
+}
++ + + + + + [27:32] 37> readOneFile =
+    # returns a data.frame for one variable and one time
+    # 24*24 4 columns  - lat, long, time values.
+function(f)
+{
+  read.table(f, skip = 7)
+}
++ + + + + + [27:48] 38> fileVarNames[1]
+[1] "cloudhigh"
+[27:51] 39> ff[1]
+[1] "cloudhigh1.txt"
+[28:03] 40> readOneFile(ff[1])
+*** output flushed ***
+[28:23] 41> ff
+  [1] "cloudhigh1.txt"    "cloudhigh10.txt"   "cloudhigh11.txt"  
+  [4] "cloudhigh12.txt"   "cloudhigh13.txt"   "cloudhigh14.txt"  
+  [7] "cloudhigh15.txt"   "cloudhigh16.txt"   "cloudhigh17.txt"  
+ [10] "cloudhigh18.txt"   "cloudhigh19.txt"   "cloudhigh2.txt"   
+ [13] "cloudhigh20.txt"   "cloudhigh21.txt"   "cloudhigh22.txt"  
+ [16] "cloudhigh23.txt"   "cloudhigh24.txt"   "cloudhigh25.txt"  
+ [19] "cloudhigh26.txt"   "cloudhigh27.txt"   "cloudhigh28.txt"  
+ [22] "cloudhigh29.txt"   "cloudhigh3.txt"    "cloudhigh30.txt"  
+ [25] "cloudhigh31.txt"   "cloudhigh32.txt"   "cloudhigh33.txt"  
+ [28] "cloudhigh34.txt"   "cloudhigh35.txt"   "cloudhigh36.txt"  
+ [31] "cloudhigh37.txt"   "cloudhigh38.txt"   "cloudhigh39.txt"  
+ [34] "cloudhigh4.txt"    "cloudhigh40.txt"   "cloudhigh41.txt"  
+ [37] "cloudhigh42.txt"   "cloudhigh43.txt"   "cloudhigh44.txt"  
+ [40] "cloudhigh45.txt"   "cloudhigh46.txt"   "cloudhigh47.txt"  
+ [43] "cloudhigh48.txt"   "cloudhigh49.txt"   "cloudhigh5.txt"   
+ [46] "cloudhigh50.txt"   "cloudhigh51.txt"   "cloudhigh52.txt"  
+ [49] "cloudhigh53.txt"   "cloudhigh54.txt"   "cloudhigh55.txt"  
+ [52] "cloudhigh56.txt"   "cloudhigh57.txt"   "cloudhigh58.txt"  
+ [55] "cloudhigh59.txt"   "cloudhigh6.txt"    "cloudhigh60.txt"  
+ [58] "cloudhigh61.txt"   "cloudhigh62.txt"   "cloudhigh63.txt"  
+ [61] "cloudhigh64.txt"   "cloudhigh65.txt"   "cloudhigh66.txt"  
+ [64] "cloudhigh67.txt"   "cloudhigh68.txt"   "cloudhigh69.txt"  
+ [67] "cloudhigh7.txt"    "cloudhigh70.txt"   "cloudhigh71.txt"  
+ [70] "cloudhigh72.txt"   "cloudhigh8.txt"    "cloudhigh9.txt"   
+ [73] "cloudlow1.txt"     "cloudlow10.txt"    "cloudlow11.txt"   
+ [76] "cloudlow12.txt"    "cloudlow13.txt"    "cloudlow14.txt"   
+ [79] "cloudlow15.txt"    "cloudlow16.txt"    "cloudlow17.txt"   
+ [82] "cloudlow18.txt"    "cloudlow19.txt"    "cloudlow2.txt"    
+ [85] "cloudlow20.txt"    "cloudlow21.txt"    "cloudlow22.txt"   
+ [88] "cloudlow23.txt"    "cloudlow24.txt"    "cloudlow25.txt"   
+ [91] "cloudlow26.txt"    "cloudlow27.txt"    "cloudlow28.txt"   
+ [94] "cloudlow29.txt"    "cloudlow3.txt"     "cloudlow30.txt"   
+ [97] "cloudlow31.txt"    "cloudlow32.txt"    "cloudlow33.txt"   
+[100] "cloudlow34.txt"    "cloudlow35.txt"    "cloudlow36.txt"   
+[103] "cloudlow37.txt"    "cloudlow38.txt"    "cloudlow39.txt"   
+[106] "cloudlow4.txt"     "cloudlow40.txt"    "cloudlow41.txt"   
+[109] "cloudlow42.txt"    "cloudlow43.txt"    "cloudlow44.txt"   
+[112] "cloudlow45.txt"    "cloudlow46.txt"    "cloudlow47.txt"   
+[115] "cloudlow48.txt"    "cloudlow49.txt"    "cloudlow5.txt"    
+[118] "cloudlow50.txt"    "cloudlow51.txt"    "cloudlow52.txt"   
+[121] "cloudlow53.txt"    "cloudlow54.txt"    "cloudlow55.txt"   
+[124] "cloudlow56.txt"    "cloudlow57.txt"    "cloudlow58.txt"   
+[127] "cloudlow59.txt"    "cloudlow6.txt"     "cloudlow60.txt"   
+[130] "cloudlow61.txt"    "cloudlow62.txt"    "cloudlow63.txt"   
+[133] "cloudlow64.txt"    "cloudlow65.txt"    "cloudlow66.txt"   
+[136] "cloudlow67.txt"    "cloudlow68.txt"    "cloudlow69.txt"   
+[139] "cloudlow7.txt"     "cloudlow70.txt"    "cloudlow71.txt"   
+[142] "cloudlow72.txt"    "cloudlow8.txt"     "cloudlow9.txt"    
+[145] "cloudmid1.txt"     "cloudmid10.txt"    "cloudmid11.txt"   
+[148] "cloudmid12.txt"    "cloudmid13.txt"    "cloudmid14.txt"   
+[151] "cloudmid15.txt"    "cloudmid16.txt"    "cloudmid17.txt"   
+[154] "cloudmid18.txt"    "cloudmid19.txt"    "cloudmid2.txt"    
+[157] "cloudmid20.txt"    "cloudmid21.txt"    "cloudmid22.txt"   
+[160] "cloudmid23.txt"    "cloudmid24.txt"    "cloudmid25.txt"   
+[163] "cloudmid26.txt"    "cloudmid27.txt"    "cloudmid28.txt"   
+[166] "cloudmid29.txt"    "cloudmid3.txt"     "cloudmid30.txt"   
+[169] "cloudmid31.txt"    "cloudmid32.txt"    "cloudmid33.txt"   
+[172] "cloudmid34.txt"    "cloudmid35.txt"    "cloudmid36.txt"   
+[175] "cloudmid37.txt"    "cloudmid38.txt"    "cloudmid39.txt"   
+[178] "cloudmid4.txt"     "cloudmid40.txt"    "cloudmid41.txt"   
+[181] "cloudmid42.txt"    "cloudmid43.txt"    "cloudmid44.txt"   
+[184] "cloudmid45.txt"    "cloudmid46.txt"    "cloudmid47.txt"   
+[187] "cloudmid48.txt"    "cloudmid49.txt"    "cloudmid5.txt"    
+[190] "cloudmid50.txt"    "cloudmid51.txt"    "cloudmid52.txt"   
+[193] "cloudmid53.txt"    "cloudmid54.txt"    "cloudmid55.txt"   
+[196] "cloudmid56.txt"    "cloudmid57.txt"    "cloudmid58.txt"   
+[199] "cloudmid59.txt"    "cloudmid6.txt"     "cloudmid60.txt"   
+[202] "cloudmid61.txt"    "cloudmid62.txt"    "cloudmid63.txt"   
+[205] "cloudmid64.txt"    "cloudmid65.txt"    "cloudmid66.txt"   
+[208] "cloudmid67.txt"    "cloudmid68.txt"    "cloudmid69.txt"   
+[211] "cloudmid7.txt"     "cloudmid70.txt"    "cloudmid71.txt"   
+[214] "cloudmid72.txt"    "cloudmid8.txt"     "cloudmid9.txt"    
+[217] "ozone1.txt"        "ozone10.txt"       "ozone11.txt"      
+[220] "ozone12.txt"       "ozone13.txt"       "ozone14.txt"      
+[223] "ozone15.txt"       "ozone16.txt"       "ozone17.txt"      
+[226] "ozone18.txt"       "ozone19.txt"       "ozone2.txt"       
+[229] "ozone20.txt"       "ozone21.txt"       "ozone22.txt"      
+[232] "ozone23.txt"       "ozone24.txt"       "ozone25.txt"      
+[235] "ozone26.txt"       "ozone27.txt"       "ozone28.txt"      
+[238] "ozone29.txt"       "ozone3.txt"        "ozone30.txt"      
+[241] "ozone31.txt"       "ozone32.txt"       "ozone33.txt"      
+[244] "ozone34.txt"       "ozone35.txt"       "ozone36.txt"      
+[247] "ozone37.txt"       "ozone38.txt"       "ozone39.txt"      
+[250] "ozone4.txt"        "ozone40.txt"       "ozone41.txt"      
+[253] "ozone42.txt"       "ozone43.txt"       "ozone44.txt"      
+[256] "ozone45.txt"       "ozone46.txt"       "ozone47.txt"      
+[259] "ozone48.txt"       "ozone49.txt"       "ozone5.txt"       
+[262] "ozone50.txt"       "ozone51.txt"       "ozone52.txt"      
+[265] "ozone53.txt"       "ozone54.txt"       "ozone55.txt"      
+[268] "ozone56.txt"       "ozone57.txt"       "ozone58.txt"      
+[271] "ozone59.txt"       "ozone6.txt"        "ozone60.txt"      
+[274] "ozone61.txt"       "ozone62.txt"       "ozone63.txt"      
+[277] "ozone64.txt"       "ozone65.txt"       "ozone66.txt"      
+[280] "ozone67.txt"       "ozone68.txt"       "ozone69.txt"      
+[283] "ozone7.txt"        "ozone70.txt"       "ozone71.txt"      
+[286] "ozone72.txt"       "ozone8.txt"        "ozone9.txt"       
+[289] "pressure1.txt"     "pressure10.txt"    "pressure11.txt"   
+[292] "pressure12.txt"    "pressure13.txt"    "pressure14.txt"   
+[295] "pressure15.txt"    "pressure16.txt"    "pressure17.txt"   
+[298] "pressure18.txt"    "pressure19.txt"    "pressure2.txt"    
+[301] "pressure20.txt"    "pressure21.txt"    "pressure22.txt"   
+[304] "pressure23.txt"    "pressure24.txt"    "pressure25.txt"   
+[307] "pressure26.txt"    "pressure27.txt"    "pressure28.txt"   
+[310] "pressure29.txt"    "pressure3.txt"     "pressure30.txt"   
+[313] "pressure31.txt"    "pressure32.txt"    "pressure33.txt"   
+[316] "pressure34.txt"    "pressure35.txt"    "pressure36.txt"   
+[319] "pressure37.txt"    "pressure38.txt"    "pressure39.txt"   
+[322] "pressure4.txt"     "pressure40.txt"    "pressure41.txt"   
+[325] "pressure42.txt"    "pressure43.txt"    "pressure44.txt"   
+[328] "pressure45.txt"    "pressure46.txt"    "pressure47.txt"   
+[331] "pressure48.txt"    "pressure49.txt"    "pressure5.txt"    
+[334] "pressure50.txt"    "pressure51.txt"    "pressure52.txt"   
+[337] "pressure53.txt"    "pressure54.txt"    "pressure55.txt"   
+[340] "pressure56.txt"    "pressure57.txt"    "pressure58.txt"   
+[343] "pressure59.txt"    "pressure6.txt"     "pressure60.txt"   
+[346] "pressure61.txt"    "pressure62.txt"    "pressure63.txt"   
+[349] "pressure64.txt"    "pressure65.txt"    "pressure66.txt"   
+[352] "pressure67.txt"    "pressure68.txt"    "pressure69.txt"   
+[355] "pressure7.txt"     "pressure70.txt"    "pressure71.txt"   
+[358] "pressure72.txt"    "pressure8.txt"     "pressure9.txt"    
+[361] "surftemp1.txt"     "surftemp10.txt"    "surftemp11.txt"   
+[364] "surftemp12.txt"    "surftemp13.txt"    "surftemp14.txt"   
+[367] "surftemp15.txt"    "surftemp16.txt"    "surftemp17.txt"   
+[370] "surftemp18.txt"    "surftemp19.txt"    "surftemp2.txt"    
+[373] "surftemp20.txt"    "surftemp21.txt"    "surftemp22.txt"   
+[376] "surftemp23.txt"    "surftemp24.txt"    "surftemp25.txt"   
+[379] "surftemp26.txt"    "surftemp27.txt"    "surftemp28.txt"   
+[382] "surftemp29.txt"    "surftemp3.txt"     "surftemp30.txt"   
+[385] "surftemp31.txt"    "surftemp32.txt"    "surftemp33.txt"   
+[388] "surftemp34.txt"    "surftemp35.txt"    "surftemp36.txt"   
+[391] "surftemp37.txt"    "surftemp38.txt"    "surftemp39.txt"   
+[394] "surftemp4.txt"     "surftemp40.txt"    "surftemp41.txt"   
+[397] "surftemp42.txt"    "surftemp43.txt"    "surftemp44.txt"   
+[400] "surftemp45.txt"    "surftemp46.txt"    "surftemp47.txt"   
+[403] "surftemp48.txt"    "surftemp49.txt"    "surftemp5.txt"    
+[406] "surftemp50.txt"    "surftemp51.txt"    "surftemp52.txt"   
+[409] "surftemp53.txt"    "surftemp54.txt"    "surftemp55.txt"   
+[412] "surftemp56.txt"    "surftemp57.txt"    "surftemp58.txt"   
+[415] "surftemp59.txt"    "surftemp6.txt"     "surftemp60.txt"   
+[418] "surftemp61.txt"    "surftemp62.txt"    "surftemp63.txt"   
+[421] "surftemp64.txt"    "surftemp65.txt"    "surftemp66.txt"   
+[424] "surftemp67.txt"    "surftemp68.txt"    "surftemp69.txt"   
+[427] "surftemp7.txt"     "surftemp70.txt"    "surftemp71.txt"   
+[430] "surftemp72.txt"    "surftemp8.txt"     "surftemp9.txt"    
+[433] "temperature1.txt"  "temperature10.txt" "temperature11.txt"
+[436] "temperature12.txt" "temperature13.txt" "temperature14.txt"
+[439] "temperature15.txt" "temperature16.txt" "temperature17.txt"
+[442] "temperature18.txt" "temperature19.txt" "temperature2.txt" 
+[445] "temperature20.txt" "temperature21.txt" "temperature22.txt"
+[448] "temperature23.txt" "temperature24.txt" "temperature25.txt"
+[451] "temperature26.txt" "temperature27.txt" "temperature28.txt"
+[454] "temperature29.txt" "temperature3.txt"  "temperature30.txt"
+[457] "temperature31.txt" "temperature32.txt" "temperature33.txt"
+[460] "temperature34.txt" "temperature35.txt" "temperature36.txt"
+[463] "temperature37.txt" "temperature38.txt" "temperature39.txt"
+[466] "temperature4.txt"  "temperature40.txt" "temperature41.txt"
+[469] "temperature42.txt" "temperature43.txt" "temperature44.txt"
+[472] "temperature45.txt" "temperature46.txt" "temperature47.txt"
+[475] "temperature48.txt" "temperature49.txt" "temperature5.txt" 
+[478] "temperature50.txt" "temperature51.txt" "temperature52.txt"
+[481] "temperature53.txt" "temperature54.txt" "temperature55.txt"
+[484] "temperature56.txt" "temperature57.txt" "temperature58.txt"
+[487] "temperature59.txt" "temperature6.txt"  "temperature60.txt"
+[490] "temperature61.txt" "temperature62.txt" "temperature63.txt"
+[493] "temperature64.txt" "temperature65.txt" "temperature66.txt"
+[496] "temperature67.txt" "temperature68.txt" "temperature69.txt"
+[499] "temperature7.txt"  "temperature70.txt" "temperature71.txt"
+[502] "temperature72.txt" "temperature8.txt"  "temperature9.txt" 
+[29:07] 42> fileVarNames
+  [1] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+  [5] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+  [9] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [13] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [17] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [21] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [25] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [29] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [33] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [37] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [41] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [45] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [49] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [53] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [57] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [61] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [65] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [69] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [73] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [77] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [81] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [85] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [89] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [93] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [97] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[101] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[105] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[109] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[113] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[117] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[121] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[125] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[129] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[133] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[137] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[141] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[145] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[149] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[153] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[157] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[161] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[165] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[169] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[173] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[177] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[181] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[185] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[189] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[193] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[197] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[201] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[205] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[209] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[213] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[217] "ozone"       "ozone"       "ozone"       "ozone"      
+[221] "ozone"       "ozone"       "ozone"       "ozone"      
+[225] "ozone"       "ozone"       "ozone"       "ozone"      
+[229] "ozone"       "ozone"       "ozone"       "ozone"      
+[233] "ozone"       "ozone"       "ozone"       "ozone"      
+[237] "ozone"       "ozone"       "ozone"       "ozone"      
+[241] "ozone"       "ozone"       "ozone"       "ozone"      
+[245] "ozone"       "ozone"       "ozone"       "ozone"      
+[249] "ozone"       "ozone"       "ozone"       "ozone"      
+[253] "ozone"       "ozone"       "ozone"       "ozone"      
+[257] "ozone"       "ozone"       "ozone"       "ozone"      
+[261] "ozone"       "ozone"       "ozone"       "ozone"      
+[265] "ozone"       "ozone"       "ozone"       "ozone"      
+[269] "ozone"       "ozone"       "ozone"       "ozone"      
+[273] "ozone"       "ozone"       "ozone"       "ozone"      
+[277] "ozone"       "ozone"       "ozone"       "ozone"      
+[281] "ozone"       "ozone"       "ozone"       "ozone"      
+[285] "ozone"       "ozone"       "ozone"       "ozone"      
+[289] "pressure"    "pressure"    "pressure"    "pressure"   
+[293] "pressure"    "pressure"    "pressure"    "pressure"   
+[297] "pressure"    "pressure"    "pressure"    "pressure"   
+[301] "pressure"    "pressure"    "pressure"    "pressure"   
+[305] "pressure"    "pressure"    "pressure"    "pressure"   
+[309] "pressure"    "pressure"    "pressure"    "pressure"   
+[313] "pressure"    "pressure"    "pressure"    "pressure"   
+[317] "pressure"    "pressure"    "pressure"    "pressure"   
+[321] "pressure"    "pressure"    "pressure"    "pressure"   
+[325] "pressure"    "pressure"    "pressure"    "pressure"   
+[329] "pressure"    "pressure"    "pressure"    "pressure"   
+[333] "pressure"    "pressure"    "pressure"    "pressure"   
+[337] "pressure"    "pressure"    "pressure"    "pressure"   
+[341] "pressure"    "pressure"    "pressure"    "pressure"   
+[345] "pressure"    "pressure"    "pressure"    "pressure"   
+[349] "pressure"    "pressure"    "pressure"    "pressure"   
+[353] "pressure"    "pressure"    "pressure"    "pressure"   
+[357] "pressure"    "pressure"    "pressure"    "pressure"   
+[361] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[365] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[369] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[373] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[377] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[381] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[385] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[389] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[393] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[397] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[401] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[405] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[409] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[413] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[417] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[421] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[425] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[429] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[433] "temperature" "temperature" "temperature" "temperature"
+[437] "temperature" "temperature" "temperature" "temperature"
+[441] "temperature" "temperature" "temperature" "temperature"
+[445] "temperature" "temperature" "temperature" "temperature"
+[449] "temperature" "temperature" "temperature" "temperature"
+[453] "temperature" "temperature" "temperature" "temperature"
+[457] "temperature" "temperature" "temperature" "temperature"
+[461] "temperature" "temperature" "temperature" "temperature"
+[465] "temperature" "temperature" "temperature" "temperature"
+[469] "temperature" "temperature" "temperature" "temperature"
+[473] "temperature" "temperature" "temperature" "temperature"
+[477] "temperature" "temperature" "temperature" "temperature"
+[481] "temperature" "temperature" "temperature" "temperature"
+[485] "temperature" "temperature" "temperature" "temperature"
+[489] "temperature" "temperature" "temperature" "temperature"
+[493] "temperature" "temperature" "temperature" "temperature"
+[497] "temperature" "temperature" "temperature" "temperature"
+[501] "temperature" "temperature" "temperature" "temperature"
+[29:11] 43> split(ff, fileVarNames)
+$cloudhigh
+ [1] "cloudhigh1.txt"  "cloudhigh10.txt" "cloudhigh11.txt"
+ [4] "cloudhigh12.txt" "cloudhigh13.txt" "cloudhigh14.txt"
+ [7] "cloudhigh15.txt" "cloudhigh16.txt" "cloudhigh17.txt"
+[10] "cloudhigh18.txt" "cloudhigh19.txt" "cloudhigh2.txt" 
+[13] "cloudhigh20.txt" "cloudhigh21.txt" "cloudhigh22.txt"
+[16] "cloudhigh23.txt" "cloudhigh24.txt" "cloudhigh25.txt"
+[19] "cloudhigh26.txt" "cloudhigh27.txt" "cloudhigh28.txt"
+[22] "cloudhigh29.txt" "cloudhigh3.txt"  "cloudhigh30.txt"
+[25] "cloudhigh31.txt" "cloudhigh32.txt" "cloudhigh33.txt"
+[28] "cloudhigh34.txt" "cloudhigh35.txt" "cloudhigh36.txt"
+[31] "cloudhigh37.txt" "cloudhigh38.txt" "cloudhigh39.txt"
+[34] "cloudhigh4.txt"  "cloudhigh40.txt" "cloudhigh41.txt"
+[37] "cloudhigh42.txt" "cloudhigh43.txt" "cloudhigh44.txt"
+[40] "cloudhigh45.txt" "cloudhigh46.txt" "cloudhigh47.txt"
+[43] "cloudhigh48.txt" "cloudhigh49.txt" "cloudhigh5.txt" 
+[46] "cloudhigh50.txt" "cloudhigh51.txt" "cloudhigh52.txt"
+[49] "cloudhigh53.txt" "cloudhigh54.txt" "cloudhigh55.txt"
+[52] "cloudhigh56.txt" "cloudhigh57.txt" "cloudhigh58.txt"
+[55] "cloudhigh59.txt" "cloudhigh6.txt"  "cloudhigh60.txt"
+[58] "cloudhigh61.txt" "cloudhigh62.txt" "cloudhigh63.txt"
+[61] "cloudhigh64.txt" "cloudhigh65.txt" "cloudhigh66.txt"
+[64] "cloudhigh67.txt" "cloudhigh68.txt" "cloudhigh69.txt"
+[67] "cloudhigh7.txt"  "cloudhigh70.txt" "cloudhigh71.txt"
+[70] "cloudhigh72.txt" "cloudhigh8.txt"  "cloudhigh9.txt" 
+
+$cloudlow
+ [1] "cloudlow1.txt"  "cloudlow10.txt" "cloudlow11.txt"
+ [4] "cloudlow12.txt" "cloudlow13.txt" "cloudlow14.txt"
+ [7] "cloudlow15.txt" "cloudlow16.txt" "cloudlow17.txt"
+[10] "cloudlow18.txt" "cloudlow19.txt" "cloudlow2.txt" 
+[13] "cloudlow20.txt" "cloudlow21.txt" "cloudlow22.txt"
+[16] "cloudlow23.txt" "cloudlow24.txt" "cloudlow25.txt"
+[19] "cloudlow26.txt" "cloudlow27.txt" "cloudlow28.txt"
+[22] "cloudlow29.txt" "cloudlow3.txt"  "cloudlow30.txt"
+[25] "cloudlow31.txt" "cloudlow32.txt" "cloudlow33.txt"
+[28] "cloudlow34.txt" "cloudlow35.txt" "cloudlow36.txt"
+[31] "cloudlow37.txt" "cloudlow38.txt" "cloudlow39.txt"
+[34] "cloudlow4.txt"  "cloudlow40.txt" "cloudlow41.txt"
+[37] "cloudlow42.txt" "cloudlow43.txt" "cloudlow44.txt"
+[40] "cloudlow45.txt" "cloudlow46.txt" "cloudlow47.txt"
+[43] "cloudlow48.txt" "cloudlow49.txt" "cloudlow5.txt" 
+[46] "cloudlow50.txt" "cloudlow51.txt" "cloudlow52.txt"
+[49] "cloudlow53.txt" "cloudlow54.txt" "cloudlow55.txt"
+[52] "cloudlow56.txt" "cloudlow57.txt" "cloudlow58.txt"
+[55] "cloudlow59.txt" "cloudlow6.txt"  "cloudlow60.txt"
+[58] "cloudlow61.txt" "cloudlow62.txt" "cloudlow63.txt"
+[61] "cloudlow64.txt" "cloudlow65.txt" "cloudlow66.txt"
+[64] "cloudlow67.txt" "cloudlow68.txt" "cloudlow69.txt"
+[67] "cloudlow7.txt"  "cloudlow70.txt" "cloudlow71.txt"
+[70] "cloudlow72.txt" "cloudlow8.txt"  "cloudlow9.txt" 
+
+$cloudmid
+ [1] "cloudmid1.txt"  "cloudmid10.txt" "cloudmid11.txt"
+ [4] "cloudmid12.txt" "cloudmid13.txt" "cloudmid14.txt"
+ [7] "cloudmid15.txt" "cloudmid16.txt" "cloudmid17.txt"
+[10] "cloudmid18.txt" "cloudmid19.txt" "cloudmid2.txt" 
+[13] "cloudmid20.txt" "cloudmid21.txt" "cloudmid22.txt"
+[16] "cloudmid23.txt" "cloudmid24.txt" "cloudmid25.txt"
+[19] "cloudmid26.txt" "cloudmid27.txt" "cloudmid28.txt"
+[22] "cloudmid29.txt" "cloudmid3.txt"  "cloudmid30.txt"
+[25] "cloudmid31.txt" "cloudmid32.txt" "cloudmid33.txt"
+[28] "cloudmid34.txt" "cloudmid35.txt" "cloudmid36.txt"
+[31] "cloudmid37.txt" "cloudmid38.txt" "cloudmid39.txt"
+[34] "cloudmid4.txt"  "cloudmid40.txt" "cloudmid41.txt"
+[37] "cloudmid42.txt" "cloudmid43.txt" "cloudmid44.txt"
+[40] "cloudmid45.txt" "cloudmid46.txt" "cloudmid47.txt"
+[43] "cloudmid48.txt" "cloudmid49.txt" "cloudmid5.txt" 
+[46] "cloudmid50.txt" "cloudmid51.txt" "cloudmid52.txt"
+[49] "cloudmid53.txt" "cloudmid54.txt" "cloudmid55.txt"
+[52] "cloudmid56.txt" "cloudmid57.txt" "cloudmid58.txt"
+[55] "cloudmid59.txt" "cloudmid6.txt"  "cloudmid60.txt"
+[58] "cloudmid61.txt" "cloudmid62.txt" "cloudmid63.txt"
+[61] "cloudmid64.txt" "cloudmid65.txt" "cloudmid66.txt"
+[64] "cloudmid67.txt" "cloudmid68.txt" "cloudmid69.txt"
+[67] "cloudmid7.txt"  "cloudmid70.txt" "cloudmid71.txt"
+[70] "cloudmid72.txt" "cloudmid8.txt"  "cloudmid9.txt" 
+
+$ozone
+ [1] "ozone1.txt"  "ozone10.txt" "ozone11.txt" "ozone12.txt"
+ [5] "ozone13.txt" "ozone14.txt" "ozone15.txt" "ozone16.txt"
+ [9] "ozone17.txt" "ozone18.txt" "ozone19.txt" "ozone2.txt" 
+[13] "ozone20.txt" "ozone21.txt" "ozone22.txt" "ozone23.txt"
+[17] "ozone24.txt" "ozone25.txt" "ozone26.txt" "ozone27.txt"
+[21] "ozone28.txt" "ozone29.txt" "ozone3.txt"  "ozone30.txt"
+[25] "ozone31.txt" "ozone32.txt" "ozone33.txt" "ozone34.txt"
+[29] "ozone35.txt" "ozone36.txt" "ozone37.txt" "ozone38.txt"
+[33] "ozone39.txt" "ozone4.txt"  "ozone40.txt" "ozone41.txt"
+[37] "ozone42.txt" "ozone43.txt" "ozone44.txt" "ozone45.txt"
+[41] "ozone46.txt" "ozone47.txt" "ozone48.txt" "ozone49.txt"
+[45] "ozone5.txt"  "ozone50.txt" "ozone51.txt" "ozone52.txt"
+[49] "ozone53.txt" "ozone54.txt" "ozone55.txt" "ozone56.txt"
+[53] "ozone57.txt" "ozone58.txt" "ozone59.txt" "ozone6.txt" 
+[57] "ozone60.txt" "ozone61.txt" "ozone62.txt" "ozone63.txt"
+[61] "ozone64.txt" "ozone65.txt" "ozone66.txt" "ozone67.txt"
+[65] "ozone68.txt" "ozone69.txt" "ozone7.txt"  "ozone70.txt"
+[69] "ozone71.txt" "ozone72.txt" "ozone8.txt"  "ozone9.txt" 
+
+$pressure
+ [1] "pressure1.txt"  "pressure10.txt" "pressure11.txt"
+ [4] "pressure12.txt" "pressure13.txt" "pressure14.txt"
+ [7] "pressure15.txt" "pressure16.txt" "pressure17.txt"
+[10] "pressure18.txt" "pressure19.txt" "pressure2.txt" 
+[13] "pressure20.txt" "pressure21.txt" "pressure22.txt"
+[16] "pressure23.txt" "pressure24.txt" "pressure25.txt"
+[19] "pressure26.txt" "pressure27.txt" "pressure28.txt"
+[22] "pressure29.txt" "pressure3.txt"  "pressure30.txt"
+[25] "pressure31.txt" "pressure32.txt" "pressure33.txt"
+[28] "pressure34.txt" "pressure35.txt" "pressure36.txt"
+[31] "pressure37.txt" "pressure38.txt" "pressure39.txt"
+[34] "pressure4.txt"  "pressure40.txt" "pressure41.txt"
+[37] "pressure42.txt" "pressure43.txt" "pressure44.txt"
+[40] "pressure45.txt" "pressure46.txt" "pressure47.txt"
+[43] "pressure48.txt" "pressure49.txt" "pressure5.txt" 
+[46] "pressure50.txt" "pressure51.txt" "pressure52.txt"
+[49] "pressure53.txt" "pressure54.txt" "pressure55.txt"
+[52] "pressure56.txt" "pressure57.txt" "pressure58.txt"
+[55] "pressure59.txt" "pressure6.txt"  "pressure60.txt"
+[58] "pressure61.txt" "pressure62.txt" "pressure63.txt"
+[61] "pressure64.txt" "pressure65.txt" "pressure66.txt"
+[64] "pressure67.txt" "pressure68.txt" "pressure69.txt"
+[67] "pressure7.txt"  "pressure70.txt" "pressure71.txt"
+[70] "pressure72.txt" "pressure8.txt"  "pressure9.txt" 
+
+$surftemp
+ [1] "surftemp1.txt"  "surftemp10.txt" "surftemp11.txt"
+ [4] "surftemp12.txt" "surftemp13.txt" "surftemp14.txt"
+ [7] "surftemp15.txt" "surftemp16.txt" "surftemp17.txt"
+[10] "surftemp18.txt" "surftemp19.txt" "surftemp2.txt" 
+[13] "surftemp20.txt" "surftemp21.txt" "surftemp22.txt"
+[16] "surftemp23.txt" "surftemp24.txt" "surftemp25.txt"
+[19] "surftemp26.txt" "surftemp27.txt" "surftemp28.txt"
+[22] "surftemp29.txt" "surftemp3.txt"  "surftemp30.txt"
+[25] "surftemp31.txt" "surftemp32.txt" "surftemp33.txt"
+[28] "surftemp34.txt" "surftemp35.txt" "surftemp36.txt"
+[31] "surftemp37.txt" "surftemp38.txt" "surftemp39.txt"
+[34] "surftemp4.txt"  "surftemp40.txt" "surftemp41.txt"
+[37] "surftemp42.txt" "surftemp43.txt" "surftemp44.txt"
+[40] "surftemp45.txt" "surftemp46.txt" "surftemp47.txt"
+[43] "surftemp48.txt" "surftemp49.txt" "surftemp5.txt" 
+[46] "surftemp50.txt" "surftemp51.txt" "surftemp52.txt"
+[49] "surftemp53.txt" "surftemp54.txt" "surftemp55.txt"
+[52] "surftemp56.txt" "surftemp57.txt" "surftemp58.txt"
+[55] "surftemp59.txt" "surftemp6.txt"  "surftemp60.txt"
+[58] "surftemp61.txt" "surftemp62.txt" "surftemp63.txt"
+[61] "surftemp64.txt" "surftemp65.txt" "surftemp66.txt"
+[64] "surftemp67.txt" "surftemp68.txt" "surftemp69.txt"
+[67] "surftemp7.txt"  "surftemp70.txt" "surftemp71.txt"
+[70] "surftemp72.txt" "surftemp8.txt"  "surftemp9.txt" 
+
+$temperature
+ [1] "temperature1.txt"  "temperature10.txt" "temperature11.txt"
+ [4] "temperature12.txt" "temperature13.txt" "temperature14.txt"
+ [7] "temperature15.txt" "temperature16.txt" "temperature17.txt"
+[10] "temperature18.txt" "temperature19.txt" "temperature2.txt" 
+[13] "temperature20.txt" "temperature21.txt" "temperature22.txt"
+[16] "temperature23.txt" "temperature24.txt" "temperature25.txt"
+[19] "temperature26.txt" "temperature27.txt" "temperature28.txt"
+[22] "temperature29.txt" "temperature3.txt"  "temperature30.txt"
+[25] "temperature31.txt" "temperature32.txt" "temperature33.txt"
+[28] "temperature34.txt" "temperature35.txt" "temperature36.txt"
+[31] "temperature37.txt" "temperature38.txt" "temperature39.txt"
+[34] "temperature4.txt"  "temperature40.txt" "temperature41.txt"
+[37] "temperature42.txt" "temperature43.txt" "temperature44.txt"
+[40] "temperature45.txt" "temperature46.txt" "temperature47.txt"
+[43] "temperature48.txt" "temperature49.txt" "temperature5.txt" 
+[46] "temperature50.txt" "temperature51.txt" "temperature52.txt"
+[49] "temperature53.txt" "temperature54.txt" "temperature55.txt"
+[52] "temperature56.txt" "temperature57.txt" "temperature58.txt"
+[55] "temperature59.txt" "temperature6.txt"  "temperature60.txt"
+[58] "temperature61.txt" "temperature62.txt" "temperature63.txt"
+[61] "temperature64.txt" "temperature65.txt" "temperature66.txt"
+[64] "temperature67.txt" "temperature68.txt" "temperature69.txt"
+[67] "temperature7.txt"  "temperature70.txt" "temperature71.txt"
+[70] "temperature72.txt" "temperature8.txt"  "temperature9.txt" 
+
+[29:28] 44> filesByVar = split(ff, fileVarNames)
+[29:45] 45> filesByVar[[1]]
+*** output flushed ***
+[29:57] 46> 
+[30:49] 47> class(tmp)
+[1] "list"
+[31:35] 48> length(tmp)
+[1] 72
+[31:42] 49> sapply(tmp, class)
+*** output flushed ***
+[31:50] 50> table(sapply(tmp, class))
+
+data.frame 
+        72 
+[31:54] 51> var1 = do.call(rbind, tmp)
+[32:33] 52> class(var1)
+[1] "data.frame"
+[32:37] 53> readAllFilesForOneVar = 
+function(files)
+{
+    tmp  = lapply(files, readOneFile)
+    var1 = do.call(rbind, tmp)
+}
++ + + + + [33:52] 54> dfsForEachVar = lapply(filesByVar, readAllFilesForOneVar)
+There were 37 warnings (use warnings() to see them)
+[34:18] 55> d = read.table(ff[1], skip = 7)
+[41:01] 56> d
+      V1 V2  V3   V4   V5   V6   V7   V8   V9  V10  V11  V12  V13
+1  36.2N  / 51: 26.0 23.0 23.0 17.0 19.5 17.0 16.0 16.0 16.0 19.0
+2  33.8N  / 50: 20.0 20.0 18.5 16.5 18.0 15.0 15.0 15.0 16.0 15.0
+3  31.2N  / 49: 16.0 16.0 14.0 12.5 13.5 14.5 13.5 13.5 13.5 13.0
+4  28.8N  / 48: 13.0 11.0 11.0 11.0 14.0 13.5 11.5 12.0 15.0 18.0
+5  26.2N  / 47:  7.5  8.0 10.5 10.5 15.0 16.5 19.5 20.0 20.5 19.5
+6  23.8N  / 46:  8.0 11.0 13.0 19.5 19.5 26.0 27.5 25.5 20.0 14.0
+7  21.2N  / 45: 14.5 13.5 15.0 19.5 28.0 28.0 23.0 14.0  6.0  3.5
+8  18.8N  / 44: 19.5 19.5 24.0 24.5 24.0 21.5 14.5  7.5  3.0  1.0
+9  16.2N  / 43: 22.5 26.0 24.0 18.0 13.0  7.5  4.0  2.0  2.0  1.0
+10 13.8N  / 42: 21.0 26.5 25.5 20.0 12.0  6.0  3.0  2.0  1.5  1.5
+11 11.2N  / 41: 19.0 20.0 21.0 14.0  8.5  5.5  3.0  1.5  1.5  1.0
+12  8.8N  / 40: 16.5 16.5 15.0 10.0  8.0  7.5  5.0  3.0  3.0  2.5
+13  6.2N  / 39: 17.5 15.0 15.0 16.5 12.5 11.5 13.0 13.0 12.0 10.5
+14  3.8N  / 38:  5.5  4.5  5.0  5.5 11.0 11.5 15.5 17.5 17.0 16.0
+15  1.2N  / 37:  0.5  0.5  0.0  0.0  1.0  3.0  5.0  8.0  8.0  8.0
+16  1.2S  / 36:  0.0  0.0  0.0  0.0  0.0  0.5  1.5  3.5  3.0  1.5
+17  3.8S  / 35:  0.5  0.0  0.0  0.0  0.5  1.0  1.5  3.0  3.5  1.5
+18  6.2S  / 34:  1.5  1.0  1.0  0.5  0.5  1.0  2.5  3.0  2.0  2.0
+19  8.8S  / 33:  1.5  3.0  1.5  1.0  1.5  1.5  2.5  2.5  2.5  2.5
+20 11.2S  / 32:  2.0  3.0  4.0  3.5  2.0  1.0  1.0  1.5  2.5  2.5
+21 13.8S  / 31:  4.0  3.0  3.0  3.5  3.0  2.5  1.5  1.0  2.0  2.0
+22 16.2S  / 30:  3.5  3.0  1.5  1.0  3.0  2.5  1.5  1.5  1.0  1.0
+23 18.8S  / 29:  2.5  2.5  2.5  1.5  1.0  0.5  0.5  0.5  0.5  0.5
+24 21.2S  / 28:  0.5  1.5  1.5  1.0  0.5  0.0  0.0  0.0  0.5  1.0
+    V14  V15  V16  V17  V18  V19  V20  V21  V22  V23  V24  V25  V26
+1  18.0 19.0 19.5 19.5 18.0 16.0 14.0 14.0 14.0 18.0 20.5 22.0 25.5
+2  15.0 17.5 17.0 17.0 17.0 17.5 17.5 18.0 19.0 19.0 20.0 22.0 23.5
+3  13.0 16.5 18.5 20.0 21.0 21.0 21.0 20.5 20.5 19.5 19.0 19.0 19.0
+4  18.0 18.5 20.5 20.5 18.5 18.0 17.0 15.0 15.0 14.0 13.0 13.0 13.5
+5  17.0 16.0 16.0 16.0 12.5  9.5  8.5  7.5  5.5  4.5  4.5  6.5  6.5
+6   9.5  8.5 10.0  8.0  4.5  5.0  5.0  4.5  3.5  2.5  2.5  4.0  8.0
+7   3.5  3.0  3.0  3.5  3.0  2.5  1.5  1.5  1.0  1.5  2.5  3.5  4.0
+8   0.5  0.5  1.0  2.5  1.5  1.5  1.5  1.0  1.0  1.0  1.5  1.5  1.5
+9   1.0  1.0  0.5  0.5  0.5  1.0  1.0  1.0  0.5  0.0  0.0  1.0  1.0
+10  1.0  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5  0.5
+11  1.0  1.5  2.0  3.0  1.0  1.0  1.5  1.0  0.5  0.5  0.0  1.0  1.0
+12  2.5  2.0  1.5  1.5  1.5  1.5  3.5  4.0  2.0  1.5  1.0  1.5  1.5
+13  9.0  9.0  6.0  3.0  5.5 12.0  8.0  3.0  2.0  3.5  3.0  2.5  2.0
+14 19.0 22.0 12.0  6.5 16.5 13.5  4.0  5.5  9.0  9.0  5.0  2.0  2.0
+15  7.5  5.0  4.5 11.5 15.0  9.0  8.5 13.0 18.5 15.5  7.0  5.0  5.5
+16  1.0  0.0  0.5  3.5  7.5 11.5 15.0 20.5 21.5 20.0 14.5 13.5 15.5
+17  0.5  0.0  0.0  1.0  7.0 13.5 21.5 25.5 27.5 29.0 26.5 26.5 29.5
+18  1.0  0.5  0.5  1.0  5.5 11.5 17.5 28.5 32.0 35.5 35.0 36.5 39.5
+19  2.5  2.5  1.5  1.0  3.0 21.0 21.5 26.5 33.5 40.5 43.0 44.5 42.5
+20  2.0  2.0  1.0  1.5 14.5 36.5 30.0 30.0 36.0 38.5 41.5 44.0 44.0
+21  2.0  1.5  1.0  1.5  4.5 27.0 41.0 42.5 32.0 33.0 39.0 43.0 48.0
+22  1.0  0.5  1.0  2.5  4.0  7.0 16.0 28.5 35.5 39.0 34.0 31.0 39.0
+23  0.5  1.5  2.5  3.0  3.0  3.0  3.0 13.5 31.0 31.0 31.5 26.5 36.0
+24  1.0  1.0  1.5  2.5  1.5  1.0  1.0  1.5 14.0 29.5 22.5 24.0 36.0
+    V27
+1  25.5
+2  23.5
+3  20.5
+4  12.5
+5  10.0
+6  12.5
+7   7.0
+8   2.5
+9   1.0
+10  0.5
+11  0.5
+12  1.0
+13  1.5
+14  3.5
+15  7.5
+16 21.0
+17 32.0
+18 41.0
+19 46.0
+20 47.5
+21 45.5
+22 45.0
+23 36.5
+24 36.5
+[41:03] 57> unlist(d[, -(1:3)])
+*** output flushed ***
+[41:29] 58> vals = unname(unlist(d[, -(1:3)]))
+[41:37] 59> vals
+  [1] 26.0 20.0 16.0 13.0  7.5  8.0 14.5 19.5 22.5 21.0 19.0 16.5 17.5
+ [14]  5.5  0.5  0.0  0.5  1.5  1.5  2.0  4.0  3.5  2.5  0.5 23.0 20.0
+ [27] 16.0 11.0  8.0 11.0 13.5 19.5 26.0 26.5 20.0 16.5 15.0  4.5  0.5
+ [40]  0.0  0.0  1.0  3.0  3.0  3.0  3.0  2.5  1.5 23.0 18.5 14.0 11.0
+ [53] 10.5 13.0 15.0 24.0 24.0 25.5 21.0 15.0 15.0  5.0  0.0  0.0  0.0
+ [66]  1.0  1.5  4.0  3.0  1.5  2.5  1.5 17.0 16.5 12.5 11.0 10.5 19.5
+ [79] 19.5 24.5 18.0 20.0 14.0 10.0 16.5  5.5  0.0  0.0  0.0  0.5  1.0
+ [92]  3.5  3.5  1.0  1.5  1.0 19.5 18.0 13.5 14.0 15.0 19.5 28.0 24.0
+[105] 13.0 12.0  8.5  8.0 12.5 11.0  1.0  0.0  0.5  0.5  1.5  2.0  3.0
+[118]  3.0  1.0  0.5 17.0 15.0 14.5 13.5 16.5 26.0 28.0 21.5  7.5  6.0
+[131]  5.5  7.5 11.5 11.5  3.0  0.5  1.0  1.0  1.5  1.0  2.5  2.5  0.5
+[144]  0.0 16.0 15.0 13.5 11.5 19.5 27.5 23.0 14.5  4.0  3.0  3.0  5.0
+[157] 13.0 15.5  5.0  1.5  1.5  2.5  2.5  1.0  1.5  1.5  0.5  0.0 16.0
+[170] 15.0 13.5 12.0 20.0 25.5 14.0  7.5  2.0  2.0  1.5  3.0 13.0 17.5
+[183]  8.0  3.5  3.0  3.0  2.5  1.5  1.0  1.5  0.5  0.0 16.0 16.0 13.5
+[196] 15.0 20.5 20.0  6.0  3.0  2.0  1.5  1.5  3.0 12.0 17.0  8.0  3.0
+[209]  3.5  2.0  2.5  2.5  2.0  1.0  0.5  0.5 19.0 15.0 13.0 18.0 19.5
+[222] 14.0  3.5  1.0  1.0  1.5  1.0  2.5 10.5 16.0  8.0  1.5  1.5  2.0
+[235]  2.5  2.5  2.0  1.0  0.5  1.0 18.0 15.0 13.0 18.0 17.0  9.5  3.5
+[248]  0.5  1.0  1.0  1.0  2.5  9.0 19.0  7.5  1.0  0.5  1.0  2.5  2.0
+[261]  2.0  1.0  0.5  1.0 19.0 17.5 16.5 18.5 16.0  8.5  3.0  0.5  1.0
+[274]  0.5  1.5  2.0  9.0 22.0  5.0  0.0  0.0  0.5  2.5  2.0  1.5  0.5
+[287]  1.5  1.0 19.5 17.0 18.5 20.5 16.0 10.0  3.0  1.0  0.5  0.5  2.0
+[300]  1.5  6.0 12.0  4.5  0.5  0.0  0.5  1.5  1.0  1.0  1.0  2.5  1.5
+[313] 19.5 17.0 20.0 20.5 16.0  8.0  3.5  2.5  0.5  0.5  3.0  1.5  3.0
+[326]  6.5 11.5  3.5  1.0  1.0  1.0  1.5  1.5  2.5  3.0  2.5 18.0 17.0
+[339] 21.0 18.5 12.5  4.5  3.0  1.5  0.5  0.5  1.0  1.5  5.5 16.5 15.0
+[352]  7.5  7.0  5.5  3.0 14.5  4.5  4.0  3.0  1.5 16.0 17.5 21.0 18.0
+[365]  9.5  5.0  2.5  1.5  1.0  0.5  1.0  1.5 12.0 13.5  9.0 11.5 13.5
+[378] 11.5 21.0 36.5 27.0  7.0  3.0  1.0 14.0 17.5 21.0 17.0  8.5  5.0
+[391]  1.5  1.5  1.0  0.5  1.5  3.5  8.0  4.0  8.5 15.0 21.5 17.5 21.5
+[404] 30.0 41.0 16.0  3.0  1.0 14.0 18.0 20.5 15.0  7.5  4.5  1.5  1.0
+[417]  1.0  0.5  1.0  4.0  3.0  5.5 13.0 20.5 25.5 28.5 26.5 30.0 42.5
+[430] 28.5 13.5  1.5 14.0 19.0 20.5 15.0  5.5  3.5  1.0  1.0  0.5  0.5
+[443]  0.5  2.0  2.0  9.0 18.5 21.5 27.5 32.0 33.5 36.0 32.0 35.5 31.0
+[456] 14.0 18.0 19.0 19.5 14.0  4.5  2.5  1.5  1.0  0.0  0.5  0.5  1.5
+[469]  3.5  9.0 15.5 20.0 29.0 35.5 40.5 38.5 33.0 39.0 31.0 29.5 20.5
+[482] 20.0 19.0 13.0  4.5  2.5  2.5  1.5  0.0  0.5  0.0  1.0  3.0  5.0
+[495]  7.0 14.5 26.5 35.0 43.0 41.5 39.0 34.0 31.5 22.5 22.0 22.0 19.0
+[508] 13.0  6.5  4.0  3.5  1.5  1.0  0.5  1.0  1.5  2.5  2.0  5.0 13.5
+[521] 26.5 36.5 44.5 44.0 43.0 31.0 26.5 24.0 25.5 23.5 19.0 13.5  6.5
+[534]  8.0  4.0  1.5  1.0  0.5  1.0  1.5  2.0  2.0  5.5 15.5 29.5 39.5
+[547] 42.5 44.0 48.0 39.0 36.0 36.0 25.5 23.5 20.5 12.5 10.0 12.5  7.0
+[560]  2.5  1.0  0.5  0.5  1.0  1.5  3.5  7.5 21.0 32.0 41.0 46.0 47.5
+[573] 45.5 45.0 36.5 36.5
+[41:38] 60> d[,1]
+ [1] 36.2N 33.8N 31.2N 28.8N 26.2N 23.8N 21.2N 18.8N 16.2N 13.8N 11.2N
+[12] 8.8N  6.2N  3.8N  1.2N  1.2S  3.8S  6.2S  8.8S  11.2S 13.8S 16.2S
+[23] 18.8S 21.2S
+24 Levels: 1.2N 1.2S 11.2N 11.2S 13.8N 13.8S 16.2N 16.2S ... 8.8S
+[41:51] 61> lat = as.character(d[,1])
+[42:36] 62> lat
+ [1] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+ [9] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[17] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[42:37] 63> rep(lat, 24)
+  [1] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+  [9] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+ [17] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+ [25] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+ [33] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+ [41] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+ [49] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+ [57] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+ [65] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+ [73] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+ [81] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+ [89] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+ [97] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[105] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[113] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[121] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[129] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[137] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[145] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[153] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[161] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[169] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[177] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[185] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[193] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[201] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[209] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[217] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[225] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[233] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[241] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[249] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[257] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[265] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[273] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[281] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[289] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[297] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[305] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[313] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[321] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[329] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[337] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[345] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[353] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[361] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[369] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[377] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[385] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[393] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[401] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[409] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[417] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[425] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[433] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[441] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[449] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[457] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[465] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[473] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[481] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[489] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[497] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[505] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[513] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[521] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[529] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[537] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[545] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[553] "36.2N" "33.8N" "31.2N" "28.8N" "26.2N" "23.8N" "21.2N" "18.8N"
+[561] "16.2N" "13.8N" "11.2N" "8.8N"  "6.2N"  "3.8N"  "1.2N"  "1.2S" 
+[569] "3.8S"  "6.2S"  "8.8S"  "11.2S" "13.8S" "16.2S" "18.8S" "21.2S"
+[42:43] 64> rep(lat, each = 24)
+  [1] "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N"
+  [9] "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N"
+ [17] "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N" "36.2N"
+ [25] "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N"
+ [33] "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N"
+ [41] "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N" "33.8N"
+ [49] "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N"
+ [57] "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N"
+ [65] "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N" "31.2N"
+ [73] "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N"
+ [81] "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N"
+ [89] "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N" "28.8N"
+ [97] "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N"
+[105] "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N"
+[113] "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N" "26.2N"
+[121] "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N"
+[129] "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N"
+[137] "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N" "23.8N"
+[145] "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N"
+[153] "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N"
+[161] "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N" "21.2N"
+[169] "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N"
+[177] "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N"
+[185] "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N" "18.8N"
+[193] "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N"
+[201] "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N"
+[209] "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N" "16.2N"
+[217] "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N"
+[225] "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N"
+[233] "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N" "13.8N"
+[241] "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N"
+[249] "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N"
+[257] "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N" "11.2N"
+[265] "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N" 
+[273] "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N" 
+[281] "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N"  "8.8N" 
+[289] "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N" 
+[297] "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N" 
+[305] "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N"  "6.2N" 
+[313] "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N" 
+[321] "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N" 
+[329] "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N"  "3.8N" 
+[337] "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N" 
+[345] "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N" 
+[353] "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N"  "1.2N" 
+[361] "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S" 
+[369] "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S" 
+[377] "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S"  "1.2S" 
+[385] "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S" 
+[393] "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S" 
+[401] "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S"  "3.8S" 
+[409] "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S" 
+[417] "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S" 
+[425] "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S"  "6.2S" 
+[433] "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S" 
+[441] "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S" 
+[449] "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S"  "8.8S" 
+[457] "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S"
+[465] "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S"
+[473] "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S" "11.2S"
+[481] "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S"
+[489] "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S"
+[497] "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S" "13.8S"
+[505] "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S"
+[513] "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S"
+[521] "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S" "16.2S"
+[529] "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S"
+[537] "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S"
+[545] "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S" "18.8S"
+[553] "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S"
+[561] "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S"
+[569] "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S" "21.2S"
+[42:59] 65> 

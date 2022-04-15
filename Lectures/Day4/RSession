@@ -1,0 +1,982 @@
+campus-018-050[Day4-51]>R
+
+R Under development (unstable) (2017-09-22 r73334) -- "Unsuffered Consequences"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin16.7.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 4381 
+Time = 2022-04-12 17:36:26 
+Dir = /Users/duncan/141b/Public/Lectures/Day4 
+Warning message:
+In as.POSIXlt.POSIXct(x, tz) :
+  unknown timezone 'zone/tz/2021a.3.0/zoneinfo/America/Los_Angeles'
+1> ff = list.files("~/Data/NASAWeather", full.names = TRUE, pattern = "txt")
+[36:47] 2> length(ff)
+[1] 504
+[36:50] 3> tm = sapply(ff, function(f) readLines(f)[5])
+[37:04] 4> table(nchar(tm))
+
+ 41 
+504 
+[37:33] 5> table(substring(tm, nchar(tm)-5))
+
+ 00:00 
+   504 
+[37:47] 6> tm = sapply(ff, function(f) readLines(f)[6])
+[38:39] 7> table(tm)
+tm
+              113.8W 111.2W 108.8W 106.2W 103.8W 101.2W 98.8W  96.2W  93.8W  91.2W  88.8W  86.2W  83.8W  81.2W  78.8W  76.2W  73.8W  71.2W  68.8W  66.2W  63.8W  61.2W  58.8W  56.2W   
+                                                                                                                                                                                   504 
+[38:50] 8> length(unique(ff))
+[1] 504
+[40:04] 9> readLines("~/Data/NASAWeather/cloudhigh1.txt")[6]
+[1] "              113.8W 111.2W 108.8W 106.2W 103.8W 101.2W 98.8W  96.2W  93.8W  91.2W  88.8W  86.2W  83.8W  81.2W  78.8W  76.2W  73.8W  71.2W  68.8W  66.2W  63.8W  61.2W  58.8W  56.2W  "
+[40:25] 10> lon = sapply(ff, function(f) readLines("~/Data/NASAWeather/cloudhigh1.txt")[6])
+[40:37] 11> length(unique(lon))
+[1] 1
+[40:43] 12> lon = sapply(ff, function(f) readLines(f)[6])
+[40:59] 13> length(unique(lon))
+[1] 1
+[41:00] 14> lat = sapply(ff, function(f) read.table(f, skip = 7)[,1])
+[42:25] 15> table(unlist(lat))
+
+ 1.2N  1.2S 11.2N 11.2S 13.8N 13.8S 16.2N 16.2S 18.8N 18.8S 21.2N 
+  504   504   504   504   504   504   504   504   504   504   504 
+21.2S 23.8N 26.2N 28.8N  3.8N  3.8S 31.2N 33.8N 36.2N  6.2N  6.2S 
+  504   504   504   504   504   504   504   504   504   504   504 
+ 8.8N  8.8S 
+  504   504 
+[42:48] 16> ff
+  [1] "/Users/duncan/Data/NASAWeather/cloudhigh1.txt"   
+  [2] "/Users/duncan/Data/NASAWeather/cloudhigh10.txt"  
+  [3] "/Users/duncan/Data/NASAWeather/cloudhigh11.txt"  
+  [4] "/Users/duncan/Data/NASAWeather/cloudhigh12.txt"  
+  [5] "/Users/duncan/Data/NASAWeather/cloudhigh13.txt"  
+  [6] "/Users/duncan/Data/NASAWeather/cloudhigh14.txt"  
+  [7] "/Users/duncan/Data/NASAWeather/cloudhigh15.txt"  
+  [8] "/Users/duncan/Data/NASAWeather/cloudhigh16.txt"  
+  [9] "/Users/duncan/Data/NASAWeather/cloudhigh17.txt"  
+ [10] "/Users/duncan/Data/NASAWeather/cloudhigh18.txt"  
+ [11] "/Users/duncan/Data/NASAWeather/cloudhigh19.txt"  
+ [12] "/Users/duncan/Data/NASAWeather/cloudhigh2.txt"   
+ [13] "/Users/duncan/Data/NASAWeather/cloudhigh20.txt"  
+ [14] "/Users/duncan/Data/NASAWeather/cloudhigh21.txt"  
+ [15] "/Users/duncan/Data/NASAWeather/cloudhigh22.txt"  
+ [16] "/Users/duncan/Data/NASAWeather/cloudhigh23.txt"  
+ [17] "/Users/duncan/Data/NASAWeather/cloudhigh24.txt"  
+ [18] "/Users/duncan/Data/NASAWeather/cloudhigh25.txt"  
+ [19] "/Users/duncan/Data/NASAWeather/cloudhigh26.txt"  
+ [20] "/Users/duncan/Data/NASAWeather/cloudhigh27.txt"  
+ [21] "/Users/duncan/Data/NASAWeather/cloudhigh28.txt"  
+ [22] "/Users/duncan/Data/NASAWeather/cloudhigh29.txt"  
+ [23] "/Users/duncan/Data/NASAWeather/cloudhigh3.txt"   
+ [24] "/Users/duncan/Data/NASAWeather/cloudhigh30.txt"  
+ [25] "/Users/duncan/Data/NASAWeather/cloudhigh31.txt"  
+ [26] "/Users/duncan/Data/NASAWeather/cloudhigh32.txt"  
+ [27] "/Users/duncan/Data/NASAWeather/cloudhigh33.txt"  
+ [28] "/Users/duncan/Data/NASAWeather/cloudhigh34.txt"  
+ [29] "/Users/duncan/Data/NASAWeather/cloudhigh35.txt"  
+ [30] "/Users/duncan/Data/NASAWeather/cloudhigh36.txt"  
+ [31] "/Users/duncan/Data/NASAWeather/cloudhigh37.txt"  
+ [32] "/Users/duncan/Data/NASAWeather/cloudhigh38.txt"  
+ [33] "/Users/duncan/Data/NASAWeather/cloudhigh39.txt"  
+ [34] "/Users/duncan/Data/NASAWeather/cloudhigh4.txt"   
+ [35] "/Users/duncan/Data/NASAWeather/cloudhigh40.txt"  
+ [36] "/Users/duncan/Data/NASAWeather/cloudhigh41.txt"  
+ [37] "/Users/duncan/Data/NASAWeather/cloudhigh42.txt"  
+ [38] "/Users/duncan/Data/NASAWeather/cloudhigh43.txt"  
+ [39] "/Users/duncan/Data/NASAWeather/cloudhigh44.txt"  
+ [40] "/Users/duncan/Data/NASAWeather/cloudhigh45.txt"  
+ [41] "/Users/duncan/Data/NASAWeather/cloudhigh46.txt"  
+ [42] "/Users/duncan/Data/NASAWeather/cloudhigh47.txt"  
+ [43] "/Users/duncan/Data/NASAWeather/cloudhigh48.txt"  
+ [44] "/Users/duncan/Data/NASAWeather/cloudhigh49.txt"  
+ [45] "/Users/duncan/Data/NASAWeather/cloudhigh5.txt"   
+ [46] "/Users/duncan/Data/NASAWeather/cloudhigh50.txt"  
+ [47] "/Users/duncan/Data/NASAWeather/cloudhigh51.txt"  
+ [48] "/Users/duncan/Data/NASAWeather/cloudhigh52.txt"  
+ [49] "/Users/duncan/Data/NASAWeather/cloudhigh53.txt"  
+ [50] "/Users/duncan/Data/NASAWeather/cloudhigh54.txt"  
+ [51] "/Users/duncan/Data/NASAWeather/cloudhigh55.txt"  
+ [52] "/Users/duncan/Data/NASAWeather/cloudhigh56.txt"  
+ [53] "/Users/duncan/Data/NASAWeather/cloudhigh57.txt"  
+ [54] "/Users/duncan/Data/NASAWeather/cloudhigh58.txt"  
+ [55] "/Users/duncan/Data/NASAWeather/cloudhigh59.txt"  
+ [56] "/Users/duncan/Data/NASAWeather/cloudhigh6.txt"   
+ [57] "/Users/duncan/Data/NASAWeather/cloudhigh60.txt"  
+ [58] "/Users/duncan/Data/NASAWeather/cloudhigh61.txt"  
+ [59] "/Users/duncan/Data/NASAWeather/cloudhigh62.txt"  
+ [60] "/Users/duncan/Data/NASAWeather/cloudhigh63.txt"  
+ [61] "/Users/duncan/Data/NASAWeather/cloudhigh64.txt"  
+ [62] "/Users/duncan/Data/NASAWeather/cloudhigh65.txt"  
+ [63] "/Users/duncan/Data/NASAWeather/cloudhigh66.txt"  
+ [64] "/Users/duncan/Data/NASAWeather/cloudhigh67.txt"  
+ [65] "/Users/duncan/Data/NASAWeather/cloudhigh68.txt"  
+ [66] "/Users/duncan/Data/NASAWeather/cloudhigh69.txt"  
+ [67] "/Users/duncan/Data/NASAWeather/cloudhigh7.txt"   
+ [68] "/Users/duncan/Data/NASAWeather/cloudhigh70.txt"  
+ [69] "/Users/duncan/Data/NASAWeather/cloudhigh71.txt"  
+ [70] "/Users/duncan/Data/NASAWeather/cloudhigh72.txt"  
+ [71] "/Users/duncan/Data/NASAWeather/cloudhigh8.txt"   
+ [72] "/Users/duncan/Data/NASAWeather/cloudhigh9.txt"   
+ [73] "/Users/duncan/Data/NASAWeather/cloudlow1.txt"    
+ [74] "/Users/duncan/Data/NASAWeather/cloudlow10.txt"   
+ [75] "/Users/duncan/Data/NASAWeather/cloudlow11.txt"   
+ [76] "/Users/duncan/Data/NASAWeather/cloudlow12.txt"   
+ [77] "/Users/duncan/Data/NASAWeather/cloudlow13.txt"   
+ [78] "/Users/duncan/Data/NASAWeather/cloudlow14.txt"   
+ [79] "/Users/duncan/Data/NASAWeather/cloudlow15.txt"   
+ [80] "/Users/duncan/Data/NASAWeather/cloudlow16.txt"   
+ [81] "/Users/duncan/Data/NASAWeather/cloudlow17.txt"   
+ [82] "/Users/duncan/Data/NASAWeather/cloudlow18.txt"   
+ [83] "/Users/duncan/Data/NASAWeather/cloudlow19.txt"   
+ [84] "/Users/duncan/Data/NASAWeather/cloudlow2.txt"    
+ [85] "/Users/duncan/Data/NASAWeather/cloudlow20.txt"   
+ [86] "/Users/duncan/Data/NASAWeather/cloudlow21.txt"   
+ [87] "/Users/duncan/Data/NASAWeather/cloudlow22.txt"   
+ [88] "/Users/duncan/Data/NASAWeather/cloudlow23.txt"   
+ [89] "/Users/duncan/Data/NASAWeather/cloudlow24.txt"   
+ [90] "/Users/duncan/Data/NASAWeather/cloudlow25.txt"   
+ [91] "/Users/duncan/Data/NASAWeather/cloudlow26.txt"   
+ [92] "/Users/duncan/Data/NASAWeather/cloudlow27.txt"   
+ [93] "/Users/duncan/Data/NASAWeather/cloudlow28.txt"   
+ [94] "/Users/duncan/Data/NASAWeather/cloudlow29.txt"   
+ [95] "/Users/duncan/Data/NASAWeather/cloudlow3.txt"    
+ [96] "/Users/duncan/Data/NASAWeather/cloudlow30.txt"   
+ [97] "/Users/duncan/Data/NASAWeather/cloudlow31.txt"   
+ [98] "/Users/duncan/Data/NASAWeather/cloudlow32.txt"   
+ [99] "/Users/duncan/Data/NASAWeather/cloudlow33.txt"   
+[100] "/Users/duncan/Data/NASAWeather/cloudlow34.txt"   
+[101] "/Users/duncan/Data/NASAWeather/cloudlow35.txt"   
+[102] "/Users/duncan/Data/NASAWeather/cloudlow36.txt"   
+[103] "/Users/duncan/Data/NASAWeather/cloudlow37.txt"   
+[104] "/Users/duncan/Data/NASAWeather/cloudlow38.txt"   
+[105] "/Users/duncan/Data/NASAWeather/cloudlow39.txt"   
+[106] "/Users/duncan/Data/NASAWeather/cloudlow4.txt"    
+[107] "/Users/duncan/Data/NASAWeather/cloudlow40.txt"   
+[108] "/Users/duncan/Data/NASAWeather/cloudlow41.txt"   
+[109] "/Users/duncan/Data/NASAWeather/cloudlow42.txt"   
+[110] "/Users/duncan/Data/NASAWeather/cloudlow43.txt"   
+[111] "/Users/duncan/Data/NASAWeather/cloudlow44.txt"   
+[112] "/Users/duncan/Data/NASAWeather/cloudlow45.txt"   
+[113] "/Users/duncan/Data/NASAWeather/cloudlow46.txt"   
+[114] "/Users/duncan/Data/NASAWeather/cloudlow47.txt"   
+[115] "/Users/duncan/Data/NASAWeather/cloudlow48.txt"   
+[116] "/Users/duncan/Data/NASAWeather/cloudlow49.txt"   
+[117] "/Users/duncan/Data/NASAWeather/cloudlow5.txt"    
+[118] "/Users/duncan/Data/NASAWeather/cloudlow50.txt"   
+[119] "/Users/duncan/Data/NASAWeather/cloudlow51.txt"   
+[120] "/Users/duncan/Data/NASAWeather/cloudlow52.txt"   
+[121] "/Users/duncan/Data/NASAWeather/cloudlow53.txt"   
+[122] "/Users/duncan/Data/NASAWeather/cloudlow54.txt"   
+[123] "/Users/duncan/Data/NASAWeather/cloudlow55.txt"   
+[124] "/Users/duncan/Data/NASAWeather/cloudlow56.txt"   
+[125] "/Users/duncan/Data/NASAWeather/cloudlow57.txt"   
+[126] "/Users/duncan/Data/NASAWeather/cloudlow58.txt"   
+[127] "/Users/duncan/Data/NASAWeather/cloudlow59.txt"   
+[128] "/Users/duncan/Data/NASAWeather/cloudlow6.txt"    
+[129] "/Users/duncan/Data/NASAWeather/cloudlow60.txt"   
+[130] "/Users/duncan/Data/NASAWeather/cloudlow61.txt"   
+[131] "/Users/duncan/Data/NASAWeather/cloudlow62.txt"   
+[132] "/Users/duncan/Data/NASAWeather/cloudlow63.txt"   
+[133] "/Users/duncan/Data/NASAWeather/cloudlow64.txt"   
+[134] "/Users/duncan/Data/NASAWeather/cloudlow65.txt"   
+[135] "/Users/duncan/Data/NASAWeather/cloudlow66.txt"   
+[136] "/Users/duncan/Data/NASAWeather/cloudlow67.txt"   
+[137] "/Users/duncan/Data/NASAWeather/cloudlow68.txt"   
+[138] "/Users/duncan/Data/NASAWeather/cloudlow69.txt"   
+[139] "/Users/duncan/Data/NASAWeather/cloudlow7.txt"    
+[140] "/Users/duncan/Data/NASAWeather/cloudlow70.txt"   
+[141] "/Users/duncan/Data/NASAWeather/cloudlow71.txt"   
+[142] "/Users/duncan/Data/NASAWeather/cloudlow72.txt"   
+[143] "/Users/duncan/Data/NASAWeather/cloudlow8.txt"    
+[144] "/Users/duncan/Data/NASAWeather/cloudlow9.txt"    
+[145] "/Users/duncan/Data/NASAWeather/cloudmid1.txt"    
+[146] "/Users/duncan/Data/NASAWeather/cloudmid10.txt"   
+[147] "/Users/duncan/Data/NASAWeather/cloudmid11.txt"   
+[148] "/Users/duncan/Data/NASAWeather/cloudmid12.txt"   
+[149] "/Users/duncan/Data/NASAWeather/cloudmid13.txt"   
+[150] "/Users/duncan/Data/NASAWeather/cloudmid14.txt"   
+[151] "/Users/duncan/Data/NASAWeather/cloudmid15.txt"   
+[152] "/Users/duncan/Data/NASAWeather/cloudmid16.txt"   
+[153] "/Users/duncan/Data/NASAWeather/cloudmid17.txt"   
+[154] "/Users/duncan/Data/NASAWeather/cloudmid18.txt"   
+[155] "/Users/duncan/Data/NASAWeather/cloudmid19.txt"   
+[156] "/Users/duncan/Data/NASAWeather/cloudmid2.txt"    
+[157] "/Users/duncan/Data/NASAWeather/cloudmid20.txt"   
+[158] "/Users/duncan/Data/NASAWeather/cloudmid21.txt"   
+[159] "/Users/duncan/Data/NASAWeather/cloudmid22.txt"   
+[160] "/Users/duncan/Data/NASAWeather/cloudmid23.txt"   
+[161] "/Users/duncan/Data/NASAWeather/cloudmid24.txt"   
+[162] "/Users/duncan/Data/NASAWeather/cloudmid25.txt"   
+[163] "/Users/duncan/Data/NASAWeather/cloudmid26.txt"   
+[164] "/Users/duncan/Data/NASAWeather/cloudmid27.txt"   
+[165] "/Users/duncan/Data/NASAWeather/cloudmid28.txt"   
+[166] "/Users/duncan/Data/NASAWeather/cloudmid29.txt"   
+[167] "/Users/duncan/Data/NASAWeather/cloudmid3.txt"    
+[168] "/Users/duncan/Data/NASAWeather/cloudmid30.txt"   
+[169] "/Users/duncan/Data/NASAWeather/cloudmid31.txt"   
+[170] "/Users/duncan/Data/NASAWeather/cloudmid32.txt"   
+[171] "/Users/duncan/Data/NASAWeather/cloudmid33.txt"   
+[172] "/Users/duncan/Data/NASAWeather/cloudmid34.txt"   
+[173] "/Users/duncan/Data/NASAWeather/cloudmid35.txt"   
+[174] "/Users/duncan/Data/NASAWeather/cloudmid36.txt"   
+[175] "/Users/duncan/Data/NASAWeather/cloudmid37.txt"   
+[176] "/Users/duncan/Data/NASAWeather/cloudmid38.txt"   
+[177] "/Users/duncan/Data/NASAWeather/cloudmid39.txt"   
+[178] "/Users/duncan/Data/NASAWeather/cloudmid4.txt"    
+[179] "/Users/duncan/Data/NASAWeather/cloudmid40.txt"   
+[180] "/Users/duncan/Data/NASAWeather/cloudmid41.txt"   
+[181] "/Users/duncan/Data/NASAWeather/cloudmid42.txt"   
+[182] "/Users/duncan/Data/NASAWeather/cloudmid43.txt"   
+[183] "/Users/duncan/Data/NASAWeather/cloudmid44.txt"   
+[184] "/Users/duncan/Data/NASAWeather/cloudmid45.txt"   
+[185] "/Users/duncan/Data/NASAWeather/cloudmid46.txt"   
+[186] "/Users/duncan/Data/NASAWeather/cloudmid47.txt"   
+[187] "/Users/duncan/Data/NASAWeather/cloudmid48.txt"   
+[188] "/Users/duncan/Data/NASAWeather/cloudmid49.txt"   
+[189] "/Users/duncan/Data/NASAWeather/cloudmid5.txt"    
+[190] "/Users/duncan/Data/NASAWeather/cloudmid50.txt"   
+[191] "/Users/duncan/Data/NASAWeather/cloudmid51.txt"   
+[192] "/Users/duncan/Data/NASAWeather/cloudmid52.txt"   
+[193] "/Users/duncan/Data/NASAWeather/cloudmid53.txt"   
+[194] "/Users/duncan/Data/NASAWeather/cloudmid54.txt"   
+[195] "/Users/duncan/Data/NASAWeather/cloudmid55.txt"   
+[196] "/Users/duncan/Data/NASAWeather/cloudmid56.txt"   
+[197] "/Users/duncan/Data/NASAWeather/cloudmid57.txt"   
+[198] "/Users/duncan/Data/NASAWeather/cloudmid58.txt"   
+[199] "/Users/duncan/Data/NASAWeather/cloudmid59.txt"   
+[200] "/Users/duncan/Data/NASAWeather/cloudmid6.txt"    
+[201] "/Users/duncan/Data/NASAWeather/cloudmid60.txt"   
+[202] "/Users/duncan/Data/NASAWeather/cloudmid61.txt"   
+[203] "/Users/duncan/Data/NASAWeather/cloudmid62.txt"   
+[204] "/Users/duncan/Data/NASAWeather/cloudmid63.txt"   
+[205] "/Users/duncan/Data/NASAWeather/cloudmid64.txt"   
+[206] "/Users/duncan/Data/NASAWeather/cloudmid65.txt"   
+[207] "/Users/duncan/Data/NASAWeather/cloudmid66.txt"   
+[208] "/Users/duncan/Data/NASAWeather/cloudmid67.txt"   
+[209] "/Users/duncan/Data/NASAWeather/cloudmid68.txt"   
+[210] "/Users/duncan/Data/NASAWeather/cloudmid69.txt"   
+[211] "/Users/duncan/Data/NASAWeather/cloudmid7.txt"    
+[212] "/Users/duncan/Data/NASAWeather/cloudmid70.txt"   
+[213] "/Users/duncan/Data/NASAWeather/cloudmid71.txt"   
+[214] "/Users/duncan/Data/NASAWeather/cloudmid72.txt"   
+[215] "/Users/duncan/Data/NASAWeather/cloudmid8.txt"    
+[216] "/Users/duncan/Data/NASAWeather/cloudmid9.txt"    
+[217] "/Users/duncan/Data/NASAWeather/ozone1.txt"       
+[218] "/Users/duncan/Data/NASAWeather/ozone10.txt"      
+[219] "/Users/duncan/Data/NASAWeather/ozone11.txt"      
+[220] "/Users/duncan/Data/NASAWeather/ozone12.txt"      
+[221] "/Users/duncan/Data/NASAWeather/ozone13.txt"      
+[222] "/Users/duncan/Data/NASAWeather/ozone14.txt"      
+[223] "/Users/duncan/Data/NASAWeather/ozone15.txt"      
+[224] "/Users/duncan/Data/NASAWeather/ozone16.txt"      
+[225] "/Users/duncan/Data/NASAWeather/ozone17.txt"      
+[226] "/Users/duncan/Data/NASAWeather/ozone18.txt"      
+[227] "/Users/duncan/Data/NASAWeather/ozone19.txt"      
+[228] "/Users/duncan/Data/NASAWeather/ozone2.txt"       
+[229] "/Users/duncan/Data/NASAWeather/ozone20.txt"      
+[230] "/Users/duncan/Data/NASAWeather/ozone21.txt"      
+[231] "/Users/duncan/Data/NASAWeather/ozone22.txt"      
+[232] "/Users/duncan/Data/NASAWeather/ozone23.txt"      
+[233] "/Users/duncan/Data/NASAWeather/ozone24.txt"      
+[234] "/Users/duncan/Data/NASAWeather/ozone25.txt"      
+[235] "/Users/duncan/Data/NASAWeather/ozone26.txt"      
+[236] "/Users/duncan/Data/NASAWeather/ozone27.txt"      
+[237] "/Users/duncan/Data/NASAWeather/ozone28.txt"      
+[238] "/Users/duncan/Data/NASAWeather/ozone29.txt"      
+[239] "/Users/duncan/Data/NASAWeather/ozone3.txt"       
+[240] "/Users/duncan/Data/NASAWeather/ozone30.txt"      
+[241] "/Users/duncan/Data/NASAWeather/ozone31.txt"      
+[242] "/Users/duncan/Data/NASAWeather/ozone32.txt"      
+[243] "/Users/duncan/Data/NASAWeather/ozone33.txt"      
+[244] "/Users/duncan/Data/NASAWeather/ozone34.txt"      
+[245] "/Users/duncan/Data/NASAWeather/ozone35.txt"      
+[246] "/Users/duncan/Data/NASAWeather/ozone36.txt"      
+[247] "/Users/duncan/Data/NASAWeather/ozone37.txt"      
+[248] "/Users/duncan/Data/NASAWeather/ozone38.txt"      
+[249] "/Users/duncan/Data/NASAWeather/ozone39.txt"      
+[250] "/Users/duncan/Data/NASAWeather/ozone4.txt"       
+[251] "/Users/duncan/Data/NASAWeather/ozone40.txt"      
+[252] "/Users/duncan/Data/NASAWeather/ozone41.txt"      
+[253] "/Users/duncan/Data/NASAWeather/ozone42.txt"      
+[254] "/Users/duncan/Data/NASAWeather/ozone43.txt"      
+[255] "/Users/duncan/Data/NASAWeather/ozone44.txt"      
+[256] "/Users/duncan/Data/NASAWeather/ozone45.txt"      
+[257] "/Users/duncan/Data/NASAWeather/ozone46.txt"      
+[258] "/Users/duncan/Data/NASAWeather/ozone47.txt"      
+[259] "/Users/duncan/Data/NASAWeather/ozone48.txt"      
+[260] "/Users/duncan/Data/NASAWeather/ozone49.txt"      
+[261] "/Users/duncan/Data/NASAWeather/ozone5.txt"       
+[262] "/Users/duncan/Data/NASAWeather/ozone50.txt"      
+[263] "/Users/duncan/Data/NASAWeather/ozone51.txt"      
+[264] "/Users/duncan/Data/NASAWeather/ozone52.txt"      
+[265] "/Users/duncan/Data/NASAWeather/ozone53.txt"      
+[266] "/Users/duncan/Data/NASAWeather/ozone54.txt"      
+[267] "/Users/duncan/Data/NASAWeather/ozone55.txt"      
+[268] "/Users/duncan/Data/NASAWeather/ozone56.txt"      
+[269] "/Users/duncan/Data/NASAWeather/ozone57.txt"      
+[270] "/Users/duncan/Data/NASAWeather/ozone58.txt"      
+[271] "/Users/duncan/Data/NASAWeather/ozone59.txt"      
+[272] "/Users/duncan/Data/NASAWeather/ozone6.txt"       
+[273] "/Users/duncan/Data/NASAWeather/ozone60.txt"      
+[274] "/Users/duncan/Data/NASAWeather/ozone61.txt"      
+[275] "/Users/duncan/Data/NASAWeather/ozone62.txt"      
+[276] "/Users/duncan/Data/NASAWeather/ozone63.txt"      
+[277] "/Users/duncan/Data/NASAWeather/ozone64.txt"      
+[278] "/Users/duncan/Data/NASAWeather/ozone65.txt"      
+[279] "/Users/duncan/Data/NASAWeather/ozone66.txt"      
+[280] "/Users/duncan/Data/NASAWeather/ozone67.txt"      
+[281] "/Users/duncan/Data/NASAWeather/ozone68.txt"      
+[282] "/Users/duncan/Data/NASAWeather/ozone69.txt"      
+[283] "/Users/duncan/Data/NASAWeather/ozone7.txt"       
+[284] "/Users/duncan/Data/NASAWeather/ozone70.txt"      
+[285] "/Users/duncan/Data/NASAWeather/ozone71.txt"      
+[286] "/Users/duncan/Data/NASAWeather/ozone72.txt"      
+[287] "/Users/duncan/Data/NASAWeather/ozone8.txt"       
+[288] "/Users/duncan/Data/NASAWeather/ozone9.txt"       
+[289] "/Users/duncan/Data/NASAWeather/pressure1.txt"    
+[290] "/Users/duncan/Data/NASAWeather/pressure10.txt"   
+[291] "/Users/duncan/Data/NASAWeather/pressure11.txt"   
+[292] "/Users/duncan/Data/NASAWeather/pressure12.txt"   
+[293] "/Users/duncan/Data/NASAWeather/pressure13.txt"   
+[294] "/Users/duncan/Data/NASAWeather/pressure14.txt"   
+[295] "/Users/duncan/Data/NASAWeather/pressure15.txt"   
+[296] "/Users/duncan/Data/NASAWeather/pressure16.txt"   
+[297] "/Users/duncan/Data/NASAWeather/pressure17.txt"   
+[298] "/Users/duncan/Data/NASAWeather/pressure18.txt"   
+[299] "/Users/duncan/Data/NASAWeather/pressure19.txt"   
+[300] "/Users/duncan/Data/NASAWeather/pressure2.txt"    
+[301] "/Users/duncan/Data/NASAWeather/pressure20.txt"   
+[302] "/Users/duncan/Data/NASAWeather/pressure21.txt"   
+[303] "/Users/duncan/Data/NASAWeather/pressure22.txt"   
+[304] "/Users/duncan/Data/NASAWeather/pressure23.txt"   
+[305] "/Users/duncan/Data/NASAWeather/pressure24.txt"   
+[306] "/Users/duncan/Data/NASAWeather/pressure25.txt"   
+[307] "/Users/duncan/Data/NASAWeather/pressure26.txt"   
+[308] "/Users/duncan/Data/NASAWeather/pressure27.txt"   
+[309] "/Users/duncan/Data/NASAWeather/pressure28.txt"   
+[310] "/Users/duncan/Data/NASAWeather/pressure29.txt"   
+[311] "/Users/duncan/Data/NASAWeather/pressure3.txt"    
+[312] "/Users/duncan/Data/NASAWeather/pressure30.txt"   
+[313] "/Users/duncan/Data/NASAWeather/pressure31.txt"   
+[314] "/Users/duncan/Data/NASAWeather/pressure32.txt"   
+[315] "/Users/duncan/Data/NASAWeather/pressure33.txt"   
+[316] "/Users/duncan/Data/NASAWeather/pressure34.txt"   
+[317] "/Users/duncan/Data/NASAWeather/pressure35.txt"   
+[318] "/Users/duncan/Data/NASAWeather/pressure36.txt"   
+[319] "/Users/duncan/Data/NASAWeather/pressure37.txt"   
+[320] "/Users/duncan/Data/NASAWeather/pressure38.txt"   
+[321] "/Users/duncan/Data/NASAWeather/pressure39.txt"   
+[322] "/Users/duncan/Data/NASAWeather/pressure4.txt"    
+[323] "/Users/duncan/Data/NASAWeather/pressure40.txt"   
+[324] "/Users/duncan/Data/NASAWeather/pressure41.txt"   
+[325] "/Users/duncan/Data/NASAWeather/pressure42.txt"   
+[326] "/Users/duncan/Data/NASAWeather/pressure43.txt"   
+[327] "/Users/duncan/Data/NASAWeather/pressure44.txt"   
+[328] "/Users/duncan/Data/NASAWeather/pressure45.txt"   
+[329] "/Users/duncan/Data/NASAWeather/pressure46.txt"   
+[330] "/Users/duncan/Data/NASAWeather/pressure47.txt"   
+[331] "/Users/duncan/Data/NASAWeather/pressure48.txt"   
+[332] "/Users/duncan/Data/NASAWeather/pressure49.txt"   
+[333] "/Users/duncan/Data/NASAWeather/pressure5.txt"    
+[334] "/Users/duncan/Data/NASAWeather/pressure50.txt"   
+[335] "/Users/duncan/Data/NASAWeather/pressure51.txt"   
+[336] "/Users/duncan/Data/NASAWeather/pressure52.txt"   
+[337] "/Users/duncan/Data/NASAWeather/pressure53.txt"   
+[338] "/Users/duncan/Data/NASAWeather/pressure54.txt"   
+[339] "/Users/duncan/Data/NASAWeather/pressure55.txt"   
+[340] "/Users/duncan/Data/NASAWeather/pressure56.txt"   
+[341] "/Users/duncan/Data/NASAWeather/pressure57.txt"   
+[342] "/Users/duncan/Data/NASAWeather/pressure58.txt"   
+[343] "/Users/duncan/Data/NASAWeather/pressure59.txt"   
+[344] "/Users/duncan/Data/NASAWeather/pressure6.txt"    
+[345] "/Users/duncan/Data/NASAWeather/pressure60.txt"   
+[346] "/Users/duncan/Data/NASAWeather/pressure61.txt"   
+[347] "/Users/duncan/Data/NASAWeather/pressure62.txt"   
+[348] "/Users/duncan/Data/NASAWeather/pressure63.txt"   
+[349] "/Users/duncan/Data/NASAWeather/pressure64.txt"   
+[350] "/Users/duncan/Data/NASAWeather/pressure65.txt"   
+[351] "/Users/duncan/Data/NASAWeather/pressure66.txt"   
+[352] "/Users/duncan/Data/NASAWeather/pressure67.txt"   
+[353] "/Users/duncan/Data/NASAWeather/pressure68.txt"   
+[354] "/Users/duncan/Data/NASAWeather/pressure69.txt"   
+[355] "/Users/duncan/Data/NASAWeather/pressure7.txt"    
+[356] "/Users/duncan/Data/NASAWeather/pressure70.txt"   
+[357] "/Users/duncan/Data/NASAWeather/pressure71.txt"   
+[358] "/Users/duncan/Data/NASAWeather/pressure72.txt"   
+[359] "/Users/duncan/Data/NASAWeather/pressure8.txt"    
+[360] "/Users/duncan/Data/NASAWeather/pressure9.txt"    
+[361] "/Users/duncan/Data/NASAWeather/surftemp1.txt"    
+[362] "/Users/duncan/Data/NASAWeather/surftemp10.txt"   
+[363] "/Users/duncan/Data/NASAWeather/surftemp11.txt"   
+[364] "/Users/duncan/Data/NASAWeather/surftemp12.txt"   
+[365] "/Users/duncan/Data/NASAWeather/surftemp13.txt"   
+[366] "/Users/duncan/Data/NASAWeather/surftemp14.txt"   
+[367] "/Users/duncan/Data/NASAWeather/surftemp15.txt"   
+[368] "/Users/duncan/Data/NASAWeather/surftemp16.txt"   
+[369] "/Users/duncan/Data/NASAWeather/surftemp17.txt"   
+[370] "/Users/duncan/Data/NASAWeather/surftemp18.txt"   
+[371] "/Users/duncan/Data/NASAWeather/surftemp19.txt"   
+[372] "/Users/duncan/Data/NASAWeather/surftemp2.txt"    
+[373] "/Users/duncan/Data/NASAWeather/surftemp20.txt"   
+[374] "/Users/duncan/Data/NASAWeather/surftemp21.txt"   
+[375] "/Users/duncan/Data/NASAWeather/surftemp22.txt"   
+[376] "/Users/duncan/Data/NASAWeather/surftemp23.txt"   
+[377] "/Users/duncan/Data/NASAWeather/surftemp24.txt"   
+[378] "/Users/duncan/Data/NASAWeather/surftemp25.txt"   
+[379] "/Users/duncan/Data/NASAWeather/surftemp26.txt"   
+[380] "/Users/duncan/Data/NASAWeather/surftemp27.txt"   
+[381] "/Users/duncan/Data/NASAWeather/surftemp28.txt"   
+[382] "/Users/duncan/Data/NASAWeather/surftemp29.txt"   
+[383] "/Users/duncan/Data/NASAWeather/surftemp3.txt"    
+[384] "/Users/duncan/Data/NASAWeather/surftemp30.txt"   
+[385] "/Users/duncan/Data/NASAWeather/surftemp31.txt"   
+[386] "/Users/duncan/Data/NASAWeather/surftemp32.txt"   
+[387] "/Users/duncan/Data/NASAWeather/surftemp33.txt"   
+[388] "/Users/duncan/Data/NASAWeather/surftemp34.txt"   
+[389] "/Users/duncan/Data/NASAWeather/surftemp35.txt"   
+[390] "/Users/duncan/Data/NASAWeather/surftemp36.txt"   
+[391] "/Users/duncan/Data/NASAWeather/surftemp37.txt"   
+[392] "/Users/duncan/Data/NASAWeather/surftemp38.txt"   
+[393] "/Users/duncan/Data/NASAWeather/surftemp39.txt"   
+[394] "/Users/duncan/Data/NASAWeather/surftemp4.txt"    
+[395] "/Users/duncan/Data/NASAWeather/surftemp40.txt"   
+[396] "/Users/duncan/Data/NASAWeather/surftemp41.txt"   
+[397] "/Users/duncan/Data/NASAWeather/surftemp42.txt"   
+[398] "/Users/duncan/Data/NASAWeather/surftemp43.txt"   
+[399] "/Users/duncan/Data/NASAWeather/surftemp44.txt"   
+[400] "/Users/duncan/Data/NASAWeather/surftemp45.txt"   
+[401] "/Users/duncan/Data/NASAWeather/surftemp46.txt"   
+[402] "/Users/duncan/Data/NASAWeather/surftemp47.txt"   
+[403] "/Users/duncan/Data/NASAWeather/surftemp48.txt"   
+[404] "/Users/duncan/Data/NASAWeather/surftemp49.txt"   
+[405] "/Users/duncan/Data/NASAWeather/surftemp5.txt"    
+[406] "/Users/duncan/Data/NASAWeather/surftemp50.txt"   
+[407] "/Users/duncan/Data/NASAWeather/surftemp51.txt"   
+[408] "/Users/duncan/Data/NASAWeather/surftemp52.txt"   
+[409] "/Users/duncan/Data/NASAWeather/surftemp53.txt"   
+[410] "/Users/duncan/Data/NASAWeather/surftemp54.txt"   
+[411] "/Users/duncan/Data/NASAWeather/surftemp55.txt"   
+[412] "/Users/duncan/Data/NASAWeather/surftemp56.txt"   
+[413] "/Users/duncan/Data/NASAWeather/surftemp57.txt"   
+[414] "/Users/duncan/Data/NASAWeather/surftemp58.txt"   
+[415] "/Users/duncan/Data/NASAWeather/surftemp59.txt"   
+[416] "/Users/duncan/Data/NASAWeather/surftemp6.txt"    
+[417] "/Users/duncan/Data/NASAWeather/surftemp60.txt"   
+[418] "/Users/duncan/Data/NASAWeather/surftemp61.txt"   
+[419] "/Users/duncan/Data/NASAWeather/surftemp62.txt"   
+[420] "/Users/duncan/Data/NASAWeather/surftemp63.txt"   
+[421] "/Users/duncan/Data/NASAWeather/surftemp64.txt"   
+[422] "/Users/duncan/Data/NASAWeather/surftemp65.txt"   
+[423] "/Users/duncan/Data/NASAWeather/surftemp66.txt"   
+[424] "/Users/duncan/Data/NASAWeather/surftemp67.txt"   
+[425] "/Users/duncan/Data/NASAWeather/surftemp68.txt"   
+[426] "/Users/duncan/Data/NASAWeather/surftemp69.txt"   
+[427] "/Users/duncan/Data/NASAWeather/surftemp7.txt"    
+[428] "/Users/duncan/Data/NASAWeather/surftemp70.txt"   
+[429] "/Users/duncan/Data/NASAWeather/surftemp71.txt"   
+[430] "/Users/duncan/Data/NASAWeather/surftemp72.txt"   
+[431] "/Users/duncan/Data/NASAWeather/surftemp8.txt"    
+[432] "/Users/duncan/Data/NASAWeather/surftemp9.txt"    
+[433] "/Users/duncan/Data/NASAWeather/temperature1.txt" 
+[434] "/Users/duncan/Data/NASAWeather/temperature10.txt"
+[435] "/Users/duncan/Data/NASAWeather/temperature11.txt"
+[436] "/Users/duncan/Data/NASAWeather/temperature12.txt"
+[437] "/Users/duncan/Data/NASAWeather/temperature13.txt"
+[438] "/Users/duncan/Data/NASAWeather/temperature14.txt"
+[439] "/Users/duncan/Data/NASAWeather/temperature15.txt"
+[440] "/Users/duncan/Data/NASAWeather/temperature16.txt"
+[441] "/Users/duncan/Data/NASAWeather/temperature17.txt"
+[442] "/Users/duncan/Data/NASAWeather/temperature18.txt"
+[443] "/Users/duncan/Data/NASAWeather/temperature19.txt"
+[444] "/Users/duncan/Data/NASAWeather/temperature2.txt" 
+[445] "/Users/duncan/Data/NASAWeather/temperature20.txt"
+[446] "/Users/duncan/Data/NASAWeather/temperature21.txt"
+[447] "/Users/duncan/Data/NASAWeather/temperature22.txt"
+[448] "/Users/duncan/Data/NASAWeather/temperature23.txt"
+[449] "/Users/duncan/Data/NASAWeather/temperature24.txt"
+[450] "/Users/duncan/Data/NASAWeather/temperature25.txt"
+[451] "/Users/duncan/Data/NASAWeather/temperature26.txt"
+[452] "/Users/duncan/Data/NASAWeather/temperature27.txt"
+[453] "/Users/duncan/Data/NASAWeather/temperature28.txt"
+[454] "/Users/duncan/Data/NASAWeather/temperature29.txt"
+[455] "/Users/duncan/Data/NASAWeather/temperature3.txt" 
+[456] "/Users/duncan/Data/NASAWeather/temperature30.txt"
+[457] "/Users/duncan/Data/NASAWeather/temperature31.txt"
+[458] "/Users/duncan/Data/NASAWeather/temperature32.txt"
+[459] "/Users/duncan/Data/NASAWeather/temperature33.txt"
+[460] "/Users/duncan/Data/NASAWeather/temperature34.txt"
+[461] "/Users/duncan/Data/NASAWeather/temperature35.txt"
+[462] "/Users/duncan/Data/NASAWeather/temperature36.txt"
+[463] "/Users/duncan/Data/NASAWeather/temperature37.txt"
+[464] "/Users/duncan/Data/NASAWeather/temperature38.txt"
+[465] "/Users/duncan/Data/NASAWeather/temperature39.txt"
+[466] "/Users/duncan/Data/NASAWeather/temperature4.txt" 
+[467] "/Users/duncan/Data/NASAWeather/temperature40.txt"
+[468] "/Users/duncan/Data/NASAWeather/temperature41.txt"
+[469] "/Users/duncan/Data/NASAWeather/temperature42.txt"
+[470] "/Users/duncan/Data/NASAWeather/temperature43.txt"
+[471] "/Users/duncan/Data/NASAWeather/temperature44.txt"
+[472] "/Users/duncan/Data/NASAWeather/temperature45.txt"
+[473] "/Users/duncan/Data/NASAWeather/temperature46.txt"
+[474] "/Users/duncan/Data/NASAWeather/temperature47.txt"
+[475] "/Users/duncan/Data/NASAWeather/temperature48.txt"
+[476] "/Users/duncan/Data/NASAWeather/temperature49.txt"
+[477] "/Users/duncan/Data/NASAWeather/temperature5.txt" 
+[478] "/Users/duncan/Data/NASAWeather/temperature50.txt"
+[479] "/Users/duncan/Data/NASAWeather/temperature51.txt"
+[480] "/Users/duncan/Data/NASAWeather/temperature52.txt"
+[481] "/Users/duncan/Data/NASAWeather/temperature53.txt"
+[482] "/Users/duncan/Data/NASAWeather/temperature54.txt"
+[483] "/Users/duncan/Data/NASAWeather/temperature55.txt"
+[484] "/Users/duncan/Data/NASAWeather/temperature56.txt"
+[485] "/Users/duncan/Data/NASAWeather/temperature57.txt"
+[486] "/Users/duncan/Data/NASAWeather/temperature58.txt"
+[487] "/Users/duncan/Data/NASAWeather/temperature59.txt"
+[488] "/Users/duncan/Data/NASAWeather/temperature6.txt" 
+[489] "/Users/duncan/Data/NASAWeather/temperature60.txt"
+[490] "/Users/duncan/Data/NASAWeather/temperature61.txt"
+[491] "/Users/duncan/Data/NASAWeather/temperature62.txt"
+[492] "/Users/duncan/Data/NASAWeather/temperature63.txt"
+[493] "/Users/duncan/Data/NASAWeather/temperature64.txt"
+[494] "/Users/duncan/Data/NASAWeather/temperature65.txt"
+[495] "/Users/duncan/Data/NASAWeather/temperature66.txt"
+[496] "/Users/duncan/Data/NASAWeather/temperature67.txt"
+[497] "/Users/duncan/Data/NASAWeather/temperature68.txt"
+[498] "/Users/duncan/Data/NASAWeather/temperature69.txt"
+[499] "/Users/duncan/Data/NASAWeather/temperature7.txt" 
+[500] "/Users/duncan/Data/NASAWeather/temperature70.txt"
+[501] "/Users/duncan/Data/NASAWeather/temperature71.txt"
+[502] "/Users/duncan/Data/NASAWeather/temperature72.txt"
+[503] "/Users/duncan/Data/NASAWeather/temperature8.txt" 
+[504] "/Users/duncan/Data/NASAWeather/temperature9.txt" 
+[49:04] 17> f = ff[1]
+[49:21] 18> f
+[1] "/Users/duncan/Data/NASAWeather/cloudhigh1.txt"
+[49:48] 19> strsplit(f, "")[[1]]
+ [1] "/" "U" "s" "e" "r" "s" "/" "d" "u" "n" "c" "a" "n" "/" "D" "a"
+[17] "t" "a" "/" "N" "A" "S" "A" "W" "e" "a" "t" "h" "e" "r" "/" "c"
+[33] "l" "o" "u" "d" "h" "i" "g" "h" "1" "." "t" "x" "t"
+[50:26] 20> basename(f)
+[1] "cloudhigh1.txt"
+[50:52] 21> strsplit(basename(f), "")[[1]]
+ [1] "c" "l" "o" "u" "d" "h" "i" "g" "h" "1" "." "t" "x" "t"
+[51:14] 22> strsplit(basename(f), "")[[1]]  %in% 0:9
+ [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+[12] FALSE FALSE FALSE
+[51:17] 23> chars = strsplit(basename(f), "")[[1]]
+[51:42] 24> chars[chars  %in% 0:9]
+[1] "1"
+[51:48] 25> num = as.integer(chars[chars  %in% 0:9])
+[51:59] 26> TRUE + 3.1415
+[1] 4.1415
+[54:38] 27> gsub(".*([0-9][0-9]?).*", "\\1",  basename(f))
+[1] "1"
+[58:44] 28> gsub(".*([0-9][0-9]?).*", "\\1",  basename(ff[2]))
+[1] "0"
+[58:55] 29> ff[2]
+[1] "/Users/duncan/Data/NASAWeather/cloudhigh10.txt"
+[58:59] 30> gsub("[^0-9]*([0-9][0-9]?).*", "\\1",  basename(ff[2]))
+[1] "10"
+[01:08] 31> gsub("[^0-9]*([0-9][0-9]?).*", "\\1",  basename(ff[1]))
+[1] "1"
+[01:14] 32> gsub("[^0-9]*([0-9][0-9]?).*", "\\1",  basename(ff))
+  [1] "1"  "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "2"  "20"
+ [14] "21" "22" "23" "24" "25" "26" "27" "28" "29" "3"  "30" "31" "32"
+ [27] "33" "34" "35" "36" "37" "38" "39" "4"  "40" "41" "42" "43" "44"
+ [40] "45" "46" "47" "48" "49" "5"  "50" "51" "52" "53" "54" "55" "56"
+ [53] "57" "58" "59" "6"  "60" "61" "62" "63" "64" "65" "66" "67" "68"
+ [66] "69" "7"  "70" "71" "72" "8"  "9"  "1"  "10" "11" "12" "13" "14"
+ [79] "15" "16" "17" "18" "19" "2"  "20" "21" "22" "23" "24" "25" "26"
+ [92] "27" "28" "29" "3"  "30" "31" "32" "33" "34" "35" "36" "37" "38"
+[105] "39" "4"  "40" "41" "42" "43" "44" "45" "46" "47" "48" "49" "5" 
+[118] "50" "51" "52" "53" "54" "55" "56" "57" "58" "59" "6"  "60" "61"
+[131] "62" "63" "64" "65" "66" "67" "68" "69" "7"  "70" "71" "72" "8" 
+[144] "9"  "1"  "10" "11" "12" "13" "14" "15" "16" "17" "18" "19" "2" 
+[157] "20" "21" "22" "23" "24" "25" "26" "27" "28" "29" "3"  "30" "31"
+[170] "32" "33" "34" "35" "36" "37" "38" "39" "4"  "40" "41" "42" "43"
+[183] "44" "45" "46" "47" "48" "49" "5"  "50" "51" "52" "53" "54" "55"
+[196] "56" "57" "58" "59" "6"  "60" "61" "62" "63" "64" "65" "66" "67"
+[209] "68" "69" "7"  "70" "71" "72" "8"  "9"  "1"  "10" "11" "12" "13"
+[222] "14" "15" "16" "17" "18" "19" "2"  "20" "21" "22" "23" "24" "25"
+[235] "26" "27" "28" "29" "3"  "30" "31" "32" "33" "34" "35" "36" "37"
+[248] "38" "39" "4"  "40" "41" "42" "43" "44" "45" "46" "47" "48" "49"
+[261] "5"  "50" "51" "52" "53" "54" "55" "56" "57" "58" "59" "6"  "60"
+[274] "61" "62" "63" "64" "65" "66" "67" "68" "69" "7"  "70" "71" "72"
+[287] "8"  "9"  "1"  "10" "11" "12" "13" "14" "15" "16" "17" "18" "19"
+[300] "2"  "20" "21" "22" "23" "24" "25" "26" "27" "28" "29" "3"  "30"
+[313] "31" "32" "33" "34" "35" "36" "37" "38" "39" "4"  "40" "41" "42"
+[326] "43" "44" "45" "46" "47" "48" "49" "5"  "50" "51" "52" "53" "54"
+[339] "55" "56" "57" "58" "59" "6"  "60" "61" "62" "63" "64" "65" "66"
+[352] "67" "68" "69" "7"  "70" "71" "72" "8"  "9"  "1"  "10" "11" "12"
+[365] "13" "14" "15" "16" "17" "18" "19" "2"  "20" "21" "22" "23" "24"
+[378] "25" "26" "27" "28" "29" "3"  "30" "31" "32" "33" "34" "35" "36"
+[391] "37" "38" "39" "4"  "40" "41" "42" "43" "44" "45" "46" "47" "48"
+[404] "49" "5"  "50" "51" "52" "53" "54" "55" "56" "57" "58" "59" "6" 
+[417] "60" "61" "62" "63" "64" "65" "66" "67" "68" "69" "7"  "70" "71"
+[430] "72" "8"  "9"  "1"  "10" "11" "12" "13" "14" "15" "16" "17" "18"
+[443] "19" "2"  "20" "21" "22" "23" "24" "25" "26" "27" "28" "29" "3" 
+[456] "30" "31" "32" "33" "34" "35" "36" "37" "38" "39" "4"  "40" "41"
+[469] "42" "43" "44" "45" "46" "47" "48" "49" "5"  "50" "51" "52" "53"
+[482] "54" "55" "56" "57" "58" "59" "6"  "60" "61" "62" "63" "64" "65"
+[495] "66" "67" "68" "69" "7"  "70" "71" "72" "8"  "9" 
+[01:22] 33> as.integer(gsub("[^0-9]*([0-9][0-9]?).*", "\\1",  basename(ff)))
+  [1]  1 10 11 12 13 14 15 16 17 18 19  2 20 21 22 23 24 25 26 27 28
+ [22] 29  3 30 31 32 33 34 35 36 37 38 39  4 40 41 42 43 44 45 46 47
+ [43] 48 49  5 50 51 52 53 54 55 56 57 58 59  6 60 61 62 63 64 65 66
+ [64] 67 68 69  7 70 71 72  8  9  1 10 11 12 13 14 15 16 17 18 19  2
+ [85] 20 21 22 23 24 25 26 27 28 29  3 30 31 32 33 34 35 36 37 38 39
+[106]  4 40 41 42 43 44 45 46 47 48 49  5 50 51 52 53 54 55 56 57 58
+[127] 59  6 60 61 62 63 64 65 66 67 68 69  7 70 71 72  8  9  1 10 11
+[148] 12 13 14 15 16 17 18 19  2 20 21 22 23 24 25 26 27 28 29  3 30
+[169] 31 32 33 34 35 36 37 38 39  4 40 41 42 43 44 45 46 47 48 49  5
+[190] 50 51 52 53 54 55 56 57 58 59  6 60 61 62 63 64 65 66 67 68 69
+[211]  7 70 71 72  8  9  1 10 11 12 13 14 15 16 17 18 19  2 20 21 22
+[232] 23 24 25 26 27 28 29  3 30 31 32 33 34 35 36 37 38 39  4 40 41
+[253] 42 43 44 45 46 47 48 49  5 50 51 52 53 54 55 56 57 58 59  6 60
+[274] 61 62 63 64 65 66 67 68 69  7 70 71 72  8  9  1 10 11 12 13 14
+[295] 15 16 17 18 19  2 20 21 22 23 24 25 26 27 28 29  3 30 31 32 33
+[316] 34 35 36 37 38 39  4 40 41 42 43 44 45 46 47 48 49  5 50 51 52
+[337] 53 54 55 56 57 58 59  6 60 61 62 63 64 65 66 67 68 69  7 70 71
+[358] 72  8  9  1 10 11 12 13 14 15 16 17 18 19  2 20 21 22 23 24 25
+[379] 26 27 28 29  3 30 31 32 33 34 35 36 37 38 39  4 40 41 42 43 44
+[400] 45 46 47 48 49  5 50 51 52 53 54 55 56 57 58 59  6 60 61 62 63
+[421] 64 65 66 67 68 69  7 70 71 72  8  9  1 10 11 12 13 14 15 16 17
+[442] 18 19  2 20 21 22 23 24 25 26 27 28 29  3 30 31 32 33 34 35 36
+[463] 37 38 39  4 40 41 42 43 44 45 46 47 48 49  5 50 51 52 53 54 55
+[484] 56 57 58 59  6 60 61 62 63 64 65 66 67 68 69  7 70 71 72  8  9
+[01:28] 34> gsub("[0-9].*", "",  basename(ff)))
+Error: unexpected ')' in "gsub("[0-9].*", "",  basename(ff)))"
+No suitable frames for recover()
+[01:28] 34> gsub("[0-9].*", "",  basename(ff))
+  [1] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+  [5] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+  [9] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [13] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [17] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [21] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [25] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [29] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [33] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [37] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [41] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [45] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [49] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [53] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [57] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [61] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [65] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [69] "cloudhigh"   "cloudhigh"   "cloudhigh"   "cloudhigh"  
+ [73] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [77] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [81] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [85] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [89] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [93] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+ [97] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[101] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[105] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[109] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[113] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[117] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[121] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[125] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[129] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[133] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[137] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[141] "cloudlow"    "cloudlow"    "cloudlow"    "cloudlow"   
+[145] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[149] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[153] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[157] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[161] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[165] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[169] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[173] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[177] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[181] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[185] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[189] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[193] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[197] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[201] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[205] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[209] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[213] "cloudmid"    "cloudmid"    "cloudmid"    "cloudmid"   
+[217] "ozone"       "ozone"       "ozone"       "ozone"      
+[221] "ozone"       "ozone"       "ozone"       "ozone"      
+[225] "ozone"       "ozone"       "ozone"       "ozone"      
+[229] "ozone"       "ozone"       "ozone"       "ozone"      
+[233] "ozone"       "ozone"       "ozone"       "ozone"      
+[237] "ozone"       "ozone"       "ozone"       "ozone"      
+[241] "ozone"       "ozone"       "ozone"       "ozone"      
+[245] "ozone"       "ozone"       "ozone"       "ozone"      
+[249] "ozone"       "ozone"       "ozone"       "ozone"      
+[253] "ozone"       "ozone"       "ozone"       "ozone"      
+[257] "ozone"       "ozone"       "ozone"       "ozone"      
+[261] "ozone"       "ozone"       "ozone"       "ozone"      
+[265] "ozone"       "ozone"       "ozone"       "ozone"      
+[269] "ozone"       "ozone"       "ozone"       "ozone"      
+[273] "ozone"       "ozone"       "ozone"       "ozone"      
+[277] "ozone"       "ozone"       "ozone"       "ozone"      
+[281] "ozone"       "ozone"       "ozone"       "ozone"      
+[285] "ozone"       "ozone"       "ozone"       "ozone"      
+[289] "pressure"    "pressure"    "pressure"    "pressure"   
+[293] "pressure"    "pressure"    "pressure"    "pressure"   
+[297] "pressure"    "pressure"    "pressure"    "pressure"   
+[301] "pressure"    "pressure"    "pressure"    "pressure"   
+[305] "pressure"    "pressure"    "pressure"    "pressure"   
+[309] "pressure"    "pressure"    "pressure"    "pressure"   
+[313] "pressure"    "pressure"    "pressure"    "pressure"   
+[317] "pressure"    "pressure"    "pressure"    "pressure"   
+[321] "pressure"    "pressure"    "pressure"    "pressure"   
+[325] "pressure"    "pressure"    "pressure"    "pressure"   
+[329] "pressure"    "pressure"    "pressure"    "pressure"   
+[333] "pressure"    "pressure"    "pressure"    "pressure"   
+[337] "pressure"    "pressure"    "pressure"    "pressure"   
+[341] "pressure"    "pressure"    "pressure"    "pressure"   
+[345] "pressure"    "pressure"    "pressure"    "pressure"   
+[349] "pressure"    "pressure"    "pressure"    "pressure"   
+[353] "pressure"    "pressure"    "pressure"    "pressure"   
+[357] "pressure"    "pressure"    "pressure"    "pressure"   
+[361] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[365] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[369] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[373] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[377] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[381] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[385] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[389] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[393] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[397] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[401] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[405] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[409] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[413] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[417] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[421] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[425] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[429] "surftemp"    "surftemp"    "surftemp"    "surftemp"   
+[433] "temperature" "temperature" "temperature" "temperature"
+[437] "temperature" "temperature" "temperature" "temperature"
+[441] "temperature" "temperature" "temperature" "temperature"
+[445] "temperature" "temperature" "temperature" "temperature"
+[449] "temperature" "temperature" "temperature" "temperature"
+[453] "temperature" "temperature" "temperature" "temperature"
+[457] "temperature" "temperature" "temperature" "temperature"
+[461] "temperature" "temperature" "temperature" "temperature"
+[465] "temperature" "temperature" "temperature" "temperature"
+[469] "temperature" "temperature" "temperature" "temperature"
+[473] "temperature" "temperature" "temperature" "temperature"
+[477] "temperature" "temperature" "temperature" "temperature"
+[481] "temperature" "temperature" "temperature" "temperature"
+[485] "temperature" "temperature" "temperature" "temperature"
+[489] "temperature" "temperature" "temperature" "temperature"
+[493] "temperature" "temperature" "temperature" "temperature"
+[497] "temperature" "temperature" "temperature" "temperature"
+[501] "temperature" "temperature" "temperature" "temperature"
+[04:16] 35> f
+
+  cloudhigh    cloudlow    cloudmid       ozone    pressure 
+         72          72          72          72          72 
+   surftemp temperature 
+         72          72 
+[04:20] 36> readLines(f)[5]
+[1] "             TIME     : 16-JAN-1995 00:00"
+[06:16] 37> gsub("TIME", "", readLines(f)[5])
+[1] "                  : 16-JAN-1995 00:00"
+[06:23] 38> gsub("TIME    :", "", readLines(f)[5])
+[1] "             TIME     : 16-JAN-1995 00:00"
+[06:32] 39> gsub("TIME     :", "", readLines(f)[5])
+[1] "              16-JAN-1995 00:00"
+[06:40] 40> gsub("TIME *:", "", readLines(f)[5])
+[1] "              16-JAN-1995 00:00"
+[06:57] 41> ll = readLines("~/Data/Mannheim/offline")
+
+
+
+[24:05] 42> [24:05] 42> [24:05] 42> [24:05] 42>  grepl("^#", ll[1:5]) 
+[1]  TRUE  TRUE  TRUE FALSE FALSE
+[25:54] 43> ll = ll[! grepl("^#", ll[1:5]) ]
+[26:05] 44> head(ll)
+*** output flushed ***
+[26:06] 45> ddevs = strsplit(ll, ";")
+[26:53] 46> parts = strsplit(ll, ";")
+[27:04] 47>     ddevs = lapply(parts, `[`, -(1:4))
+[27:06] 48> ddevs[[1]]
+ [1] "00:14:bf:b1:97:8a=-38,2437000000,3"
+ [2] "00:14:bf:b1:97:90=-56,2427000000,3"
+ [3] "00:0f:a3:39:e1:c0=-53,2462000000,3"
+ [4] "00:14:bf:b1:97:8d=-65,2442000000,3"
+ [5] "00:14:bf:b1:97:81=-65,2422000000,3"
+ [6] "00:14:bf:3b:c7:c6=-66,2432000000,3"
+ [7] "00:0f:a3:39:dd:cd=-75,2412000000,3"
+ [8] "00:0f:a3:39:e0:4b=-78,2462000000,3"
+ [9] "00:0f:a3:39:e2:10=-87,2437000000,3"
+[10] "02:64:fb:68:52:e6=-88,2447000000,1"
+[11] "02:00:42:55:31:00=-84,2457000000,1"
+[27:19] 49> strsplit(ddevs[[1]], "[=,]")
+[[1]]
+[1] "00:14:bf:b1:97:8a" "-38"               "2437000000"       
+[4] "3"                
+
+[[2]]
+[1] "00:14:bf:b1:97:90" "-56"               "2427000000"       
+[4] "3"                
+
+[[3]]
+[1] "00:0f:a3:39:e1:c0" "-53"               "2462000000"       
+[4] "3"                
+
+[[4]]
+[1] "00:14:bf:b1:97:8d" "-65"               "2442000000"       
+[4] "3"                
+
+[[5]]
+[1] "00:14:bf:b1:97:81" "-65"               "2422000000"       
+[4] "3"                
+
+[[6]]
+[1] "00:14:bf:3b:c7:c6" "-66"               "2432000000"       
+[4] "3"                
+
+[[7]]
+[1] "00:0f:a3:39:dd:cd" "-75"               "2412000000"       
+[4] "3"                
+
+[[8]]
+[1] "00:0f:a3:39:e0:4b" "-78"               "2462000000"       
+[4] "3"                
+
+[[9]]
+[1] "00:0f:a3:39:e2:10" "-87"               "2437000000"       
+[4] "3"                
+
+[[10]]
+[1] "02:64:fb:68:52:e6" "-88"               "2447000000"       
+[4] "1"                
+
+[[11]]
+[1] "02:00:42:55:31:00" "-84"               "2457000000"       
+[4] "1"                
+
+[28:31] 50> do.call(rbind, strsplit(ddevs[[1]], "[=,]"))
+      [,1]                [,2]  [,3]         [,4]
+ [1,] "00:14:bf:b1:97:8a" "-38" "2437000000" "3" 
+ [2,] "00:14:bf:b1:97:90" "-56" "2427000000" "3" 
+ [3,] "00:0f:a3:39:e1:c0" "-53" "2462000000" "3" 
+ [4,] "00:14:bf:b1:97:8d" "-65" "2442000000" "3" 
+ [5,] "00:14:bf:b1:97:81" "-65" "2422000000" "3" 
+ [6,] "00:14:bf:3b:c7:c6" "-66" "2432000000" "3" 
+ [7,] "00:0f:a3:39:dd:cd" "-75" "2412000000" "3" 
+ [8,] "00:0f:a3:39:e0:4b" "-78" "2462000000" "3" 
+ [9,] "00:0f:a3:39:e2:10" "-87" "2437000000" "3" 
+[10,] "02:64:fb:68:52:e6" "-88" "2447000000" "1" 
+[11,] "02:00:42:55:31:00" "-84" "2457000000" "1" 
+[29:07] 51> unlist(ddevs[1:2]
++ )
+ [1] "00:14:bf:b1:97:8a=-38,2437000000,3"
+ [2] "00:14:bf:b1:97:90=-56,2427000000,3"
+ [3] "00:0f:a3:39:e1:c0=-53,2462000000,3"
+ [4] "00:14:bf:b1:97:8d=-65,2442000000,3"
+ [5] "00:14:bf:b1:97:81=-65,2422000000,3"
+ [6] "00:14:bf:3b:c7:c6=-66,2432000000,3"
+ [7] "00:0f:a3:39:dd:cd=-75,2412000000,3"
+ [8] "00:0f:a3:39:e0:4b=-78,2462000000,3"
+ [9] "00:0f:a3:39:e2:10=-87,2437000000,3"
+[10] "02:64:fb:68:52:e6=-88,2447000000,1"
+[11] "02:00:42:55:31:00=-84,2457000000,1"
+[12] "00:14:bf:b1:97:8a=-38,2437000000,3"
+[13] "00:0f:a3:39:e1:c0=-54,2462000000,3"
+[14] "00:14:bf:b1:97:90=-56,2427000000,3"
+[15] "00:14:bf:3b:c7:c6=-67,2432000000,3"
+[16] "00:14:bf:b1:97:81=-66,2422000000,3"
+[17] "00:14:bf:b1:97:8d=-70,2442000000,3"
+[18] "00:0f:a3:39:e0:4b=-79,2462000000,3"
+[19] "00:0f:a3:39:dd:cd=-73,2412000000,3"
+[20] "00:0f:a3:39:e2:10=-83,2437000000,3"
+[21] "02:00:42:55:31:00=-85,2457000000,1"
+[31:33] 52> parts[[1]]
+ [1] "t=1139643118358"                   
+ [2] "id=00:02:2D:21:0F:33"              
+ [3] "pos=0.0,0.0,0.0"                   
+ [4] "degree=0.0"                        
+ [5] "00:14:bf:b1:97:8a=-38,2437000000,3"
+ [6] "00:14:bf:b1:97:90=-56,2427000000,3"
+ [7] "00:0f:a3:39:e1:c0=-53,2462000000,3"
+ [8] "00:14:bf:b1:97:8d=-65,2442000000,3"
+ [9] "00:14:bf:b1:97:81=-65,2422000000,3"
+[10] "00:14:bf:3b:c7:c6=-66,2432000000,3"
+[11] "00:0f:a3:39:dd:cd=-75,2412000000,3"
+[12] "00:0f:a3:39:e0:4b=-78,2462000000,3"
+[13] "00:0f:a3:39:e2:10=-87,2437000000,3"
+[14] "02:64:fb:68:52:e6=-88,2447000000,1"
+[15] "02:00:42:55:31:00=-84,2457000000,1"
+[34:15] 53>     fixed = lapply(parts, `[`, 1:4)
+[35:34] 54> fixed[1:2]
+[[1]]
+[1] "t=1139643118358"      "id=00:02:2D:21:0F:33"
+[3] "pos=0.0,0.0,0.0"      "degree=0.0"          
+
+[[2]]
+[1] "t=1139643118744"      "id=00:02:2D:21:0F:33"
+[3] "pos=0.0,0.0,0.0"      "degree=0.0"          
+
+[35:48] 55> rep(1:3, each = c(10, 11, 3))
+ [1] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3
+Warning message:
+In rep(1:3, each = c(10, 11, 3)) : first element used of 'each' argument
+[41:39] 56> rep(1:3,  c(10, 11, 3))
+ [1] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 3 3 3
+[41:45] 57> ?rep
+WARNING: terminal is not fully functional
+-  (press RETURN)
+rep                    package:base                    R Documentation
+
+Replicate Elements of Vectors and Lists
+
+Description:
+
+     ‘rep’ replicates the values in ‘x’.  It is a generic function, and
+     the (internal) default method is described here.
+
+     ‘rep.int’ and ‘rep_len’ are faster simplified versions for two
+     common cases.  They are not generic.
+
+Usage:
+
+     rep(x, ...)
+     
+     rep.int(x, times)
+     
+     rep_len(x, length.out)
+     
+Arguments:
+
+       x: a vector (of any mode including a ‘list’) or a factor or (for
+          ‘rep’ only) a ‘POSIXct’ or ‘POSIXlt’ or ‘Date’ object; or an
+          S4 object containing such an object.
+
+     ...: further arguments to be passed to or from other methods.  For
+          the internal default method these can include:
+
+:q
+[42:25] 58> 
+[42:25] 58> rep(1:3, 5)
+ [1] 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3
+[42:41] 59> 
