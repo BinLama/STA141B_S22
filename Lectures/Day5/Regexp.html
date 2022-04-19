@@ -126,6 +126,23 @@ sub("dog", "cat", "The dogma of dog owners")
 # Regular Expression Language
 ## Core elements
 
++ literal matching
++ wildcard
++ start and end - meta characters - ^ and $
+   + escaping meta-characters  (\\)
++ character classes
+   + named character classes  ( [[:space:][:punct:]]
+   + complement set   ([^])
++ quantifiers - ?, *, +, {m,n}
++ alternates (|)
++ grouping  ()
++ back references  (\\1)
+
+
+---
+# Regular Expression Language
+## Core elements
+
 + Literal patterns  - "dog", "JAN"
 
 + Wildcard - matches anyt single character
@@ -281,6 +298,9 @@ gsub(".*([0-9]{1,2}-[A-Z]{3}-(19|20)[0-9]{2}).*", "\\1", x)
 
 + [regular-expressions.info](https://www.regular-expressions.info/)
 
++ [https://cheatography.com/davechild/cheat-sheets/regular-expressions\
+/](https://cheatography.com/davechild/cheat-sheets/regular-expressions\
+/)
 
 
 
