@@ -1,0 +1,1176 @@
+dtl[Day7-51]>find ~/Classes/Davis -name StateOfUnion 
+/Users/duncan/Classes/Davis/stat141bW20/Lectures/Regexp/StateOfUnion
+/Users/duncan/Classes/Davis/stat141-07/Data/StateOfUnion
+dtl[Day7-52]>cp /Users/duncan/Classes/Davis/stat141bW20/Lectures/Regexp/StateOfUnion .
+dtl[Day7-53]>git pull
+remote: Enumerating objects: 9, done.        
+remote: Counting objects: 100% (9/9), done.        
+remote: Compressing objects: 100% (1/1), done.        
+remote: Total 5 (delta 4), reused 5 (delta 4), pack-reused 0        
+Unpacking objects: 100% (5/5), done.
+From github.com:duncantl/STA141B_S22
+   7cf0de3..d6ab1e0  main       -> origin/main
+Updating 7cf0de3..d6ab1e0
+error: Your local changes to the following files would be overwritten by merge:
+	Lectures/Day7/slides.html
+Please commit your changes or stash them before you merge.
+Aborting
+dtl[Day7-54]>git add slides.html 
+dtl[Day7-55]>git commit -m ""
+Aborting commit due to empty commit message.
+dtl[Day7-56]>git commit -m "..."
+[main a2ce2ed] ...
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+dtl[Day7-57]>git pull
+Auto-merging Lectures/Day7/slides.html
+2022-04-19 10:21:15.468 Emacs-x86_64-10_9[87322:16029808] Failed to initialize color list unarchiver: Error Domain=NSCocoaErrorDomain Code=4864 "*** -[NSKeyedUnarchiver _initForReadingFromData:error:throwLegacyExceptions:]: non-keyed archive cannot be decoded by NSKeyedUnarchiver" UserInfo={NSDebugDescription=*** -[NSKeyedUnarchiver _initForReadingFromData:error:throwLegacyExceptions:]: non-keyed archive cannot be decoded by NSKeyedUnarchiver}
+Merge made by the 'recursive' strategy.
+ Lectures/Day7/slides.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+dtl[Day7-58]>open slides.html 
+dtl[Day7-59]>R
+
+R Under development (unstable) (2017-09-22 r73334) -- "Unsuffered Consequences"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin16.7.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 87405 
+Time = 2022-04-19 17:30:24 
+Dir = /Users/duncan/141b/Public/Lectures/Day7 
+Warning message:
+In as.POSIXlt.POSIXct(x, tz) :
+  unknown timezone 'zone/tz/2021a.3.0/zoneinfo/America/Los_Angeles'
+1> ll = readLines("~/141b/Assignments/RHelpArchives/RHelpArchives/2022-March.txt")
+[41:09] 2> length(ll)
+[1] 23927
+[41:12] 3> ll = ll[1:409]
+[41:58] 4> ll[1:2]
+[1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022"
+[2] "From: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)"           
+[43:09] 5> paste(ll[1:2], collapse = "")
+[1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022From: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)"
+[43:11] 6> paste(ll[1:2], collapse = "\n")
+[1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022\nFrom: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)"
+[44:28] 7> cat(paste(ll[1:2], collapse = "\n"))
+From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022
+From: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)[44:46] 8> 
+[44:46] 8> paste(ll, collapse = "\n")
+[1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022\nFrom: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)\nDate: Tue, 1 Mar 2022 03:47:00 +0000\nSubject: [R] setting zeros for the missing interval in data\nMessage-ID: <AS8P194MB0999458978E8F395C2D8DEC39A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>\n\nDear useRs,\n\nI have the following dataset which represents rainfall data at a 5-minute interval from 1 May 2021 to 30 September 2021.\n\n> dput(YY)\n\nstructure(list(?..CHANNEL = c(30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L), YEAR = c(2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L), TIMESTAMP = c(\"2021/05/02 10:00:00 PM\",\n\"2021/05/02 10:55:00 PM\", \"2021/05/04 05:40:00 PM\", \"2021/05/04 06:50:00 PM\",\n\"2021/05/05 03:05:00 AM\", \"2021/05/08 05:15:00 AM\", \"2021/05/08 05:20:00 AM\",\n\"2021/05/08 05:30:00 AM\", \"2021/05/08 05:50:00 AM\", \"2021/05/08 06:05:00 AM\",\n\"2021/05/08 07:15:00 AM\", \"2021/05/08 08:00:00 AM\", \"2021/05/08 08:05:00 AM\",\n\"2021/05/08 08:15:00 AM\", \"2021/05/08 08:35:00 AM\", \"2021/05/08 08:50:00 AM\",\n\"2021/05/08 09:05:00 AM\", \"2021/05/08 09:30:00 AM\", \"2021/05/08 09:45:00 AM\",\n\"2021/05/08 09:55:00 AM\", \"2021/05/08 10:10:00 AM\", \"2021/05/08 10:20:00 AM\",\n\"2021/05/08 10:40:00 AM\", \"2021/05/08 10:55:00 AM\", \"2021/05/08 11:15:00 AM\",\n\"2021/05/08 11:25:00 AM\", \"2021/05/08 11:35:00 AM\", \"2021/05/08 11:45:00 AM\",\n\"2021/05/08 11:50:00 AM\", \"2021/05/08 12:00:00 PM\", \"2021/05/08 12:05:00 PM\",\n\"2021/05/08 12:15:00 PM\", \"2021/05/08 12:20:00 PM\", \"2021/05/08 12:30:00 PM\",\n\"2021/05/08 12:35:00 PM\", \"2021/05/08 12:50:00 PM\", \"2021/05/08 01:35:00 PM\",\n\"2021/05/08 01:50:00 PM\", \"2021/05/08 02:20:00 PM\", \"2021/05/08 02:30:00 PM\",\n\"2021/05/08 02:35:00 PM\", \"2021/05/08 03:00:00 PM\", \"2021/05/08 03:35:00 PM\",\n\"2021/05/08 03:45:00 PM\", \"2021/05/08 04:30:00 PM\", \"2021/05/08 04:40:00 PM\",\n\"2021/05/08 04:55:00 PM\", \"2021/05/08 05:05:00 PM\", \"2021/05/08 05:20:00 PM\",\n\"2021/05/08 07:25:00 PM\", \"2021/05/08 09:00:00 PM\", \"2021/05/08 09:25:00 PM\",\n\"2021/05/08 09:50:00 PM\", \"2021/05/08 10:15:00 PM\", \"2021/05/08 10:40:00 PM\",\n\"2021/05/08 11:35:00 PM\", \"2021/05/09 12:40:00 AM\", \"2021/05/09 01:10:00 AM\",\n\"2021/05/09 02:10:00 AM\", \"2021/05/09 06:00:00 AM\", \"2021/05/09 02:40:00 PM\",\n\"2021/05/09 02:45:00 PM\", \"2021/05/09 02:50:00 PM\", \"2021/05/09 02:55:00 PM\",\n\"2021/05/09 03:00:00 PM\", \"2021/05/09 03:05:00 PM\", \"2021/05/09 03:10:00 PM\",\n\"2021/05/09 03:15:00 PM\", \"2021/05/09 03:20:00 PM\", \"2021/05/09 03:25:00 PM\",\n\"2021/05/09 03:30:00 PM\", \"2021/05/09 03:35:00 PM\", \"2021/05/09 03:40:00 PM\",\n\"2021/05/09 03:45:00 PM\", \"2021/05/09 03:50:00 PM\", \"2021/05/09 03:55:00 PM\",\n\"2021/05/09 04:00:00 PM\", \"2021/05/09 04:05:00 PM\", \"2021/05/09 04:10:00 PM\",\n\"2021/05/09 04:15:00 PM\", \"2021/05/09 04:25:00 PM\", \"2021/05/09 04:30:00 PM\",\n\"2021/05/09 04:35:00 PM\", \"2021/05/09 04:40:00 PM\", \"2021/05/09 04:45:00 PM\",\n\"2021/05/09 04:50:00 PM\", \"2021/05/09 05:00:00 PM\", \"2021/05/09 05:05:00 PM\",\n\"2021/05/09 05:10:00 PM\", \"2021/05/09 05:20:00 PM\", \"2021/05/09 05:25:00 PM\",\n\"2021/05/09 05:35:00 PM\", \"2021/05/09 05:45:00 PM\", \"2021/05/09 05:50:00 PM\",\n\"2021/05/09 06:00:00 PM\", \"2021/05/09 06:10:00 PM\", \"2021/05/09 06:20:00 PM\",\n\"2021/05/09 06:30:00 PM\", \"2021/05/09 06:40:00 PM\", \"2021/05/09 06:50:00 PM\"\n), RAINFALL = c(0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2\n)), row.names = c(276L, 286L, 599L, 773L, 829L, 951L, 955L, 971L,\n996L, 1014L, 1123L, 1242L, 1260L, 1301L, 1378L, 1422L, 1456L,\n1487L, 1504L, 1515L, 1539L, 1557L, 1597L, 1629L, 1679L, 1708L,\n1728L, 1757L, 1775L, 1803L, 1818L, 1846L, 1859L, 1882L, 1892L,\n1917L, 1983L, 2007L, 2050L, 2066L, 2077L, 2124L, 2190L, 2207L,\n2288L, 2309L, 2334L, 2351L, 2374L, 2518L, 2588L, 2600L, 2616L,\n2627L, 2639L, 2655L, 2674L, 2684L, 2725L, 2967L, 3826L, 3830L,\n3832L, 3838L, 3842L, 3845L, 3846L, 3851L, 3854L, 3856L, 3861L,\n3865L, 3868L, 3871L, 3873L, 3877L, 3880L, 3881L, 3885L, 3888L,\n3890L, 3893L, 3897L, 3899L, 3900L, 3902L, 3906L, 3907L, 3910L,\n3914L, 3915L, 3917L, 3920L, 3922L, 3923L, 3926L, 3928L, 3931L,\n3932L, 3933L), class = \"data.frame\")\n\nYou could clearly see that there are some intervals which are missing from this dataset. For example, the data values for 1st of May are missing. Similarly,\n\nbetween\n\n30 2021 2021/05/02 10:00:00 PM      0.2\n\nand\n\n30 2021 2021/05/02 10:55:00 PM      0.2\n\nthe values of rainfall depth for following \"time stamps\" are missing because they were \"zero\"\n\n30 2021 2021/05/02 10:05:00 PM      0.0\n\n30 2021 2021/05/02 10:10:00 PM      0.0\n\n30 2021 2021/05/02 10:15:00 PM      0.0\n\n30 2021 2021/05/02 10:20:00 PM      0.0\n\n30 2021 2021/05/02 10:25:00 PM      0.0\n\n30 2021 2021/05/02 10:30:00 PM      0.0\n\n30 2021 2021/05/02 10:35:00 PM      0.0\n\n30 2021 2021/05/02 10:40:00 PM      0.0\n\n30 2021 2021/05/02 10:45:00 PM      0.0\n\n30 2021 2021/05/02 10:50:00 PM      0.0\n\nSo, what I want is a uniform list starting from 2021/05/01 to 2021/09/30 at every 5-minute intervals with \"zero\" values for the missing intervals in the original data list. I hope my question is clear.\n\nThank You very much in advance,\n\nEliza\n\n\n\n[https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png]<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>     Virus-free. www.avg.com<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>\n\n\t[[alternative HTML version deleted]]\n\n\nFrom e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:52:47 2022\nFrom: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)\nDate: Tue, 1 Mar 2022 03:52:47 +0000\nSubject: [R] setting zeros for missing interval in data\nMessage-ID: <AS8P194MB0999415DA9E3164DB57EA9409A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>\n\n[The data setting in the last email might be faulty]\n\nDear useRs,\n\nI have the following dataset which represents rainfall data at a 5-minute interval from 1 May 2021 to 30 September 2021.\n\n> dput(YY)\n\nstructure(list(CHANNEL = c(30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,\n30L, 30L), YEAR = c(2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n2021L, 2021L, 2021L, 2021L), TIMESTAMP = c(\"2021/05/02 10:00:00 PM\",\n\"2021/05/02 10:55:00 PM\", \"2021/05/04 05:40:00 PM\", \"2021/05/04 06:50:00 PM\",\n\"2021/05/05 03:05:00 AM\", \"2021/05/08 05:15:00 AM\", \"2021/05/08 05:20:00 AM\",\n\"2021/05/08 05:30:00 AM\", \"2021/05/08 05:50:00 AM\", \"2021/05/08 06:05:00 AM\",\n\"2021/05/08 07:15:00 AM\", \"2021/05/08 08:00:00 AM\", \"2021/05/08 08:05:00 AM\",\n\"2021/05/08 08:15:00 AM\", \"2021/05/08 08:35:00 AM\", \"2021/05/08 08:50:00 AM\",\n\"2021/05/08 09:05:00 AM\", \"2021/05/08 09:30:00 AM\", \"2021/05/08 09:45:00 AM\",\n\"2021/05/08 09:55:00 AM\", \"2021/05/08 10:10:00 AM\", \"2021/05/08 10:20:00 AM\",\n\"2021/05/08 10:40:00 AM\", \"2021/05/08 10:55:00 AM\", \"2021/05/08 11:15:00 AM\",\n\"2021/05/08 11:25:00 AM\", \"2021/05/08 11:35:00 AM\", \"2021/05/08 11:45:00 AM\",\n\"2021/05/08 11:50:00 AM\", \"2021/05/08 12:00:00 PM\", \"2021/05/08 12:05:00 PM\",\n\"2021/05/08 12:15:00 PM\", \"2021/05/08 12:20:00 PM\", \"2021/05/08 12:30:00 PM\",\n\"2021/05/08 12:35:00 PM\", \"2021/05/08 12:50:00 PM\", \"2021/05/08 01:35:00 PM\",\n\"2021/05/08 01:50:00 PM\", \"2021/05/08 02:20:00 PM\", \"2021/05/08 02:30:00 PM\",\n\"2021/05/08 02:35:00 PM\", \"2021/05/08 03:00:00 PM\", \"2021/05/08 03:35:00 PM\",\n\"2021/05/08 03:45:00 PM\", \"2021/05/08 04:30:00 PM\", \"2021/05/08 04:40:00 PM\",\n\"2021/05/08 04:55:00 PM\", \"2021/05/08 05:05:00 PM\", \"2021/05/08 05:20:00 PM\",\n\"2021/05/08 07:25:00 PM\", \"2021/05/08 09:00:00 PM\", \"2021/05/08 09:25:00 PM\",\n\"2021/05/08 09:50:00 PM\", \"2021/05/08 10:15:00 PM\", \"2021/05/08 10:40:00 PM\",\n\"2021/05/08 11:35:00 PM\", \"2021/05/09 12:40:00 AM\", \"2021/05/09 01:10:00 AM\",\n\"2021/05/09 02:10:00 AM\", \"2021/05/09 06:00:00 AM\", \"2021/05/09 02:40:00 PM\",\n\"2021/05/09 02:45:00 PM\", \"2021/05/09 02:50:00 PM\", \"2021/05/09 02:55:00 PM\",\n\"2021/05/09 03:00:00 PM\", \"2021/05/09 03:05:00 PM\", \"2021/05/09 03:10:00 PM\",\n\"2021/05/09 03:15:00 PM\", \"2021/05/09 03:20:00 PM\", \"2021/05/09 03:25:00 PM\",\n\"2021/05/09 03:30:00 PM\", \"2021/05/09 03:35:00 PM\", \"2021/05/09 03:40:00 PM\",\n\"2021/05/09 03:45:00 PM\", \"2021/05/09 03:50:00 PM\", \"2021/05/09 03:55:00 PM\",\n\"2021/05/09 04:00:00 PM\", \"2021/05/09 04:05:00 PM\", \"2021/05/09 04:10:00 PM\",\n\"2021/05/09 04:15:00 PM\", \"2021/05/09 04:25:00 PM\", \"2021/05/09 04:30:00 PM\",\n\"2021/05/09 04:35:00 PM\", \"2021/05/09 04:40:00 PM\", \"2021/05/09 04:45:00 PM\",\n\"2021/05/09 04:50:00 PM\", \"2021/05/09 05:00:00 PM\", \"2021/05/09 05:05:00 PM\",\n\"2021/05/09 05:10:00 PM\", \"2021/05/09 05:20:00 PM\", \"2021/05/09 05:25:00 PM\",\n\"2021/05/09 05:35:00 PM\", \"2021/05/09 05:45:00 PM\", \"2021/05/09 05:50:00 PM\",\n\"2021/05/09 06:00:00 PM\", \"2021/05/09 06:10:00 PM\", \"2021/05/09 06:20:00 PM\",\n\"2021/05/09 06:30:00 PM\", \"2021/05/09 06:40:00 PM\", \"2021/05/09 06:50:00 PM\"\n), RAINFALL = c(0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2\n)), row.names = c(276L, 286L, 599L, 773L, 829L, 951L, 955L, 971L,\n996L, 1014L, 1123L, 1242L, 1260L, 1301L, 1378L, 1422L, 1456L,\n1487L, 1504L, 1515L, 1539L, 1557L, 1597L, 1629L, 1679L, 1708L,\n1728L, 1757L, 1775L, 1803L, 1818L, 1846L, 1859L, 1882L, 1892L,\n1917L, 1983L, 2007L, 2050L, 2066L, 2077L, 2124L, 2190L, 2207L,\n2288L, 2309L, 2334L, 2351L, 2374L, 2518L, 2588L, 2600L, 2616L,\n2627L, 2639L, 2655L, 2674L, 2684L, 2725L, 2967L, 3826L, 3830L,\n3832L, 3838L, 3842L, 3845L, 3846L, 3851L, 3854L, 3856L, 3861L,\n3865L, 3868L, 3871L, 3873L, 3877L, 3880L, 3881L, 3885L, 3888L,\n3890L, 3893L, 3897L, 3899L, 3900L, 3902L, 3906L, 3907L, 3910L,\n3914L, 3915L, 3917L, 3920L, 3922L, 3923L, 3926L, 3928L, 3931L,\n3932L, 3933L), class = \"data.frame\")\n\nYou could clearly see that there are some intervals which are missing from this dataset. For example, the data values for 1st of May are missing. Similarly,\n\nbetween\n\n30 2021 2021/05/02 10:00:00 PM      0.2\n\nand\n\n30 2021 2021/05/02 10:55:00 PM      0.2\n\nthe values of rainfall depth for following \"time stamps\" are missing because they were \"zero\"\n\n30 2021 2021/05/02 10:05:00 PM      0.0\n\n30 2021 2021/05/02 10:10:00 PM      0.0\n\n30 2021 2021/05/02 10:15:00 PM      0.0\n\n30 2021 2021/05/02 10:20:00 PM      0.0\n\n30 2021 2021/05/02 10:25:00 PM      0.0\n\n30 2021 2021/05/02 10:30:00 PM      0.0\n\n30 2021 2021/05/02 10:35:00 PM      0.0\n\n30 2021 2021/05/02 10:40:00 PM      0.0\n\n30 2021 2021/05/02 10:45:00 PM      0.0\n\n30 2021 2021/05/02 10:50:00 PM      0.0\n\nSo, what I want is a uniform list starting from 2021/05/01 to 2021/09/30 at every 5-minute intervals with \"zero\" values for the missing intervals in the original data list. I hope my question is clear.\n\nThank You very much in advance,\n\nEliza\n\n[https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png]<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>     Virus-free. www.avg.com<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>\n\n\t[[alternative HTML version deleted]]\n\n\nFrom drj|m|emon @end|ng |rom gm@||@com  Tue Mar  1 05:35:14 2022\nFrom: drj|m|emon @end|ng |rom gm@||@com (Jim Lemon)\nDate: Tue, 1 Mar 2022 15:35:14 +1100\nSubject: [R] setting zeros for the missing interval in data\nIn-Reply-To: <AS8P194MB0999458978E8F395C2D8DEC39A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>\nReferences: <AS8P194MB0999458978E8F395C2D8DEC39A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>\nMessage-ID: <CA+8X3fUYxCO147MN+k_c7c388ygJ9AnERLdypr3Re93VM+i1oQ@mail.gmail.com>\n\nHi Eliza,\nYour data wouldn't read for me, so I had to do some quick hacking to\nget something to work with. It's a bit long, so I've attached what may\nbe a solution as an R source file.\n\nJim\n\nOn Tue, Mar 1, 2022 at 2:47 PM Eliza Botto <eliza_botto at outlook.com>   C-c C-c^C2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,\n> 2021L, 2021L, 2021L, 2021L), TIMESTAMP = c(\"2021/05/02 10:00:00 PM\",\n> \"2021/05/02 10:55:00 PM\", \"2021/05/04 05:40:00 PM\", \"2021/05/04 06:50:00 PM\",\n> \"2021/05/05 03:05:00 AM\", \"2021/05/08 05:15:00 AM\", \"2021/05/08 05:20:00 AM\",\n> \"2021/05/08 05:30:00 AM\", \"2021/05/08 05:50:00 AM\", \"2021/05/08 06:05:00 AM\",\n> \"2021/05/08 07:15:00 AM\", \"2021/05/08 08:00:00 AM\", \"2021/05/08 08:05:00 AM\",\n> \"2021/05/08 08:15:00 AM\", \"2021/05/08 08:35:00 AM\", \"2021/05/08 08:50:00 AM\",\n> \"2021/05/08 09:05:00 AM\", \"2021/05/08 09:30:00 AM\", \"2021/05/08 09:45:00 AM\",\n> \"2021/05/08 09:55:00 AM\", \"2021/05/08 10:10:00 AM\", \"2021/05/08 10:20:00 AM\",\n> \"2021/05/08 10:40:00 AM\", \"2021/05/08 10:55:00 AM\", \"2021/05/08 11:15:00 AM\",\n> \"2021/05/08 11:25:00 AM\", \"2021/05/08 11:35:00 AM\", \"2021/05/08 11:45:00 AM\",\n> \"2021/05/08 11:50:00 AM\", \"2021/05/08 12:00:00 PM\", \"2021/05/08 12:05:00 PM\",\n> \"2021/05/08 12:15:00 PM\", \"2021/05/08 12:20:00 PM\", \"2021/05/08 12:30:00 PM\",\n> \"2021/05/08 12:35:00 PM\", \"2021/05/08 12:50:00 PM\", \"2021/05/08 01:35:00 PM\",\n> \"2021/05/08 01:50:00 PM\", \"2021/05/08 02:20:00 PM\", \"2021/05/08 02:30:00 PM\",\n> \"2021/05/08 02:35:00 PM\", \"2021/05/08 03:00:00 PM\", \"2021/05/08 03:35:00 PM\",\n> \"2021/05/08 03:45:00 PM\", \"2021/05/08 04:30:00 PM\", \"2021/05/08 04:40:00 PM\",\n> \"2021/05/08 04:55:00 PM\", \"2021/05/08 05:05:00 PM\", \"2021/05/08 05:20:00 PM\",\n> \"2021/05/08 07:25:00 PM\", \"2021/05/08 09:00:00 PM\", \"2021/05/08 09:25:00 PM\",\n> \"2021/05/08 09:50:00 PM\", \"2021/05/08 10:15:00 PM\", \"2021/05/08 10:40:00 PM\",\n> \"2021/05/08 11:35:00 PM\", \"2021/05/09 12:40:00 AM\", \"2021/05/09 01:10:00 AM\",\n> \"2021/05/09 02:10:00 AM\", \"2021/05/09 06:00:00 AM\", \"2021/05/09 02:40:00 PM\",\n> \"2021/05/09 02:45:00 PM\", \"2021/05/09 02:50:00 PM\", \"2021/05/09 02:55:00 PM\",\n> \"2021/05/09 03:00:00 PM\", \"2021/05/09 03:05:00 PM\", \"2021/05/09 03:10:00 PM\",\n> \"2021/05/09 03:15:00 PM\", \"2021/05/09 03:20:00 PM\", \"2021/05/09 03:25:00 PM\",\n> \"2021/05/09 03:30:00 PM\", \"2021/05/09 03:35:00 PM\", \"2021/05/09 03:40:00 PM\",\n> \"2021/05/09 03:45:00 PM\", \"2021/05/09 03:50:00 PM\", \"2021/05/09 03:55:00 PM\",\n> \"2021/05/09 04:00:00 PM\", \"2021/05/09 04:05:00 PM\", \"2021/05/09 04:10:00 PM\",\n> \"2021/05/09 04:15:00 PM\", \"2021/05/09 04:25:00 PM\", \"2021/05/09 04:30:00 PM\",\n> \"2021/05/09 04:35:00 PM\", \"2021/05/09 04:40:00 PM\", \"2021/05/09 04:45:00 PM\",\n> \"2021/05/09 04:50:00 PM\", \"2021/05/09 05:00:00 PM\", \"2021/05/09 05:05:00 PM\",\n> \"2021/05/09 05:10:00 PM\", \"2021/05/09 05:20:00 PM\", \"2021/05/09 05:25:00 PM\",\n> \"2021/05/09 05:35:00 PM\", \"2021/05/09 05:45:00 PM\", \"2021/05/09 05:50:00 PM\",\n> \"2021/05/09 06:00:00 PM\", \"2021/05/09 06:10:00 PM\", \"2021/05/09 06:20:00 PM\",\n> \"2021/05/09 06:30:00 PM\", \"2021/05/09 06:40:00 PM\", \"2021/05/09 06:50:00 PM\"\n> ), RAINFALL = c(0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,\n> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2\n> )), row.names = c(276L, 286L, 599L, 773L, 829L, 951L, 955L, 971L,\n> 996L, 1014L, 1123L, 1242L, 1260L, 1301L, 1378L, 1422L, 1456L,\n> 1487L, 1504L, 1515L, 1539L, 1557L, 1597L, 1629L, 1679L, 1708L,\n> 1728L, 1757L, 1775L, 1803L, 1818L, 1846L, 1859L, 1882L, 1892L,\n> 1917L, 1983L, 2007L, 2050L, 2066L, 2077L, 2124L, 2190L, 2207L,\n> 2288L, 2309L, 2334L, 2351L, 2374L, 2518L, 2588L, 2600L, 2616L,\n> 2627L, 2639L, 2655L, 2674L, 2684L, 2725L, 2967L, 3826L, 3830L,\n> 3832L, 3838L, 3842L, 3845L, 3846L, 3851L, 3854L, 3856L, 3861L,\n> 3865L, 3868L, 3871L, 3873L, 3877L, 3880L, 3881L, 3885L, 3888L,\n> 3890L, 3893L, 3897L, 3899L, 3900L, 3902L, 3906L, 3907L, 3910L,\n> 3914L, 3915L, 3917L, 3920L, 3922L, 3923L, 3926L, 3928L, 3931L,\n> 3932L, 3933L), class = \"data.frame\")\n>\n> You could clearly see that there are some intervals which are missing from this dataset. For example, the data values for 1st of May are missing. Similarly,\n>\n> between\n>\n> 30 2021 2021/05/02 10:00:00 PM      0.2\n>\n> and\n>\n> 30 2021 2021/05/02 10:55:00 PM      0.2\n>\n> the values of rainfall depth for following \"time stamps\" are missing because they were \"zero\"\n>\n> 30 2021 2021/05/02 10:05:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:10:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:15:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:20:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:25:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:30:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:35:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:40:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:45:00 PM      0.0\n>\n> 30 2021 2021/05/02 10:50:00 PM      0.0\n>\n> So, what I want is a uniform list starting from 2021/05/01 to 2021/09/30 at every 5-minute intervals with \"zero\" values for the missing intervals in the original data list. I hope my question is clear.\n>\n> Thank You very much in advance,\n>\n> Eliza\n>\n>\n>\n> [https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png]<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>     Virus-free. www.avg.com<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>\n>\n>         [[alternative HTML version deleted]]\n>\n> ______________________________________________\n> R-help at r-project.org mailing list -- To UNSUBSCRIBE and more, see\n> https://stat.ethz.ch/mailman/listinfo/r-help\n> PLEASE do read the posting guide http://www.R-project.org/posting-guide.html\n> and provide commented, minimal, self-contained, reproducible code.\n"
+[45:24] 9> 
+No suitable frames for recover()
+[45:24] 9> str = paste(ll, collapse = "\n")
+[45:38] 10> cat(str)
+From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022
+From: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)
+Date: Tue, 1 Mar 2022 03:47:00 +0000
+Subject: [R] setting zeros for the missing interval in data
+Message-ID: <AS8P194MB0999458978E8F395C2D8DEC39A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>
+
+Dear useRs,
+
+I have the following dataset which represents rainfall data at a 5-minute interval from 1 May 2021 to 30 September 2021.
+
+> dput(YY)
+
+structure(list(?..CHANNEL = c(30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L), YEAR = c(2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L), TIMESTAMP = c("2021/05/02 10:00:00 PM",
+"2021/05/02 10:55:00 PM", "2021/05/04 05:40:00 PM", "2021/05/04 06:50:00 PM",
+"2021/05/05 03:05:00 AM", "2021/05/08 05:15:00 AM", "2021/05/08 05:20:00 AM",
+"2021/05/08 05:30:00 AM", "2021/05/08 05:50:00 AM", "2021/05/08 06:05:00 AM",
+"2021/05/08 07:15:00 AM", "2021/05/08 08:00:00 AM", "2021/05/08 08:05:00 AM",
+"2021/05/08 08:15:00 AM", "2021/05/08 08:35:00 AM", "2021/05/08 08:50:00 AM",
+"2021/05/08 09:05:00 AM", "2021/05/08 09:30:00 AM", "2021/05/08 09:45:00 AM",
+"2021/05/08 09:55:00 AM", "2021/05/08 10:10:00 AM", "2021/05/08 10:20:00 AM",
+"2021/05/08 10:40:00 AM", "2021/05/08 10:55:00 AM", "2021/05/08 11:15:00 AM",
+"2021/05/08 11:25:00 AM", "2021/05/08 11:35:00 AM", "2021/05/08 11:45:00 AM",
+"2021/05/08 11:50:00 AM", "2021/05/08 12:00:00 PM", "2021/05/08 12:05:00 PM",
+"2021/05/08 12:15:00 PM", "2021/05/08 12:20:00 PM", "2021/05/08 12:30:00 PM",
+"2021/05/08 12:35:00 PM", "2021/05/08 12:50:00 PM", "2021/05/08 01:35:00 PM",
+"2021/05/08 01:50:00 PM", "2021/05/08 02:20:00 PM", "2021/05/08 02:30:00 PM",
+"2021/05/08 02:35:00 PM", "2021/05/08 03:00:00 PM", "2021/05/08 03:35:00 PM",
+"2021/05/08 03:45:00 PM", "2021/05/08 04:30:00 PM", "2021/05/08 04:40:00 PM",
+"2021/05/08 04:55:00 PM", "2021/05/08 05:05:00 PM", "2021/05/08 05:20:00 PM",
+"2021/05/08 07:25:00 PM", "2021/05/08 09:00:00 PM", "2021/05/08 09:25:00 PM",
+"2021/05/08 09:50:00 PM", "2021/05/08 10:15:00 PM", "2021/05/08 10:40:00 PM",
+"2021/05/08 11:35:00 PM", "2021/05/09 12:40:00 AM", "2021/05/09 01:10:00 AM",
+"2021/05/09 02:10:00 AM", "2021/05/09 06:00:00 AM", "2021/05/09 02:40:00 PM",
+"2021/05/09 02:45:00 PM", "2021/05/09 02:50:00 PM", "2021/05/09 02:55:00 PM",
+"2021/05/09 03:00:00 PM", "2021/05/09 03:05:00 PM", "2021/05/09 03:10:00 PM",
+"2021/05/09 03:15:00 PM", "2021/05/09 03:20:00 PM", "2021/05/09 03:25:00 PM",
+"2021/05/09 03:30:00 PM", "2021/05/09 03:35:00 PM", "2021/05/09 03:40:00 PM",
+"2021/05/09 03:45:00 PM", "2021/05/09 03:50:00 PM", "2021/05/09 03:55:00 PM",
+"2021/05/09 04:00:00 PM", "2021/05/09 04:05:00 PM", "2021/05/09 04:10:00 PM",
+"2021/05/09 04:15:00 PM", "2021/05/09 04:25:00 PM", "2021/05/09 04:30:00 PM",
+"2021/05/09 04:35:00 PM", "2021/05/09 04:40:00 PM", "2021/05/09 04:45:00 PM",
+"2021/05/09 04:50:00 PM", "2021/05/09 05:00:00 PM", "2021/05/09 05:05:00 PM",
+"2021/05/09 05:10:00 PM", "2021/05/09 05:20:00 PM", "2021/05/09 05:25:00 PM",
+"2021/05/09 05:35:00 PM", "2021/05/09 05:45:00 PM", "2021/05/09 05:50:00 PM",
+"2021/05/09 06:00:00 PM", "2021/05/09 06:10:00 PM", "2021/05/09 06:20:00 PM",
+"2021/05/09 06:30:00 PM", "2021/05/09 06:40:00 PM", "2021/05/09 06:50:00 PM"
+), RAINFALL = c(0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2
+)), row.names = c(276L, 286L, 599L, 773L, 829L, 951L, 955L, 971L,
+996L, 1014L, 1123L, 1242L, 1260L, 1301L, 1378L, 1422L, 1456L,
+1487L, 1504L, 1515L, 1539L, 1557L, 1597L, 1629L, 1679L, 1708L,
+1728L, 1757L, 1775L, 1803L, 1818L, 1846L, 1859L, 1882L, 1892L,
+1917L, 1983L, 2007L, 2050L, 2066L, 2077L, 2124L, 2190L, 2207L,
+2288L, 2309L, 2334L, 2351L, 2374L, 2518L, 2588L, 2600L, 2616L,
+2627L, 2639L, 2655L, 2674L, 2684L, 2725L, 2967L, 3826L, 3830L,
+3832L, 3838L, 3842L, 3845L, 3846L, 3851L, 3854L, 3856L, 3861L,
+3865L, 3868L, 3871L, 3873L, 3877L, 3880L, 3881L, 3885L, 3888L,
+3890L, 3893L, 3897L, 3899L, 3900L, 3902L, 3906L, 3907L, 3910L,
+3914L, 3915L, 3917L, 3920L, 3922L, 3923L, 3926L, 3928L, 3931L,
+3932L, 3933L), class = "data.frame")
+
+You could clearly see that there are some intervals which are missing from this dataset. For example, the data values for 1st of May are missing. Similarly,
+
+between
+
+30 2021 2021/05/02 10:00:00 PM      0.2
+
+and
+
+30 2021 2021/05/02 10:55:00 PM      0.2
+
+the values of rainfall depth for following "time stamps" are missing because they were "zero"
+
+30 2021 2021/05/02 10:05:00 PM      0.0
+
+30 2021 2021/05/02 10:10:00 PM      0.0
+
+30 2021 2021/05/02 10:15:00 PM      0.0
+
+30 2021 2021/05/02 10:20:00 PM      0.0
+
+30 2021 2021/05/02 10:25:00 PM      0.0
+
+30 2021 2021/05/02 10:30:00 PM      0.0
+
+30 2021 2021/05/02 10:35:00 PM      0.0
+
+30 2021 2021/05/02 10:40:00 PM      0.0
+
+30 2021 2021/05/02 10:45:00 PM      0.0
+
+30 2021 2021/05/02 10:50:00 PM      0.0
+
+So, what I want is a uniform list starting from 2021/05/01 to 2021/09/30 at every 5-minute intervals with "zero" values for the missing intervals in the original data list. I hope my question is clear.
+
+Thank You very much in advance,
+
+Eliza
+
+
+
+[https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png]<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>     Virus-free. www.avg.com<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>
+
+	[[alternative HTML version deleted]]
+
+
+From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:52:47 2022
+From: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)
+Date: Tue, 1 Mar 2022 03:52:47 +0000
+Subject: [R] setting zeros for missing interval in data
+Message-ID: <AS8P194MB0999415DA9E3164DB57EA9409A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>
+
+[The data setting in the last email might be faulty]
+
+Dear useRs,
+
+I have the following dataset which represents rainfall data at a 5-minute interval from 1 May 2021 to 30 September 2021.
+
+> dput(YY)
+
+structure(list(CHANNEL = c(30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+30L, 30L), YEAR = c(2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+2021L, 2021L, 2021L, 2021L), TIMESTAMP = c("2021/05/02 10:00:00 PM",
+"2021/05/02 10:55:00 PM", "2021/05/04 05:40:00 PM", "2021/05/04 06:50:00 PM",
+"2021/05/05 03:05:00 AM", "2021/05/08 05:15:00 AM", "2021/05/08 05:20:00 AM",
+"2021/05/08 05:30:00 AM", "2021/05/08 05:50:00 AM", "2021/05/08 06:05:00 AM",
+"2021/05/08 07:15:00 AM", "2021/05/08 08:00:00 AM", "2021/05/08 08:05:00 AM",
+"2021/05/08 08:15:00 AM", "2021/05/08 08:35:00 AM", "2021/05/08 08:50:00 AM",
+"2021/05/08 09:05:00 AM", "2021/05/08 09:30:00 AM", "2021/05/08 09:45:00 AM",
+"2021/05/08 09:55:00 AM", "2021/05/08 10:10:00 AM", "2021/05/08 10:20:00 AM",
+"2021/05/08 10:40:00 AM", "2021/05/08 10:55:00 AM", "2021/05/08 11:15:00 AM",
+"2021/05/08 11:25:00 AM", "2021/05/08 11:35:00 AM", "2021/05/08 11:45:00 AM",
+"2021/05/08 11:50:00 AM", "2021/05/08 12:00:00 PM", "2021/05/08 12:05:00 PM",
+"2021/05/08 12:15:00 PM", "2021/05/08 12:20:00 PM", "2021/05/08 12:30:00 PM",
+"2021/05/08 12:35:00 PM", "2021/05/08 12:50:00 PM", "2021/05/08 01:35:00 PM",
+"2021/05/08 01:50:00 PM", "2021/05/08 02:20:00 PM", "2021/05/08 02:30:00 PM",
+"2021/05/08 02:35:00 PM", "2021/05/08 03:00:00 PM", "2021/05/08 03:35:00 PM",
+"2021/05/08 03:45:00 PM", "2021/05/08 04:30:00 PM", "2021/05/08 04:40:00 PM",
+"2021/05/08 04:55:00 PM", "2021/05/08 05:05:00 PM", "2021/05/08 05:20:00 PM",
+"2021/05/08 07:25:00 PM", "2021/05/08 09:00:00 PM", "2021/05/08 09:25:00 PM",
+"2021/05/08 09:50:00 PM", "2021/05/08 10:15:00 PM", "2021/05/08 10:40:00 PM",
+"2021/05/08 11:35:00 PM", "2021/05/09 12:40:00 AM", "2021/05/09 01:10:00 AM",
+"2021/05/09 02:10:00 AM", "2021/05/09 06:00:00 AM", "2021/05/09 02:40:00 PM",
+"2021/05/09 02:45:00 PM", "2021/05/09 02:50:00 PM", "2021/05/09 02:55:00 PM",
+"2021/05/09 03:00:00 PM", "2021/05/09 03:05:00 PM", "2021/05/09 03:10:00 PM",
+"2021/05/09 03:15:00 PM", "2021/05/09 03:20:00 PM", "2021/05/09 03:25:00 PM",
+"2021/05/09 03:30:00 PM", "2021/05/09 03:35:00 PM", "2021/05/09 03:40:00 PM",
+"2021/05/09 03:45:00 PM", "2021/05/09 03:50:00 PM", "2021/05/09 03:55:00 PM",
+"2021/05/09 04:00:00 PM", "2021/05/09 04:05:00 PM", "2021/05/09 04:10:00 PM",
+"2021/05/09 04:15:00 PM", "2021/05/09 04:25:00 PM", "2021/05/09 04:30:00 PM",
+"2021/05/09 04:35:00 PM", "2021/05/09 04:40:00 PM", "2021/05/09 04:45:00 PM",
+"2021/05/09 04:50:00 PM", "2021/05/09 05:00:00 PM", "2021/05/09 05:05:00 PM",
+"2021/05/09 05:10:00 PM", "2021/05/09 05:20:00 PM", "2021/05/09 05:25:00 PM",
+"2021/05/09 05:35:00 PM", "2021/05/09 05:45:00 PM", "2021/05/09 05:50:00 PM",
+"2021/05/09 06:00:00 PM", "2021/05/09 06:10:00 PM", "2021/05/09 06:20:00 PM",
+"2021/05/09 06:30:00 PM", "2021/05/09 06:40:00 PM", "2021/05/09 06:50:00 PM"
+), RAINFALL = c(0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2
+)), row.names = c(276L, 286L, 599L, 773L, 829L, 951L, 955L, 971L,
+996L, 1014L, 1123L, 1242L, 1260L, 1301L, 1378L, 1422L, 1456L,
+1487L, 1504L, 1515L, 1539L, 1557L, 1597L, 1629L, 1679L, 1708L,
+1728L, 1757L, 1775L, 1803L, 1818L, 1846L, 1859L, 1882L, 1892L,
+1917L, 1983L, 2007L, 2050L, 2066L, 2077L, 2124L, 2190L, 2207L,
+2288L, 2309L, 2334L, 2351L, 2374L, 2518L, 2588L, 2600L, 2616L,
+2627L, 2639L, 2655L, 2674L, 2684L, 2725L, 2967L, 3826L, 3830L,
+3832L, 3838L, 3842L, 3845L, 3846L, 3851L, 3854L, 3856L, 3861L,
+3865L, 3868L, 3871L, 3873L, 3877L, 3880L, 3881L, 3885L, 3888L,
+3890L, 3893L, 3897L, 3899L, 3900L, 3902L, 3906L, 3907L, 3910L,
+3914L, 3915L, 3917L, 3920L, 3922L, 3923L, 3926L, 3928L, 3931L,
+3932L, 3933L), class = "data.frame")
+
+You could clearly see that there are some intervals which are missing from this dataset. For example, the data values for 1st of May are missing. Similarly,
+
+between
+
+30 2021 2021/05/02 10:00:00 PM      0.2
+
+and
+
+30 2021 2021/05/02 10:55:00 PM      0.2
+
+the values of rainfall depth for following "time stamps" are missing because they were "zero"
+
+30 2021 2021/05/02 10:05:00 PM      0.0
+
+30 2021 2021/05/02 10:10:00 PM      0.0
+
+30 2021 2021/05/02 10:15:00 PM      0.0
+
+30 2021 2021/05/02 10:20:00 PM      0.0
+
+30 2021 2021/05/02 10:25:00 PM      0.0
+
+30 2021 2021/05/02 10:30:00 PM      0.0
+
+30 2021 2021/05/02 10:35:00 PM      0.0
+
+30 2021 2021/05/02 10:40:00 PM      0.0
+
+30 2021 2021/05/02 10:45:00 PM      0.0
+
+30 2021 2021/05/02 10:50:00 PM      0.0
+
+So, what I want is a uniform list starting from 2021/05/01 to 2021/09/30 at every 5-minute intervals with "zero" values for the missing intervals in the original data list. I hope my question is clear.
+
+Thank You very much in advance,
+
+Eliza
+
+[https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png]<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>     Virus-free. www.avg.com<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>
+
+	[[alternative HTML version deleted]]
+
+
+From drj|m|emon @end|ng |rom gm@||@com  Tue Mar  1 05:35:14 2022
+From: drj|m|emon @end|ng |rom gm@||@com (Jim Lemon)
+Date: Tue, 1 Mar 2022 15:35:14 +1100
+Subject: [R] setting zeros for the missing interval in data
+In-Reply-To: <AS8P194MB0999458978E8F395C2D8DEC39A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>
+References: <AS8P194MB0999458978E8F395C2D8DEC39A029@AS8P194MB0999.EURP194.PROD.OUTLOOK.COM>
+Message-ID: <CA+8X3fUYxCO147MN+k_c7c388ygJ9AnERLdypr3Re93VM+i1oQ@mail.gmail.com>
+
+Hi Eliza,
+Your data wouldn't read for me, so I had to do some quick hacking to
+get something to work with. It's a bit long, so I've attached what may
+be a solution as an R source file.
+
+Jim
+
+On Tue, Mar 1, 2022 at 2:47 PM Eliza Botto <eliza_botto at outlook.com> wrote:
+>
+> Dear useRs,
+>
+> I have the following dataset which represents rainfall data at a 5-minute interval from 1 May 2021 to 30 September 2021.
+>
+> > dput(YY)
+>
+> structure(list(?..CHANNEL = c(30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L, 30L,
+> 30L, 30L), YEAR = c(2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,
+> 2021L, 2021L, 2021L, 2021L), TIMESTAMP = c("2021/05/02 10:00:00 PM",
+> "2021/05/02 10:55:00 PM", "2021/05/04 05:40:00 PM", "2021/05/04 06:50:00 PM",
+> "2021/05/05 03:05:00 AM", "2021/05/08 05:15:00 AM", "2021/05/08 05:20:00 AM",
+> "2021/05/08 05:30:00 AM", "2021/05/08 05:50:00 AM", "2021/05/08 06:05:00 AM",
+> "2021/05/08 07:15:00 AM", "2021/05/08 08:00:00 AM", "2021/05/08 08:05:00 AM",
+> "2021/05/08 08:15:00 AM", "2021/05/08 08:35:00 AM", "2021/05/08 08:50:00 AM",
+> "2021/05/08 09:05:00 AM", "2021/05/08 09:30:00 AM", "2021/05/08 09:45:00 AM",
+> "2021/05/08 09:55:00 AM", "2021/05/08 10:10:00 AM", "2021/05/08 10:20:00 AM",
+> "2021/05/08 10:40:00 AM", "2021/05/08 10:55:00 AM", "2021/05/08 11:15:00 AM",
+> "2021/05/08 11:25:00 AM", "2021/05/08 11:35:00 AM", "2021/05/08 11:45:00 AM",
+> "2021/05/08 11:50:00 AM", "2021/05/08 12:00:00 PM", "2021/05/08 12:05:00 PM",
+> "2021/05/08 12:15:00 PM", "2021/05/08 12:20:00 PM", "2021/05/08 12:30:00 PM",
+> "2021/05/08 12:35:00 PM", "2021/05/08 12:50:00 PM", "2021/05/08 01:35:00 PM",
+> "2021/05/08 01:50:00 PM", "2021/05/08 02:20:00 PM", "2021/05/08 02:30:00 PM",
+> "2021/05/08 02:35:00 PM", "2021/05/08 03:00:00 PM", "2021/05/08 03:35:00 PM",
+> "2021/05/08 03:45:00 PM", "2021/05/08 04:30:00 PM", "2021/05/08 04:40:00 PM",
+> "2021/05/08 04:55:00 PM", "2021/05/08 05:05:00 PM", "2021/05/08 05:20:00 PM",
+> "2021/05/08 07:25:00 PM", "2021/05/08 09:00:00 PM", "2021/05/08 09:25:00 PM",
+> "2021/05/08 09:50:00 PM", "2021/05/08 10:15:00 PM", "2021/05/08 10:40:00 PM",
+> "2021/05/08 11:35:00 PM", "2021/05/09 12:40:00 AM", "2021/05/09 01:10:00 AM",
+> "2021/05/09 02:10:00 AM", "2021/05/09 06:00:00 AM", "2021/05/09 02:40:00 PM",
+> "2021/05/09 02:45:00 PM", "2021/05/09 02:50:00 PM", "2021/05/09 02:55:00 PM",
+> "2021/05/09 03:00:00 PM", "2021/05/09 03:05:00 PM", "2021/05/09 03:10:00 PM",
+> "2021/05/09 03:15:00 PM", "2021/05/09 03:20:00 PM", "2021/05/09 03:25:00 PM",
+> "2021/05/09 03:30:00 PM", "2021/05/09 03:35:00 PM", "2021/05/09 03:40:00 PM",
+> "2021/05/09 03:45:00 PM", "2021/05/09 03:50:00 PM", "2021/05/09 03:55:00 PM",
+> "2021/05/09 04:00:00 PM", "2021/05/09 04:05:00 PM", "2021/05/09 04:10:00 PM",
+> "2021/05/09 04:15:00 PM", "2021/05/09 04:25:00 PM", "2021/05/09 04:30:00 PM",
+> "2021/05/09 04:35:00 PM", "2021/05/09 04:40:00 PM", "2021/05/09 04:45:00 PM",
+> "2021/05/09 04:50:00 PM", "2021/05/09 05:00:00 PM", "2021/05/09 05:05:00 PM",
+> "2021/05/09 05:10:00 PM", "2021/05/09 05:20:00 PM", "2021/05/09 05:25:00 PM",
+> "2021/05/09 05:35:00 PM", "2021/05/09 05:45:00 PM", "2021/05/09 05:50:00 PM",
+> "2021/05/09 06:00:00 PM", "2021/05/09 06:10:00 PM", "2021/05/09 06:20:00 PM",
+> "2021/05/09 06:30:00 PM", "2021/05/09 06:40:00 PM", "2021/05/09 06:50:00 PM"
+> ), RAINFALL = c(0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+> 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2
+> )), row.names = c(276L, 286L, 599L, 773L, 829L, 951L, 955L, 971L,
+> 996L, 1014L, 1123L, 1242L, 1260L, 1301L, 1378L, 1422L, 1456L,
+> 1487L, 1504L, 1515L, 1539L, 1557L, 1597L, 1629L, 1679L, 1708L,
+> 1728L, 1757L, 1775L, 1803L, 1818L, 1846L, 1859L, 1882L, 1892L,
+> 1917L, 1983L, 2007L, 2050L, 2066L, 2077L, 2124L, 2190L, 2207L,
+> 2288L, 2309L, 2334L, 2351L, 2374L, 2518L, 2588L, 2600L, 2616L,
+> 2627L, 2639L, 2655L, 2674L, 2684L, 2725L, 2967L, 3826L, 3830L,
+> 3832L, 3838L, 3842L, 3845L, 3846L, 3851L, 3854L, 3856L, 3861L,
+> 3865L, 3868L, 3871L, 3873L, 3877L, 3880L, 3881L, 3885L, 3888L,
+> 3890L, 3893L, 3897L, 3899L, 3900L, 3902L, 3906L, 3907L, 3910L,
+> 3914L, 3915L, 3917L, 3920L, 3922L, 3923L, 3926L, 3928L, 3931L,
+> 3932L, 3933L), class = "data.frame")
+>
+> You could clearly see that there are some intervals which are missing from this dataset. For example, the data values for 1st of May are missing. Similarly,
+>
+> between
+>
+> 30 2021 2021/05/02 10:00:00 PM      0.2
+>
+> and
+>
+> 30 2021 2021/05/02 10:55:00 PM      0.2
+>
+> the values of rainfall depth for following "time stamps" are missing because they were "zero"
+>
+> 30 2021 2021/05/02 10:05:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:10:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:15:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:20:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:25:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:30:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:35:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:40:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:45:00 PM      0.0
+>
+> 30 2021 2021/05/02 10:50:00 PM      0.0
+>
+> So, what I want is a uniform list starting from 2021/05/01 to 2021/09/30 at every 5-minute intervals with "zero" values for the missing intervals in the original data list. I hope my question is clear.
+>
+> Thank You very much in advance,
+>
+> Eliza
+>
+>
+>
+> [https://ipmcdn.avast.com/images/icons/icon-envelope-tick-green-avg-v1.png]<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>     Virus-free. www.avg.com<http://www.avg.com/email-signature?utm_medium=email&utm_source=link&utm_campaign=sig-email&utm_content=webmail>
+>
+>         [[alternative HTML version deleted]]
+>
+> ______________________________________________
+> R-help at r-project.org mailing list -- To UNSUBSCRIBE and more, see
+> https://stat.ethz.ch/mailman/listinfo/r-help
+> PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+> and provide commented, minimal, self-contained, reproducible code.
+[45:50] 11> length(str)
+[1] 1
+[46:06] 12> ll[1:2]
+[1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022"
+[2] "From: e||z@_botto @end|ng |rom out|ook@com (Eliza Botto)"           
+[47:43] 13> substring(str, 1, 100)
+[1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022\nFrom: e||z@_botto @end|ng |rom o"
+[55:58] 14> grep("From ", ll)
+[1]   1 132 263
+[57:04] 15> ll[23]
+[1] "2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L, 2021L,"
+[59:47] 16> ll2 = readLines("~/141b/Assignments/RHelpArchives/RHelpArchives/2022-March.txt")
+[00:55] 17> i = grep("From", ll2)
+[01:07] 18> length(i)
+[1] 732
+[01:09] 19> i = grep("From ", ll2)
+[01:30] 20> length(i)
+[1] 307
+[01:31] 21> ll2[i]
+  [1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022"                     
+  [2] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:52:47 2022"                     
+  [3] "From drj|m|emon @end|ng |rom gm@||@com  Tue Mar  1 05:35:14 2022"                        
+  [4] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar  1 05:46:34 2022"                    
+  [5] "From drj|m|emon @end|ng |rom gm@||@com  Tue Mar  1 05:59:43 2022"                        
+  [6] "From rmh @end|ng |rom temp|e@edu  Tue Mar  1 06:18:53 2022"                              
+  [7] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar  1 06:49:19 2022"                        
+  [8] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar  1 06:52:54 2022"                        
+  [9] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar  1 07:42:33 2022"                    
+ [10] "From edrenth @end|ng |rom |ry@ke-@k@demy@n|  Tue Mar  1 08:10:33 2022"                   
+ [11] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar  1 08:41:10 2022"                    
+ [12] "From m|n@h@|| @end|ng |rom um|ch@edu  Tue Mar  1 15:13:56 2022"                          
+ [13] "From Ro@@@Boy|@n @end|ng |rom uc@|@edu  Wed Mar  2 02:51:04 2022"                        
+ [14] "From @kw@|mmo @end|ng |rom gm@||@com  Wed Mar  2 03:50:31 2022"                          
+ [15] "From mtenneke@ @end|ng |rom gm@||@com  Wed Mar  2 10:52:04 2022"                         
+ [16] "From pd@|gd @end|ng |rom gm@||@com  Wed Mar  2 23:11:57 2022"                            
+ [17] "From p@u|bern@|07 @end|ng |rom gm@||@com  Wed Mar  2 23:54:43 2022"                      
+ [18] "From bgunter@4567 @end|ng |rom gm@||@com  Thu Mar  3 00:07:17 2022"                      
+ [19] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Thu Mar  3 00:27:58 2022"                    
+ [20] "From @v|gro@@ @end|ng |rom ver|zon@net  Thu Mar  3 02:02:03 2022"                        
+ [21] "From @v|gro@@ @end|ng |rom ver|zon@net  Thu Mar  3 02:08:10 2022"                        
+ [22] "From er|cjberger @end|ng |rom gm@||@com  Thu Mar  3 07:50:58 2022"                       
+ [23] "From @tch|rume @end|ng |rom gm@||@com  Thu Mar  3 08:43:32 2022"                         
+ [24] "From mtenneke@ @end|ng |rom gm@||@com  Thu Mar  3 11:03:44 2022"                         
+ [25] " From xdpyinfo I got"                                                                    
+ [26] "From n@d|ne@@|o|@b| @end|ng |rom gm@||@com  Thu Mar  3 13:15:35 2022"                    
+ [27] "From |r@|nj @end|ng |rom gm@||@com  Thu Mar  3 20:48:52 2022"                            
+ [28] "From phh@80 @end|ng |rom gm@||@com  Thu Mar  3 22:00:08 2022"                            
+ [29] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Thu Mar  3 22:01:29 2022"                    
+ [30] "From twoo|m@n @end|ng |rom ont@rgettek@com  Thu Mar  3 22:04:15 2022"                    
+ [31] "From phh@80 @end|ng |rom gm@||@com  Thu Mar  3 22:11:46 2022"                            
+ [32] "From drj|m|emon @end|ng |rom gm@||@com  Thu Mar  3 23:29:26 2022"                        
+ [33] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Thu Mar  3 23:36:02 2022"                    
+ [34] "From drj|m|emon @end|ng |rom gm@||@com  Thu Mar  3 23:38:38 2022"                        
+ [35] "From @@r@h@go@|ee @end|ng |rom gm@||@com  Thu Mar  3 23:43:00 2022"                      
+ [36] "From phh@80 @end|ng |rom gm@||@com  Fri Mar  4 00:01:05 2022"                            
+ [37] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar  4 00:06:39 2022"                        
+ [38] "From @rth|en @end|ng |rom gm@||@com  Thu Mar  3 20:11:53 2022"                           
+ [39] "From m|m@|tr@ @end|ng |rom gmx@com  Fri Mar  4 06:00:06 2022"                            
+ [40] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar  4 09:47:57 2022"                       
+ [41] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Fri Mar  4 10:26:03 2022"                    
+ [42] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar  4 10:32:58 2022"                       
+ [43] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar  4 11:13:23 2022"                       
+ [44] "From phh@80 @end|ng |rom gm@||@com  Fri Mar  4 11:41:24 2022"                            
+ [45] "From @rth|en @end|ng |rom gm@||@com  Fri Mar  4 10:21:05 2022"                           
+ [46] "From @rth|en @end|ng |rom gm@||@com  Fri Mar  4 10:53:29 2022"                           
+ [47] "From ||809 @end|ng |rom nc|@c@  Fri Mar  4 14:23:43 2022"                                
+ [48] "From kry|ov@r00t @end|ng |rom gm@||@com  Fri Mar  4 14:34:03 2022"                       
+ [49] "From ||809 @end|ng |rom nc|@c@  Fri Mar  4 15:59:45 2022"                                
+ [50] "From @rth|en @end|ng |rom gm@||@com  Fri Mar  4 16:17:17 2022"                           
+ [51] "From c@r| @end|ng |rom w|ttho|t@com  Fri Mar  4 17:45:39 2022"                           
+ [52] "From dw|n@em|u@ @end|ng |rom comc@@t@net  Fri Mar  4 17:58:30 2022"                      
+ [53] "From m|m@|tr@ @end|ng |rom gmx@com  Fri Mar  4 18:03:18 2022"                            
+ [54] "From dw|n@em|u@ @end|ng |rom comc@@t@net  Fri Mar  4 18:34:15 2022"                      
+ [55] "From phh@80 @end|ng |rom gm@||@com  Fri Mar  4 18:45:01 2022"                            
+ [56] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Fri Mar  4 21:13:40 2022"                    
+ [57] "From @rr@ypro|||e @end|ng |rom y@hoo@com  Sat Mar  5 01:41:57 2022"                      
+ [58] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sat Mar  5 01:56:16 2022"                    
+ [59] "From @rr@ypro|||e @end|ng |rom y@hoo@com  Sat Mar  5 02:05:59 2022"                      
+ [60] "From j|ox @end|ng |rom mcm@@ter@c@  Sat Mar  5 03:09:58 2022"                            
+ [61] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar  5 03:13:00 2022"                      
+ [62] "From er|ch@@ub@ @end|ng |rom neuw|rth@pr|v@@t  Mon Mar  7 13:21:11 2022"                 
+ [63] "From |8|5h9 @end|ng |rom gm@||@com  Mon Mar  7 10:14:59 2022"                            
+ [64] "From dj@ndr|j@ @end|ng |rom gm@||@com  Mon Mar  7 15:01:46 2022"                         
+ [65] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Mon Mar  7 17:19:15 2022"                    
+ [66] "From m@rc_@chw@rtz @end|ng |rom me@com  Mon Mar  7 19:28:51 2022"                        
+ [67] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  8 07:21:51 2022"                     
+ [68] "From t@v|b@r @end|ng |rom gm@||@com  Tue Mar  8 10:11:02 2022"                           
+ [69] "From dh@rm@ @end|ng |rom metr|cuk@com  Tue Mar  8 11:25:19 2022"                         
+ [70] "From kry|ov@r00t @end|ng |rom gm@||@com  Tue Mar  8 11:54:49 2022"                       
+ [71] "From btupper @end|ng |rom b|ge|ow@org  Tue Mar  8 13:15:12 2022"                         
+ [72] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar  8 15:54:21 2022"                      
+ [73] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Wed Mar  9 13:57:36 2022"                       
+ [74] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar  9 14:14:20 2022"                       
+ [75] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Wed Mar  9 14:16:47 2022"                       
+ [76] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar  9 14:42:18 2022"                       
+ [77] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar  9 18:21:26 2022"                    
+ [78] "From xwu @end|ng |rom em@||@t@mu@edu  Tue Mar  8 03:51:40 2022"                          
+ [79] "From kw@@t@t @end|ng |rom gm@||@com  Wed Mar  9 23:14:08 2022"                           
+ [80] "From me||n@@co|nte @end|ng |rom out|ook@|r  Tue Mar  8 21:44:35 2022"                    
+ [81] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Thu Mar 10 08:56:36 2022"                       
+ [82] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 10 09:03:05 2022"                       
+ [83] "From pd@me@ @end|ng |rom cb@@dk  Thu Mar 10 10:41:55 2022"                               
+ [84] "From petr@p|k@| @end|ng |rom prechez@@cz  Thu Mar 10 10:55:04 2022"                      
+ [85] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Thu Mar 10 16:50:23 2022"                       
+ [86] "From @kw@|mmo @end|ng |rom gm@||@com  Thu Mar 10 17:15:17 2022"                          
+ [87] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Thu Mar 10 17:24:59 2022"                    
+ [88] "From tebert @end|ng |rom u||@edu  Thu Mar 10 18:58:35 2022"                              
+ [89] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Fri Mar 11 08:24:27 2022"                       
+ [90] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Fri Mar 11 08:47:15 2022"                    
+ [91] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Fri Mar 11 09:48:51 2022"                       
+ [92] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar 11 10:14:10 2022"                        
+ [93] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Fri Mar 11 10:15:50 2022"                       
+ [94] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 15:14:52 2022"                     
+ [95] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar 11 15:21:05 2022"                       
+ [96] "From chr|@ho|d @end|ng |rom p@yctc@org  Fri Mar 11 15:21:39 2022"                        
+ [97] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 15:27:40 2022"                     
+ [98] "From kry|ov@r00t @end|ng |rom gm@||@com  Fri Mar 11 15:30:16 2022"                       
+ [99] "From petr@p|k@| @end|ng |rom prechez@@cz  Fri Mar 11 15:50:24 2022"                      
+[100] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar 11 16:24:03 2022"                        
+[101] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 16:43:49 2022"                     
+[102] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 18:49:52 2022"                     
+[103] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar 11 20:31:50 2022"                        
+[104] "From p@u|bern@|07 @end|ng |rom gm@||@com  Sat Mar 12 17:42:28 2022"                      
+[105] "From tebert @end|ng |rom u||@edu  Sat Mar 12 17:48:24 2022"                              
+[106] "From @pencer@gr@ve@ @end|ng |rom e||ect|vede|en@e@org  Sat Mar 12 17:49:11 2022"         
+[107] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sat Mar 12 18:04:30 2022"                    
+[108] "From kt1572757 @end|ng |rom gm@||@com  Sat Mar 12 22:29:58 2022"                         
+[109] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sat Mar 12 18:47:33 2022"                    
+[110] "From p@u|bern@|07 @end|ng |rom gm@||@com  Sat Mar 12 18:49:30 2022"                      
+[111] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar 12 19:33:38 2022"                      
+[112] "From tebert @end|ng |rom u||@edu  Sat Mar 12 19:37:41 2022"                              
+[113] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar 12 21:14:41 2022"                      
+[114] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar 12 23:17:32 2022"                      
+[115] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 13 10:17:37 2022"                    
+[116] "From er|ch@@ub@ @end|ng |rom neuw|rth@pr|v@@t  Sun Mar 13 13:51:04 2022"                 
+[117] "From @v|gro@@ @end|ng |rom ver|zon@net  Sun Mar 13 20:33:28 2022"                        
+[118] "From r@oknz @end|ng |rom gm@||@com  Mon Mar 14 01:36:33 2022"                            
+[119] "From @v|gro@@ @end|ng |rom ver|zon@net  Mon Mar 14 02:05:50 2022"                        
+[120] "From |@rchuby @end|ng |rom gm@||@com  Mon Mar 14 17:12:52 2022"                          
+[121] "From cry@n @end|ng |rom b|ngh@mton@edu  Mon Mar 14 17:26:56 2022"                        
+[122] "From tebert @end|ng |rom u||@edu  Mon Mar 14 17:39:41 2022"                              
+[123] "From er|ch@@ub@ @end|ng |rom neuw|rth@pr|v@@t  Mon Mar 14 18:02:39 2022"                 
+[124] "From @@chre|b @end|ng |rom u@|bert@@c@  Mon Mar 14 18:07:09 2022"                        
+[125] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 14 18:11:30 2022"                      
+[126] "From cry@n @end|ng |rom b|ngh@mton@edu  Mon Mar 14 18:32:28 2022"                        
+[127] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 14 18:51:26 2022"                      
+[128] "From kt1572757 @end|ng |rom gm@||@com  Mon Mar 14 18:51:35 2022"                         
+[129] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Mon Mar 14 18:52:49 2022"                        
+[130] "From w||||@mwdun|@p @end|ng |rom gm@||@com  Mon Mar 14 19:36:42 2022"                    
+[131] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar 15 02:21:11 2022"                        
+[132] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar 15 02:40:39 2022"                    
+[133] "From ht @end|ng |rom he@therturner@net  Mon Mar 14 20:11:42 2022"                        
+[134] "From j|x|@ngwu05 @end|ng |rom gm@||@com  Tue Mar 15 18:12:44 2022"                       
+[135] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Tue Mar 15 18:27:03 2022"                         
+[136] "From d@kot@judo @end|ng |rom m@c@com  Tue Mar 15 19:00:38 2022"                          
+[137] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 15 19:20:06 2022"                      
+[138] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar 15 19:31:40 2022"                        
+[139] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Tue Mar 15 21:15:19 2022"                         
+[140] "From kry|ov@r00t @end|ng |rom gm@||@com  Tue Mar 15 21:50:07 2022"                       
+[141] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Tue Mar 15 22:25:56 2022"                         
+[142] "From tebert @end|ng |rom u||@edu  Tue Mar 15 22:31:28 2022"                              
+[143] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Tue Mar 15 23:42:23 2022"                        
+[144] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 16 00:11:42 2022"                      
+[145] "From hruodr @end|ng |rom gm@||@com  Tue Mar 15 20:27:13 2022"                            
+[146] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 16 12:19:34 2022"                       
+[147] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Wed Mar 16 19:36:50 2022"                         
+[148] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Wed Mar 16 21:10:11 2022"                         
+[149] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 16 23:44:04 2022"                      
+[150] "From @pencer@gr@ve@ @end|ng |rom e||ect|vede|en@e@org  Thu Mar 17 00:47:19 2022"         
+[151] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 17 16:26:42 2022"                       
+[152] "From j|ox @end|ng |rom mcm@@ter@c@  Thu Mar 17 16:13:02 2022"                            
+[153] "From j|ox @end|ng |rom mcm@@ter@c@  Thu Mar 17 17:51:22 2022"                            
+[154] "From konr@d_kr@emer @end|ng |rom y@hoo@de  Thu Mar 17 15:17:13 2022"                     
+[155] "From rmh @end|ng |rom temp|e@edu  Thu Mar 17 19:06:00 2022"                              
+[156] "From bgunter@4567 @end|ng |rom gm@||@com  Thu Mar 17 19:30:09 2022"                      
+[157] "From du@@@@dr|@n @end|ng |rom gm@||@com  Thu Mar 17 12:19:03 2022"                       
+[158] "From kev|n@thorpe @end|ng |rom utoronto@c@  Thu Mar 17 19:06:41 2022"                    
+[159] "From r@ywong @end|ng |rom t@mu@edu  Fri Mar 18 05:25:58 2022"                            
+[160] "From hruodr @end|ng |rom gm@||@com  Fri Mar 18 08:47:11 2022"                            
+[161] "I could do something like .Tcl(\"source file.tcl\"). From there I can"                   
+[162] "From ||ndbrook @end|ng |rom gm@||@com  Thu Mar 17 18:26:53 2022"                         
+[163] "From pd@me@ @end|ng |rom cb@@dk  Fri Mar 18 11:24:02 2022"                               
+[164] "From b@row||ng@on @end|ng |rom |@nc@@ter@@c@uk  Fri Mar 18 11:30:10 2022"                
+[165] "From ce@g|guere @end|ng |rom gm@||@com  Thu Mar 17 20:38:14 2022"                        
+[166] "From murdoch@dunc@n @end|ng |rom gm@||@com  Sat Mar 19 11:52:22 2022"                    
+[167] "From murdoch@dunc@n @end|ng |rom gm@||@com  Sat Mar 19 13:35:14 2022"                    
+[168] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:15:34 2022"                     
+[169] "From twoo|m@n @end|ng |rom ont@rgettek@com  Sun Mar 20 02:19:30 2022"                    
+[170] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:23:02 2022"                     
+[171] "From twoo|m@n @end|ng |rom ont@rgettek@com  Sun Mar 20 02:27:07 2022"                    
+[172] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:31:19 2022"                     
+[173] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:38:01 2022"                     
+[174] "From twoo|m@n @end|ng |rom ont@rgettek@com  Sun Mar 20 02:48:26 2022"                    
+[175] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 02:54:50 2022"                    
+[176] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:55:56 2022"                     
+[177] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 03:05:53 2022"                     
+[178] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 02:51:09 2022"                    
+[179] "From bgunter@4567 @end|ng |rom gm@||@com  Sun Mar 20 04:44:42 2022"                      
+[180] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 08:09:05 2022"                       
+[181] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 08:38:39 2022"                    
+[182] "From deep@y@n@@@rk@r @end|ng |rom gm@||@com  Sun Mar 20 09:06:25 2022"                   
+[183] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 10:40:25 2022"                       
+[184] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 10:41:38 2022"                       
+[185] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Sun Mar 20 13:22:08 2022"                        
+[186] "From wo||g@ng@v|echtb@uer @end|ng |rom m@@@tr|chtun|ver@|ty@n|  Sun Mar 20 13:45:45 2022"
+[187] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 14:04:21 2022"                       
+[188] "From m@nugo@w@m| @end|ng |rom hotm@||@com  Sun Mar 20 08:54:59 2022"                     
+[189] "From h@@||z@ru@m||| @end|ng |rom gm@||@com  Sun Mar 20 15:33:52 2022"                    
+[190] "From bgunter@4567 @end|ng |rom gm@||@com  Sun Mar 20 20:28:29 2022"                      
+[191] "From n|ckmwr@y @end|ng |rom gm@||@com  Sun Mar 20 23:02:53 2022"                         
+[192] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 23:23:01 2022"                    
+[193] "From @kw@|mmo @end|ng |rom gm@||@com  Sun Mar 20 23:24:41 2022"                          
+[194] "From tebert @end|ng |rom u||@edu  Sun Mar 20 23:27:38 2022"                              
+[195] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Sun Mar 20 23:47:18 2022"                        
+[196] "From kt1572757 @end|ng |rom gm@||@com  Mon Mar 21 01:56:54 2022"                         
+[197] "From drj|m|emon @end|ng |rom gm@||@com  Mon Mar 21 02:40:58 2022"                        
+[198] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 21 03:02:17 2022"                      
+[199] "From er|cjberger @end|ng |rom gm@||@com  Mon Mar 21 05:47:13 2022"                       
+[200] "From j|ox @end|ng |rom mcm@@ter@c@  Mon Mar 21 15:30:23 2022"                            
+[201] "From m@nugo@w@m| @end|ng |rom hotm@||@com  Mon Mar 21 12:33:36 2022"                     
+[202] "From yuey|n505 @end|ng |rom gm@||@com  Mon Mar 21 16:54:02 2022"                         
+[203] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 21 17:51:35 2022"                      
+[204] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Mon Mar 21 18:02:41 2022"                    
+[205] "From kry|ov@r00t @end|ng |rom gm@||@com  Mon Mar 21 18:21:17 2022"                       
+[206] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 01:03:30 2022"                    
+[207] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar 22 01:40:46 2022"                    
+[208] "From tebert @end|ng |rom u||@edu  Tue Mar 22 01:44:17 2022"                              
+[209] "From bj@@m|@r@ @end|ng |rom gm@||@com  Tue Mar 22 04:17:54 2022"                         
+[210] "From j|n||68 @end|ng |rom gm@||@com  Tue Mar 22 05:07:56 2022"                           
+[211] "From r-p@ck@ge@ @end|ng |rom r-project@org  Mon Mar 21 20:35:06 2022"                    
+[212] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 11:32:32 2022"                    
+[213] "From tebert @end|ng |rom u||@edu  Tue Mar 22 13:15:01 2022"                              
+[214] "From JH@rm@e @end|ng |rom roku@com  Tue Mar 22 15:20:19 2022"                            
+[215] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 15:48:25 2022"                    
+[216] "From tebert @end|ng |rom u||@edu  Tue Mar 22 16:34:13 2022"                              
+[217] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 17:03:21 2022"                    
+[218] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 17:12:00 2022"                      
+[219] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 17:18:59 2022"                    
+[220] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 17:30:37 2022"                      
+[221] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar 22 17:33:14 2022"                    
+[222] "From tebert @end|ng |rom u||@edu  Tue Mar 22 17:49:29 2022"                              
+[223] "From tebert @end|ng |rom u||@edu  Tue Mar 22 17:54:59 2022"                              
+[224] "From tebert @end|ng |rom u||@edu  Tue Mar 22 18:27:28 2022"                              
+[225] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 19:02:54 2022"                      
+[226] "From tebert @end|ng |rom u||@edu  Tue Mar 22 19:37:20 2022"                              
+[227] "From m@rn@@w@g|ey @end|ng |rom gm@||@com  Tue Mar 22 21:45:14 2022"                      
+[228] "From ||nd@@@m||e@@te|@n@@on @end|ng |rom gm@||@com  Tue Mar 22 21:51:19 2022"            
+[229] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 23:21:56 2022"                      
+[230] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Tue Mar 22 23:33:56 2022"                        
+[231] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Wed Mar 23 06:50:28 2022"                        
+[232] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 23 07:48:41 2022"                       
+[233] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 10:38:34 2022"          
+[234] "From tebert @end|ng |rom u||@edu  Wed Mar 23 11:15:23 2022"                              
+[235] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 11:27:50 2022"          
+[236] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 23 11:33:52 2022"                       
+[237] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 11:48:44 2022"          
+[238] "From deep@y@n@@@rk@r @end|ng |rom gm@||@com  Wed Mar 23 12:05:00 2022"                   
+[239] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 13:32:05 2022"          
+[240] "From n|ckmwr@y @end|ng |rom gm@||@com  Wed Mar 23 17:51:05 2022"                         
+[241] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 23 18:58:38 2022"                      
+[242] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar 23 19:29:46 2022"                    
+[243] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 19:44:01 2022"                
+[244] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 19:50:39 2022"                
+[245] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar 23 20:31:46 2022"                    
+[246] "From j|ox @end|ng |rom mcm@@ter@c@  Wed Mar 23 20:34:30 2022"                            
+[247] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar 23 20:36:27 2022"                    
+[248] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 23 20:42:02 2022"                      
+[249] "From btupper @end|ng |rom b|ge|ow@org  Wed Mar 23 20:42:11 2022"                         
+[250] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 23 20:47:00 2022"                      
+[251] "From j|ox @end|ng |rom mcm@@ter@c@  Wed Mar 23 21:13:55 2022"                            
+[252] "From nev||@@mo@ @end|ng |rom gm@||@com  Wed Mar 23 21:46:16 2022"                        
+[253] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 22:26:34 2022"                
+[254] "From dc@r|@on @end|ng |rom t@mu@edu  Wed Mar 23 22:26:39 2022"                           
+[255] "> This Message Is From an External Sender"                                               
+[256] "From henr|k@bengt@@on @end|ng |rom gm@||@com  Wed Mar 23 22:36:21 2022"                  
+[257] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 23:16:32 2022"                
+[258] ">> This Message Is From an External Sender"                                              
+[259] "From @v|gro@@ @end|ng |rom ver|zon@net  Thu Mar 24 01:05:15 2022"                        
+[260] "> This Message Is From an External Sender"                                               
+[261] "From t@n@@@ @end|ng |rom gm@||@com  Thu Mar 24 01:40:32 2022"                            
+[262] "From bgunter@4567 @end|ng |rom gm@||@com  Thu Mar 24 01:52:29 2022"                      
+[263] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Thu Mar 24 02:41:58 2022"                    
+[264] "From t@n@@@ @end|ng |rom gm@||@com  Thu Mar 24 02:45:03 2022"                            
+[265] "From dw|n@em|u@ @end|ng |rom comc@@t@net  Thu Mar 24 06:57:25 2022"                      
+[266] "From j@w|eczo @end|ng |rom co|by@edu  Tue Mar 22 21:07:51 2022"                          
+[267] "From h@@||z@ru@m||| @end|ng |rom gm@||@com  Wed Mar 23 03:46:35 2022"                    
+[268] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Thu Mar 24 13:34:12 2022"                
+[269] ">> This Message Is From an External Sender"                                              
+[270] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 13:54:46 2022"                         
+[271] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 24 14:05:11 2022"                       
+[272] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 13:51:57 2022"                         
+[273] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 14:29:45 2022"                         
+[274] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 24 14:38:42 2022"                       
+[275] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 15:00:35 2022"                         
+[276] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 24 15:10:09 2022"                       
+[277] "From t@n@@@ @end|ng |rom gm@||@com  Fri Mar 25 04:33:39 2022"                            
+[278] "From kry|ov@r00t @end|ng |rom gm@||@com  Fri Mar 25 08:50:50 2022"                       
+[279] "From r@oknz @end|ng |rom gm@||@com  Fri Mar 25 12:44:01 2022"                            
+[280] "From j|n||68 @end|ng |rom gm@||@com  Sat Mar 26 01:31:09 2022"                           
+[281] "From r@oknz @end|ng |rom gm@||@com  Sat Mar 26 07:50:50 2022"                            
+[282] "From h@@||z@ru@m||| @end|ng |rom gm@||@com  Mon Mar 28 09:34:50 2022"                    
+[283] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Wed Mar 30 04:47:02 2022"                     
+[284] "From er|cjberger @end|ng |rom gm@||@com  Wed Mar 30 05:35:36 2022"                       
+[285] "From @v|gro@@ @end|ng |rom ver|zon@net  Wed Mar 30 05:39:31 2022"                        
+[286] "From petr@p|k@| @end|ng |rom prechez@@cz  Wed Mar 30 07:59:13 2022"                      
+[287] "From gor@n@bro@trom @end|ng |rom umu@@e  Wed Mar 30 11:27:05 2022"                       
+[288] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 30 11:48:51 2022"                       
+[289] "From er|cjberger @end|ng |rom gm@||@com  Wed Mar 30 11:49:26 2022"                       
+[290] "From gor@n@bro@trom @end|ng |rom umu@@e  Wed Mar 30 12:43:52 2022"                       
+[291] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 30 13:01:12 2022"                       
+[292] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Wed Mar 30 13:21:12 2022"                     
+[293] "From gor@n@bro@trom @end|ng |rom umu@@e  Wed Mar 30 14:39:52 2022"                       
+[294] "From w||||@mwdun|@p @end|ng |rom gm@||@com  Wed Mar 30 17:40:19 2022"                    
+[295] "From drj|m|emon @end|ng |rom gm@||@com  Wed Mar 30 22:55:21 2022"                        
+[296] "From @eb@@t|en@b|hore| @end|ng |rom @|mu|@t|on@-p|u@@com  Wed Mar 30 22:29:19 2022"      
+[297] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 30 23:19:24 2022"                      
+[298] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Wed Mar 30 23:39:49 2022"                        
+[299] "From @eb@@t|en@b|hore| @end|ng |rom @|mu|@t|on@-p|u@@com  Wed Mar 30 23:44:08 2022"      
+[300] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Thu Mar 31 00:35:18 2022"                     
+[301] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Thu Mar 31 00:46:27 2022"                     
+[302] "From w||||@mwdun|@p @end|ng |rom gm@||@com  Thu Mar 31 03:13:50 2022"                    
+[303] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 31 11:58:16 2022"                         
+[304] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Thu Mar 31 13:48:35 2022"                        
+[305] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 31 20:25:11 2022"                         
+[306] "From LK|e|n @end|ng |rom |h|360@org  Thu Mar 31 12:42:49 2022"                           
+[307] "From Lybry@@Kebre@b @end|ng |rom uc|@edu  Thu Mar 31 14:25:43 2022"                      
+[02:10] 22> grep(".From", ll2[i])
+[1]  25 161 255 258 260 269
+[03:24] 23> ll2[i][ grep(".From", ll2[i])  ]
+[1] " From xdpyinfo I got"                                                 
+[2] "I could do something like .Tcl(\"source file.tcl\"). From there I can"
+[3] "> This Message Is From an External Sender"                            
+[4] ">> This Message Is From an External Sender"                           
+[5] "> This Message Is From an External Sender"                            
+[6] ">> This Message Is From an External Sender"                           
+[03:34] 24> i = grep("^From ", ll2)
+[04:07] 25> ll2[i]
+  [1] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:47:00 2022"                     
+  [2] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  1 04:52:47 2022"                     
+  [3] "From drj|m|emon @end|ng |rom gm@||@com  Tue Mar  1 05:35:14 2022"                        
+  [4] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar  1 05:46:34 2022"                    
+  [5] "From drj|m|emon @end|ng |rom gm@||@com  Tue Mar  1 05:59:43 2022"                        
+  [6] "From rmh @end|ng |rom temp|e@edu  Tue Mar  1 06:18:53 2022"                              
+  [7] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar  1 06:49:19 2022"                        
+  [8] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar  1 06:52:54 2022"                        
+  [9] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar  1 07:42:33 2022"                    
+ [10] "From edrenth @end|ng |rom |ry@ke-@k@demy@n|  Tue Mar  1 08:10:33 2022"                   
+ [11] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar  1 08:41:10 2022"                    
+ [12] "From m|n@h@|| @end|ng |rom um|ch@edu  Tue Mar  1 15:13:56 2022"                          
+ [13] "From Ro@@@Boy|@n @end|ng |rom uc@|@edu  Wed Mar  2 02:51:04 2022"                        
+ [14] "From @kw@|mmo @end|ng |rom gm@||@com  Wed Mar  2 03:50:31 2022"                          
+ [15] "From mtenneke@ @end|ng |rom gm@||@com  Wed Mar  2 10:52:04 2022"                         
+ [16] "From pd@|gd @end|ng |rom gm@||@com  Wed Mar  2 23:11:57 2022"                            
+ [17] "From p@u|bern@|07 @end|ng |rom gm@||@com  Wed Mar  2 23:54:43 2022"                      
+ [18] "From bgunter@4567 @end|ng |rom gm@||@com  Thu Mar  3 00:07:17 2022"                      
+ [19] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Thu Mar  3 00:27:58 2022"                    
+ [20] "From @v|gro@@ @end|ng |rom ver|zon@net  Thu Mar  3 02:02:03 2022"                        
+ [21] "From @v|gro@@ @end|ng |rom ver|zon@net  Thu Mar  3 02:08:10 2022"                        
+ [22] "From er|cjberger @end|ng |rom gm@||@com  Thu Mar  3 07:50:58 2022"                       
+ [23] "From @tch|rume @end|ng |rom gm@||@com  Thu Mar  3 08:43:32 2022"                         
+ [24] "From mtenneke@ @end|ng |rom gm@||@com  Thu Mar  3 11:03:44 2022"                         
+ [25] "From n@d|ne@@|o|@b| @end|ng |rom gm@||@com  Thu Mar  3 13:15:35 2022"                    
+ [26] "From |r@|nj @end|ng |rom gm@||@com  Thu Mar  3 20:48:52 2022"                            
+ [27] "From phh@80 @end|ng |rom gm@||@com  Thu Mar  3 22:00:08 2022"                            
+ [28] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Thu Mar  3 22:01:29 2022"                    
+ [29] "From twoo|m@n @end|ng |rom ont@rgettek@com  Thu Mar  3 22:04:15 2022"                    
+ [30] "From phh@80 @end|ng |rom gm@||@com  Thu Mar  3 22:11:46 2022"                            
+ [31] "From drj|m|emon @end|ng |rom gm@||@com  Thu Mar  3 23:29:26 2022"                        
+ [32] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Thu Mar  3 23:36:02 2022"                    
+ [33] "From drj|m|emon @end|ng |rom gm@||@com  Thu Mar  3 23:38:38 2022"                        
+ [34] "From @@r@h@go@|ee @end|ng |rom gm@||@com  Thu Mar  3 23:43:00 2022"                      
+ [35] "From phh@80 @end|ng |rom gm@||@com  Fri Mar  4 00:01:05 2022"                            
+ [36] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar  4 00:06:39 2022"                        
+ [37] "From @rth|en @end|ng |rom gm@||@com  Thu Mar  3 20:11:53 2022"                           
+ [38] "From m|m@|tr@ @end|ng |rom gmx@com  Fri Mar  4 06:00:06 2022"                            
+ [39] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar  4 09:47:57 2022"                       
+ [40] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Fri Mar  4 10:26:03 2022"                    
+ [41] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar  4 10:32:58 2022"                       
+ [42] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar  4 11:13:23 2022"                       
+ [43] "From phh@80 @end|ng |rom gm@||@com  Fri Mar  4 11:41:24 2022"                            
+ [44] "From @rth|en @end|ng |rom gm@||@com  Fri Mar  4 10:21:05 2022"                           
+ [45] "From @rth|en @end|ng |rom gm@||@com  Fri Mar  4 10:53:29 2022"                           
+ [46] "From ||809 @end|ng |rom nc|@c@  Fri Mar  4 14:23:43 2022"                                
+ [47] "From kry|ov@r00t @end|ng |rom gm@||@com  Fri Mar  4 14:34:03 2022"                       
+ [48] "From ||809 @end|ng |rom nc|@c@  Fri Mar  4 15:59:45 2022"                                
+ [49] "From @rth|en @end|ng |rom gm@||@com  Fri Mar  4 16:17:17 2022"                           
+ [50] "From c@r| @end|ng |rom w|ttho|t@com  Fri Mar  4 17:45:39 2022"                           
+ [51] "From dw|n@em|u@ @end|ng |rom comc@@t@net  Fri Mar  4 17:58:30 2022"                      
+ [52] "From m|m@|tr@ @end|ng |rom gmx@com  Fri Mar  4 18:03:18 2022"                            
+ [53] "From dw|n@em|u@ @end|ng |rom comc@@t@net  Fri Mar  4 18:34:15 2022"                      
+ [54] "From phh@80 @end|ng |rom gm@||@com  Fri Mar  4 18:45:01 2022"                            
+ [55] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Fri Mar  4 21:13:40 2022"                    
+ [56] "From @rr@ypro|||e @end|ng |rom y@hoo@com  Sat Mar  5 01:41:57 2022"                      
+ [57] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sat Mar  5 01:56:16 2022"                    
+ [58] "From @rr@ypro|||e @end|ng |rom y@hoo@com  Sat Mar  5 02:05:59 2022"                      
+ [59] "From j|ox @end|ng |rom mcm@@ter@c@  Sat Mar  5 03:09:58 2022"                            
+ [60] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar  5 03:13:00 2022"                      
+ [61] "From er|ch@@ub@ @end|ng |rom neuw|rth@pr|v@@t  Mon Mar  7 13:21:11 2022"                 
+ [62] "From |8|5h9 @end|ng |rom gm@||@com  Mon Mar  7 10:14:59 2022"                            
+ [63] "From dj@ndr|j@ @end|ng |rom gm@||@com  Mon Mar  7 15:01:46 2022"                         
+ [64] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Mon Mar  7 17:19:15 2022"                    
+ [65] "From m@rc_@chw@rtz @end|ng |rom me@com  Mon Mar  7 19:28:51 2022"                        
+ [66] "From e||z@_botto @end|ng |rom out|ook@com  Tue Mar  8 07:21:51 2022"                     
+ [67] "From t@v|b@r @end|ng |rom gm@||@com  Tue Mar  8 10:11:02 2022"                           
+ [68] "From dh@rm@ @end|ng |rom metr|cuk@com  Tue Mar  8 11:25:19 2022"                         
+ [69] "From kry|ov@r00t @end|ng |rom gm@||@com  Tue Mar  8 11:54:49 2022"                       
+ [70] "From btupper @end|ng |rom b|ge|ow@org  Tue Mar  8 13:15:12 2022"                         
+ [71] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar  8 15:54:21 2022"                      
+ [72] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Wed Mar  9 13:57:36 2022"                       
+ [73] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar  9 14:14:20 2022"                       
+ [74] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Wed Mar  9 14:16:47 2022"                       
+ [75] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar  9 14:42:18 2022"                       
+ [76] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar  9 18:21:26 2022"                    
+ [77] "From xwu @end|ng |rom em@||@t@mu@edu  Tue Mar  8 03:51:40 2022"                          
+ [78] "From kw@@t@t @end|ng |rom gm@||@com  Wed Mar  9 23:14:08 2022"                           
+ [79] "From me||n@@co|nte @end|ng |rom out|ook@|r  Tue Mar  8 21:44:35 2022"                    
+ [80] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Thu Mar 10 08:56:36 2022"                       
+ [81] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 10 09:03:05 2022"                       
+ [82] "From pd@me@ @end|ng |rom cb@@dk  Thu Mar 10 10:41:55 2022"                               
+ [83] "From petr@p|k@| @end|ng |rom prechez@@cz  Thu Mar 10 10:55:04 2022"                      
+ [84] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Thu Mar 10 16:50:23 2022"                       
+ [85] "From @kw@|mmo @end|ng |rom gm@||@com  Thu Mar 10 17:15:17 2022"                          
+ [86] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Thu Mar 10 17:24:59 2022"                    
+ [87] "From tebert @end|ng |rom u||@edu  Thu Mar 10 18:58:35 2022"                              
+ [88] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Fri Mar 11 08:24:27 2022"                       
+ [89] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Fri Mar 11 08:47:15 2022"                    
+ [90] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Fri Mar 11 09:48:51 2022"                       
+ [91] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar 11 10:14:10 2022"                        
+ [92] "From |v@n@c@|@ndr@ @end|ng |rom rgzm@de  Fri Mar 11 10:15:50 2022"                       
+ [93] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 15:14:52 2022"                     
+ [94] "From er|cjberger @end|ng |rom gm@||@com  Fri Mar 11 15:21:05 2022"                       
+ [95] "From chr|@ho|d @end|ng |rom p@yctc@org  Fri Mar 11 15:21:39 2022"                        
+ [96] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 15:27:40 2022"                     
+ [97] "From kry|ov@r00t @end|ng |rom gm@||@com  Fri Mar 11 15:30:16 2022"                       
+ [98] "From petr@p|k@| @end|ng |rom prechez@@cz  Fri Mar 11 15:50:24 2022"                      
+ [99] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar 11 16:24:03 2022"                        
+[100] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 16:43:49 2022"                     
+[101] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Fri Mar 11 18:49:52 2022"                     
+[102] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Fri Mar 11 20:31:50 2022"                        
+[103] "From p@u|bern@|07 @end|ng |rom gm@||@com  Sat Mar 12 17:42:28 2022"                      
+[104] "From tebert @end|ng |rom u||@edu  Sat Mar 12 17:48:24 2022"                              
+[105] "From @pencer@gr@ve@ @end|ng |rom e||ect|vede|en@e@org  Sat Mar 12 17:49:11 2022"         
+[106] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sat Mar 12 18:04:30 2022"                    
+[107] "From kt1572757 @end|ng |rom gm@||@com  Sat Mar 12 22:29:58 2022"                         
+[108] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sat Mar 12 18:47:33 2022"                    
+[109] "From p@u|bern@|07 @end|ng |rom gm@||@com  Sat Mar 12 18:49:30 2022"                      
+[110] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar 12 19:33:38 2022"                      
+[111] "From tebert @end|ng |rom u||@edu  Sat Mar 12 19:37:41 2022"                              
+[112] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar 12 21:14:41 2022"                      
+[113] "From bgunter@4567 @end|ng |rom gm@||@com  Sat Mar 12 23:17:32 2022"                      
+[114] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 13 10:17:37 2022"                    
+[115] "From er|ch@@ub@ @end|ng |rom neuw|rth@pr|v@@t  Sun Mar 13 13:51:04 2022"                 
+[116] "From @v|gro@@ @end|ng |rom ver|zon@net  Sun Mar 13 20:33:28 2022"                        
+[117] "From r@oknz @end|ng |rom gm@||@com  Mon Mar 14 01:36:33 2022"                            
+[118] "From @v|gro@@ @end|ng |rom ver|zon@net  Mon Mar 14 02:05:50 2022"                        
+[119] "From |@rchuby @end|ng |rom gm@||@com  Mon Mar 14 17:12:52 2022"                          
+[120] "From cry@n @end|ng |rom b|ngh@mton@edu  Mon Mar 14 17:26:56 2022"                        
+[121] "From tebert @end|ng |rom u||@edu  Mon Mar 14 17:39:41 2022"                              
+[122] "From er|ch@@ub@ @end|ng |rom neuw|rth@pr|v@@t  Mon Mar 14 18:02:39 2022"                 
+[123] "From @@chre|b @end|ng |rom u@|bert@@c@  Mon Mar 14 18:07:09 2022"                        
+[124] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 14 18:11:30 2022"                      
+[125] "From cry@n @end|ng |rom b|ngh@mton@edu  Mon Mar 14 18:32:28 2022"                        
+[126] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 14 18:51:26 2022"                      
+[127] "From kt1572757 @end|ng |rom gm@||@com  Mon Mar 14 18:51:35 2022"                         
+[128] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Mon Mar 14 18:52:49 2022"                        
+[129] "From w||||@mwdun|@p @end|ng |rom gm@||@com  Mon Mar 14 19:36:42 2022"                    
+[130] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar 15 02:21:11 2022"                        
+[131] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar 15 02:40:39 2022"                    
+[132] "From ht @end|ng |rom he@therturner@net  Mon Mar 14 20:11:42 2022"                        
+[133] "From j|x|@ngwu05 @end|ng |rom gm@||@com  Tue Mar 15 18:12:44 2022"                       
+[134] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Tue Mar 15 18:27:03 2022"                         
+[135] "From d@kot@judo @end|ng |rom m@c@com  Tue Mar 15 19:00:38 2022"                          
+[136] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 15 19:20:06 2022"                      
+[137] "From @v|gro@@ @end|ng |rom ver|zon@net  Tue Mar 15 19:31:40 2022"                        
+[138] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Tue Mar 15 21:15:19 2022"                         
+[139] "From kry|ov@r00t @end|ng |rom gm@||@com  Tue Mar 15 21:50:07 2022"                       
+[140] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Tue Mar 15 22:25:56 2022"                         
+[141] "From tebert @end|ng |rom u||@edu  Tue Mar 15 22:31:28 2022"                              
+[142] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Tue Mar 15 23:42:23 2022"                        
+[143] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 16 00:11:42 2022"                      
+[144] "From hruodr @end|ng |rom gm@||@com  Tue Mar 15 20:27:13 2022"                            
+[145] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 16 12:19:34 2022"                       
+[146] "From d@||@rd|@@ @end|ng |rom ut@@c@|r  Wed Mar 16 19:36:50 2022"                         
+[147] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Wed Mar 16 21:10:11 2022"                         
+[148] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 16 23:44:04 2022"                      
+[149] "From @pencer@gr@ve@ @end|ng |rom e||ect|vede|en@e@org  Thu Mar 17 00:47:19 2022"         
+[150] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 17 16:26:42 2022"                       
+[151] "From j|ox @end|ng |rom mcm@@ter@c@  Thu Mar 17 16:13:02 2022"                            
+[152] "From j|ox @end|ng |rom mcm@@ter@c@  Thu Mar 17 17:51:22 2022"                            
+[153] "From konr@d_kr@emer @end|ng |rom y@hoo@de  Thu Mar 17 15:17:13 2022"                     
+[154] "From rmh @end|ng |rom temp|e@edu  Thu Mar 17 19:06:00 2022"                              
+[155] "From bgunter@4567 @end|ng |rom gm@||@com  Thu Mar 17 19:30:09 2022"                      
+[156] "From du@@@@dr|@n @end|ng |rom gm@||@com  Thu Mar 17 12:19:03 2022"                       
+[157] "From kev|n@thorpe @end|ng |rom utoronto@c@  Thu Mar 17 19:06:41 2022"                    
+[158] "From r@ywong @end|ng |rom t@mu@edu  Fri Mar 18 05:25:58 2022"                            
+[159] "From hruodr @end|ng |rom gm@||@com  Fri Mar 18 08:47:11 2022"                            
+[160] "From ||ndbrook @end|ng |rom gm@||@com  Thu Mar 17 18:26:53 2022"                         
+[161] "From pd@me@ @end|ng |rom cb@@dk  Fri Mar 18 11:24:02 2022"                               
+[162] "From b@row||ng@on @end|ng |rom |@nc@@ter@@c@uk  Fri Mar 18 11:30:10 2022"                
+[163] "From ce@g|guere @end|ng |rom gm@||@com  Thu Mar 17 20:38:14 2022"                        
+[164] "From murdoch@dunc@n @end|ng |rom gm@||@com  Sat Mar 19 11:52:22 2022"                    
+[165] "From murdoch@dunc@n @end|ng |rom gm@||@com  Sat Mar 19 13:35:14 2022"                    
+[166] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:15:34 2022"                     
+[167] "From twoo|m@n @end|ng |rom ont@rgettek@com  Sun Mar 20 02:19:30 2022"                    
+[168] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:23:02 2022"                     
+[169] "From twoo|m@n @end|ng |rom ont@rgettek@com  Sun Mar 20 02:27:07 2022"                    
+[170] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:31:19 2022"                     
+[171] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:38:01 2022"                     
+[172] "From twoo|m@n @end|ng |rom ont@rgettek@com  Sun Mar 20 02:48:26 2022"                    
+[173] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 02:54:50 2022"                    
+[174] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 02:55:56 2022"                     
+[175] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Sun Mar 20 03:05:53 2022"                     
+[176] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 02:51:09 2022"                    
+[177] "From bgunter@4567 @end|ng |rom gm@||@com  Sun Mar 20 04:44:42 2022"                      
+[178] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 08:09:05 2022"                       
+[179] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 08:38:39 2022"                    
+[180] "From deep@y@n@@@rk@r @end|ng |rom gm@||@com  Sun Mar 20 09:06:25 2022"                   
+[181] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 10:40:25 2022"                       
+[182] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 10:41:38 2022"                       
+[183] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Sun Mar 20 13:22:08 2022"                        
+[184] "From wo||g@ng@v|echtb@uer @end|ng |rom m@@@tr|chtun|ver@|ty@n|  Sun Mar 20 13:45:45 2022"
+[185] "From @@h|mk@poor @end|ng |rom gm@||@com  Sun Mar 20 14:04:21 2022"                       
+[186] "From m@nugo@w@m| @end|ng |rom hotm@||@com  Sun Mar 20 08:54:59 2022"                     
+[187] "From h@@||z@ru@m||| @end|ng |rom gm@||@com  Sun Mar 20 15:33:52 2022"                    
+[188] "From bgunter@4567 @end|ng |rom gm@||@com  Sun Mar 20 20:28:29 2022"                      
+[189] "From n|ckmwr@y @end|ng |rom gm@||@com  Sun Mar 20 23:02:53 2022"                         
+[190] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Sun Mar 20 23:23:01 2022"                    
+[191] "From @kw@|mmo @end|ng |rom gm@||@com  Sun Mar 20 23:24:41 2022"                          
+[192] "From tebert @end|ng |rom u||@edu  Sun Mar 20 23:27:38 2022"                              
+[193] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Sun Mar 20 23:47:18 2022"                        
+[194] "From kt1572757 @end|ng |rom gm@||@com  Mon Mar 21 01:56:54 2022"                         
+[195] "From drj|m|emon @end|ng |rom gm@||@com  Mon Mar 21 02:40:58 2022"                        
+[196] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 21 03:02:17 2022"                      
+[197] "From er|cjberger @end|ng |rom gm@||@com  Mon Mar 21 05:47:13 2022"                       
+[198] "From j|ox @end|ng |rom mcm@@ter@c@  Mon Mar 21 15:30:23 2022"                            
+[199] "From m@nugo@w@m| @end|ng |rom hotm@||@com  Mon Mar 21 12:33:36 2022"                     
+[200] "From yuey|n505 @end|ng |rom gm@||@com  Mon Mar 21 16:54:02 2022"                         
+[201] "From bgunter@4567 @end|ng |rom gm@||@com  Mon Mar 21 17:51:35 2022"                      
+[202] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Mon Mar 21 18:02:41 2022"                    
+[203] "From kry|ov@r00t @end|ng |rom gm@||@com  Mon Mar 21 18:21:17 2022"                       
+[204] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 01:03:30 2022"                    
+[205] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar 22 01:40:46 2022"                    
+[206] "From tebert @end|ng |rom u||@edu  Tue Mar 22 01:44:17 2022"                              
+[207] "From bj@@m|@r@ @end|ng |rom gm@||@com  Tue Mar 22 04:17:54 2022"                         
+[208] "From j|n||68 @end|ng |rom gm@||@com  Tue Mar 22 05:07:56 2022"                           
+[209] "From r-p@ck@ge@ @end|ng |rom r-project@org  Mon Mar 21 20:35:06 2022"                    
+[210] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 11:32:32 2022"                    
+[211] "From tebert @end|ng |rom u||@edu  Tue Mar 22 13:15:01 2022"                              
+[212] "From JH@rm@e @end|ng |rom roku@com  Tue Mar 22 15:20:19 2022"                            
+[213] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 15:48:25 2022"                    
+[214] "From tebert @end|ng |rom u||@edu  Tue Mar 22 16:34:13 2022"                              
+[215] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 17:03:21 2022"                    
+[216] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 17:12:00 2022"                      
+[217] "From neh@@bo|ogn@90 @end|ng |rom gm@||@com  Tue Mar 22 17:18:59 2022"                    
+[218] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 17:30:37 2022"                      
+[219] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Tue Mar 22 17:33:14 2022"                    
+[220] "From tebert @end|ng |rom u||@edu  Tue Mar 22 17:49:29 2022"                              
+[221] "From tebert @end|ng |rom u||@edu  Tue Mar 22 17:54:59 2022"                              
+[222] "From tebert @end|ng |rom u||@edu  Tue Mar 22 18:27:28 2022"                              
+[223] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 19:02:54 2022"                      
+[224] "From tebert @end|ng |rom u||@edu  Tue Mar 22 19:37:20 2022"                              
+[225] "From m@rn@@w@g|ey @end|ng |rom gm@||@com  Tue Mar 22 21:45:14 2022"                      
+[226] "From ||nd@@@m||e@@te|@n@@on @end|ng |rom gm@||@com  Tue Mar 22 21:51:19 2022"            
+[227] "From bgunter@4567 @end|ng |rom gm@||@com  Tue Mar 22 23:21:56 2022"                      
+[228] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Tue Mar 22 23:33:56 2022"                        
+[229] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Wed Mar 23 06:50:28 2022"                        
+[230] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 23 07:48:41 2022"                       
+[231] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 10:38:34 2022"          
+[232] "From tebert @end|ng |rom u||@edu  Wed Mar 23 11:15:23 2022"                              
+[233] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 11:27:50 2022"          
+[234] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 23 11:33:52 2022"                       
+[235] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 11:48:44 2022"          
+[236] "From deep@y@n@@@rk@r @end|ng |rom gm@||@com  Wed Mar 23 12:05:00 2022"                   
+[237] "From Sven@G@rb@de @end|ng |rom med@un|-he|de|berg@de  Wed Mar 23 13:32:05 2022"          
+[238] "From n|ckmwr@y @end|ng |rom gm@||@com  Wed Mar 23 17:51:05 2022"                         
+[239] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 23 18:58:38 2022"                      
+[240] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar 23 19:29:46 2022"                    
+[241] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 19:44:01 2022"                
+[242] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 19:50:39 2022"                
+[243] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar 23 20:31:46 2022"                    
+[244] "From j|ox @end|ng |rom mcm@@ter@c@  Wed Mar 23 20:34:30 2022"                            
+[245] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Wed Mar 23 20:36:27 2022"                    
+[246] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 23 20:42:02 2022"                      
+[247] "From btupper @end|ng |rom b|ge|ow@org  Wed Mar 23 20:42:11 2022"                         
+[248] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 23 20:47:00 2022"                      
+[249] "From j|ox @end|ng |rom mcm@@ter@c@  Wed Mar 23 21:13:55 2022"                            
+[250] "From nev||@@mo@ @end|ng |rom gm@||@com  Wed Mar 23 21:46:16 2022"                        
+[251] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 22:26:34 2022"                
+[252] "From dc@r|@on @end|ng |rom t@mu@edu  Wed Mar 23 22:26:39 2022"                           
+[253] "From henr|k@bengt@@on @end|ng |rom gm@||@com  Wed Mar 23 22:36:21 2022"                  
+[254] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Wed Mar 23 23:16:32 2022"                
+[255] "From @v|gro@@ @end|ng |rom ver|zon@net  Thu Mar 24 01:05:15 2022"                        
+[256] "From t@n@@@ @end|ng |rom gm@||@com  Thu Mar 24 01:40:32 2022"                            
+[257] "From bgunter@4567 @end|ng |rom gm@||@com  Thu Mar 24 01:52:29 2022"                      
+[258] "From jdnewm|| @end|ng |rom dcn@d@v|@@c@@u@  Thu Mar 24 02:41:58 2022"                    
+[259] "From t@n@@@ @end|ng |rom gm@||@com  Thu Mar 24 02:45:03 2022"                            
+[260] "From dw|n@em|u@ @end|ng |rom comc@@t@net  Thu Mar 24 06:57:25 2022"                      
+[261] "From j@w|eczo @end|ng |rom co|by@edu  Tue Mar 22 21:07:51 2022"                          
+[262] "From h@@||z@ru@m||| @end|ng |rom gm@||@com  Wed Mar 23 03:46:35 2022"                    
+[263] "From n@re@h_gurbux@n| @end|ng |rom hotm@||@com  Thu Mar 24 13:34:12 2022"                
+[264] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 13:54:46 2022"                         
+[265] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 24 14:05:11 2022"                       
+[266] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 13:51:57 2022"                         
+[267] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 14:29:45 2022"                         
+[268] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 24 14:38:42 2022"                       
+[269] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 24 15:00:35 2022"                         
+[270] "From kry|ov@r00t @end|ng |rom gm@||@com  Thu Mar 24 15:10:09 2022"                       
+[271] "From t@n@@@ @end|ng |rom gm@||@com  Fri Mar 25 04:33:39 2022"                            
+[272] "From kry|ov@r00t @end|ng |rom gm@||@com  Fri Mar 25 08:50:50 2022"                       
+[273] "From r@oknz @end|ng |rom gm@||@com  Fri Mar 25 12:44:01 2022"                            
+[274] "From j|n||68 @end|ng |rom gm@||@com  Sat Mar 26 01:31:09 2022"                           
+[275] "From r@oknz @end|ng |rom gm@||@com  Sat Mar 26 07:50:50 2022"                            
+[276] "From h@@||z@ru@m||| @end|ng |rom gm@||@com  Mon Mar 28 09:34:50 2022"                    
+[277] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Wed Mar 30 04:47:02 2022"                     
+[278] "From er|cjberger @end|ng |rom gm@||@com  Wed Mar 30 05:35:36 2022"                       
+[279] "From @v|gro@@ @end|ng |rom ver|zon@net  Wed Mar 30 05:39:31 2022"                        
+[280] "From petr@p|k@| @end|ng |rom prechez@@cz  Wed Mar 30 07:59:13 2022"                      
+[281] "From gor@n@bro@trom @end|ng |rom umu@@e  Wed Mar 30 11:27:05 2022"                       
+[282] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 30 11:48:51 2022"                       
+[283] "From er|cjberger @end|ng |rom gm@||@com  Wed Mar 30 11:49:26 2022"                       
+[284] "From gor@n@bro@trom @end|ng |rom umu@@e  Wed Mar 30 12:43:52 2022"                       
+[285] "From kry|ov@r00t @end|ng |rom gm@||@com  Wed Mar 30 13:01:12 2022"                       
+[286] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Wed Mar 30 13:21:12 2022"                     
+[287] "From gor@n@bro@trom @end|ng |rom umu@@e  Wed Mar 30 14:39:52 2022"                       
+[288] "From w||||@mwdun|@p @end|ng |rom gm@||@com  Wed Mar 30 17:40:19 2022"                    
+[289] "From drj|m|emon @end|ng |rom gm@||@com  Wed Mar 30 22:55:21 2022"                        
+[290] "From @eb@@t|en@b|hore| @end|ng |rom @|mu|@t|on@-p|u@@com  Wed Mar 30 22:29:19 2022"      
+[291] "From bgunter@4567 @end|ng |rom gm@||@com  Wed Mar 30 23:19:24 2022"                      
+[292] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Wed Mar 30 23:39:49 2022"                        
+[293] "From @eb@@t|en@b|hore| @end|ng |rom @|mu|@t|on@-p|u@@com  Wed Mar 30 23:44:08 2022"      
+[294] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Thu Mar 31 00:35:18 2022"                     
+[295] "From re|chm@nj @end|ng |rom @bcg|ob@|@net  Thu Mar 31 00:46:27 2022"                     
+[296] "From w||||@mwdun|@p @end|ng |rom gm@||@com  Thu Mar 31 03:13:50 2022"                    
+[297] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 31 11:58:16 2022"                         
+[298] "From ru|pb@rr@d@@ @end|ng |rom @@po@pt  Thu Mar 31 13:48:35 2022"                        
+[299] "From v@r|n@@ch@ @end|ng |rom y@hoo@|r  Thu Mar 31 20:25:11 2022"                         
+[300] "From LK|e|n @end|ng |rom |h|360@org  Thu Mar 31 12:42:49 2022"                           
+[301] "From Lybry@@Kebre@b @end|ng |rom uc|@edu  Thu Mar 31 14:25:43 2022"                      
+[04:14] 26> table(grepl("2022$", ll2[i]))
+
+TRUE 
+ 301 
+[07:27] 27> table(grepl("^From .* Mar ..? ..:..:.. 2022$", ll2))
+
+FALSE  TRUE 
+23626   301 
+[17:23] 28> z = "This costs $100 and 2 cents"
+[26:54] 29> grep("$", z)
+[1] 1
+[26:59] 30> grep("$", "This costs 100 and 2 cents")
+[1] 1
+[27:11] 31> gregexpr("$", "This costs 100 and 2 cents")
+[[1]]
+[1] 27
+attr(,"match.length")
+[1] 0
+attr(,"useBytes")
+[1] TRUE
+
+[27:43] 32> nchar("This costs 100 and 2 cents")
+[1] 26
+[27:50] 33> grep("\\$", z)
+[1] 1
+[31:41] 34> gregexpr("\\$", z)
+[[1]]
+[1] 12
+attr(,"match.length")
+[1] 1
+attr(,"useBytes")
+[1] TRUE
+
+[31:51] 35> table(grepl("^From .* (Mar|Apr|Jan|Feb) [0-9]{1,2} [0-9]{2}:[0-9]{2}:[0-9]{2} 2022$", ll2))
+
+FALSE  TRUE 
+23705   222 
+[42:14] 36> table(grepl("^From .* (Mar|Apr|Jan|Feb) .. [0-9]{2}:[0-9]{2}:[0-9]{2} 2022$", ll2))
+
+FALSE  TRUE 
+23626   301 
+[42:34] 37> table(grepl("^From .* (Mar|Apr|Jan|Feb) ( [0-9]|[1-3][0-9]) [0-9]{2}:[0-9]{2}:[0-9]{2} 2022$", ll2))
+
+FALSE  TRUE 
+23626   301 
+[44:29] 38> table(grepl("^From .* (Mar|Apr|Jan|Feb) *([0-9]|[1-3][0-9]) [0-9]{2}:[0-9]{2}:[0-9]{2} 2022$", ll2))
+
+FALSE  TRUE 
+23626   301 
+[44:38] 39> table(grepl("^From .* (Mar|Apr|Jan|Feb) *([0-9]|[1-3][0-9]) ([0-9]{2}|[0-9]{2}:){3} 2022$", ll2))
+
+FALSE  TRUE 
+23626   301 
+[47:56] 40> 

@@ -93,11 +93,15 @@ layout: true
       + exactly n times   - `{n}`   .{10}   [0-9]+[.]0{2}  "[0-9]+\\.0{2}"   123.00  123a00
 	  + more than n times - `{n,}`
 	  + between m and n times (inclusive) - `{m,n}`
+---
+# Continued
 
-   + back-references () and \1, \2
++ back-references () and \1, \2
    
-   + meta-characters - ., ^, $, *, ?, +, {, }, [, ], | and \
-   + escaping special/meta characters
++ meta-characters - ., ^, $, *, ?, +, {, }, [, ], | and \
+
++ escaping special/meta characters
+   + Use \\ before special character, e.g., "\\$"
 
 ---
 # Ubiquity
@@ -164,17 +168,20 @@ grep("\\bcat\\b", x)
 grep("\\b(cat|dog|mouse)\\b", c("catalog", "a cat on a mat", "a mouse tail"))
 ```
 
-+ For large collection of words ?
-   + Suppose we have a large collection of words that we computed previously,
-     + e.g. top 100 words used in the State of Union speeches 1900-1910.
-	 + want to see how common they are in recent State of Union speeches
-	 + Don't want to type them into a regular expression
+---
+# Contains Any of Large Collection of Words
+
++ Suppose we have a large collection of words that we computed previously,
+     + e.g. specific words used in the State of Union speeches 1900-1910.
+
++ want to see where they are used in recent State of Union speeches
+    + Don't want to manually type them into a regular expression
 	 
-   + Looking for, e.g.,  
++ Looking for, e.g.,  
 ```
 terms = c("security", "war", "peace", "justice", "rights", "liberty", "tax")
 ```
-   + State of the Union speech
++ State of the Union speech
 ```
 sou = readLines("StateOfUnion")
 ```
@@ -191,8 +198,10 @@ m = gregexpr(rx, sou2)
 regmatches(sou2, m)
 ```
 
-+ Another approach
-  + Break the text into words
+---
+# Alternative approach
+
++ Break the text into words
 ```
 w = strsplit(sou2, "[[:space:]]+")[[1]]
 ```
@@ -206,7 +215,7 @@ w1 = strsplit(sou2, "[[:space:][:punct:]]+")[[1]]
 w = strsplit(sou2, "[[:space:]]+")[[1]]
 w2 = gsub("[[:punct:]]+$", "",  w)
 ```
-
+   + Should we replace with "" or " " (space)?
 
 ```
 m = match(terms, w2)  # wrong - just matching the first occurrence. Backwards
