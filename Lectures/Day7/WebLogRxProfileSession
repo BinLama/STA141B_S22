@@ -1,0 +1,464 @@
+]0;Day7~/Classes/Davis/STA141B_Spring22/Public/Lectures/Day7> R
+
+R Under development (unstable) (2021-10-20 r81081) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin19.0.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 11891 
+Time = 2022-04-28 09:53:02 
+Dir = /Users/duncan/Classes/Davis/STA141B_Spring22/Public/Lectures/Day7 
+1> rx = '^([0-9.]+) - ([^ ]+) \\[([^\\]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+) "([^"]+)" ".*"'
+[55:08] 2> ll = readLines("eeyore.log")
+[55:17] 3> w =grepl(rx, ll)
+[55:49] 4> table(w)
+w
+FALSE  TRUE 
+ 2538  6010 
+[55:51] 5> ll[!w][1]
+[1] "68.180.229.48 - - [01/Nov/2015:05:17:05 -0800] \"GET /stat242/data/covtype.info HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)\""
+[55:58] 6> # login is a dash
+[55:58] 6> rx = '^([0-9.]+) - ([^ ]+|-) \\[([^\\]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+) "([^"]+)" ".*"'
+[56:31] 7> w =grepl(rx, ll)
+[56:34] 8> table(w)
+w
+FALSE  TRUE 
+ 2538  6010 
+[56:36] 9> rx
+[1] "^([0-9.]+) - ([^ ]+|-) \\[([^\\]+)] \"[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)\" ([0-9]+) ([0-9]+) \"([^\"]+)\" \".*\""
+[56:56] 10> # number of bytes is dash
+[56:56] 10> rx = '^([0-9.]+) - ([^ ]+|-) \\[([^\\]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+|-) "([^"]+)" ".*"'
+[57:23] 11> w =grepl(rx, ll)
+[57:27] 12> table(w)
+w
+FALSE  TRUE 
+    1  8547 
+[57:29] 13> ll[!w]
+[1] "41.220.68.249 - - [03/Nov/2015:02:41:58 -0800] \"GET /stat141/Lectures/Day1.pdf HTTP/1.1\" 200 116340 \"\" \"Mozilla/5.0 (Linux; Android 4.2.2; en-us; SAMSUNG GT-I9192 Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Version/1.0 Chrome/18.0.1025.308 Mobile Safari/535.19\""
+[57:45] 14> # the referer field is "" and we expected something between the ""
+[57:45] 14> rx = '^([0-9.]+) - ([^ ]+|-) \\[([^\\]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+|-) "([^"]*)" ".*"'
+[58:36] 15> w =grepl(rx, ll)
+[58:39] 16> table(w)
+w
+TRUE 
+8548 
+[58:41] 17> source(getCaptures)
+Error in source(getCaptures) : object 'getCaptures' not found
+
+Enter a frame number, or 0 to exit   
+
+1: source(getCaptures)
+
+Selection: 0
+[58:41] 17> source("getCaptures.R")
+[59:06] 18> getCaptures
+function(pat, x, matches = gregexpr(pat, x, perl = TRUE, ...), ..., SIMPLIFY = FALSE,
+          asDataFrame = TRUE)
+{
+    ans = mapply(getCapture, x, matches,
+                 MoreArgs =  list(asDataFrame = asDataFrame),
+                 SIMPLIFY = SIMPLIFY)
+
+    if(asDataFrame)
+        do.call(rbind, ans)
+    else
+        ans
+}
+[59:09] 19> ans = getCaptures(rx, ll)
+Error in gregexpr(pat, x, perl = TRUE, ...) : 
+  invalid regular expression '^([0-9.]+) - ([^ ]+|-) \[([^\]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+|-) "([^"]*)" ".*"'
+In addition: Warning message:
+In gregexpr(pat, x, perl = TRUE, ...) : PCRE pattern compilation error
+	'missing closing parenthesis'
+	at ''
+
+Enter a frame number, or 0 to exit   
+
+1: getCaptures(rx, ll)
+2: getCaptures.R#5: mapply(getCapture, x, matches, MoreArgs = list(a
+3: gregexpr(pat, x, perl = TRUE, ...)
+
+Selection: 0
+[59:09] 19> w =grepl(rx, ll, perl = TRUE)
+Error in grepl(rx, ll, perl = TRUE) : 
+  invalid regular expression '^([0-9.]+) - ([^ ]+|-) \[([^\]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+|-) "([^"]*)" ".*"'
+In addition: Warning message:
+In grepl(rx, ll, perl = TRUE) : PCRE pattern compilation error
+	'missing closing parenthesis'
+	at ''
+
+Enter a frame number, or 0 to exit   
+
+1: grepl(rx, ll, perl = TRUE)
+
+Selection: 0
+[59:09] 19> rx
+[1] "^([0-9.]+) - ([^ ]+|-) \\[([^\\]+)] \"[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)\" ([0-9]+) ([0-9]+|-) \"([^\"]*)\" \".*\""
+[59:56] 20> rx = '^([0-9.]+) - ([^ ]+) \\[([^\\]]+)] "[A-Z]+ (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+|-) "([^"]*)" ".*"'
+[00:37] 21> w =grepl(rx, ll, perl = TRUE)
+[00:40] 22> table(w)
+w
+TRUE 
+8548 
+[00:42] 23> ans = getCaptures(rx, ll)
+[01:04] 24> dim(ans)
+[1] 8548    9
+[01:07] 25> rx = '^([0-9.]+) - ([^ ]+) \\[([^\\]]+)] "([A-Z]+) (.*) (FTP|HTTPS?)/([0-9.]+)" ([0-9]+) ([0-9]+|-) "([^"]*)" ".*"'
+[01:15] 26> ans = getCaptures(rx, ll)
+[01:33] 27> dim(ans)
+[1] 8548   10
+[02:03] 28> head(ans)
+*** output flushed ***
+[02:05] 29> class(ans)
+[1] "data.frame"
+[02:13] 30> head(ans[,1])
+[1] "114.188.183.88" "114.188.183.88" "114.188.183.88"
+[4] "114.188.183.88" "114.188.183.88" "114.188.183.88"
+[02:19] 31> head(ans[,2])
+[1] "-" "-" "-" "-" "-" "-"
+[02:24] 32> head(ans[,3])
+[1] "01/Nov/2015:03:41:50 -0800" "01/Nov/2015:03:41:50 -0800"
+[3] "01/Nov/2015:03:42:10 -0800" "01/Nov/2015:03:42:12 -0800"
+[5] "01/Nov/2015:03:42:13 -0800" "01/Nov/2015:03:42:13 -0800"
+[02:27] 33> head(ans[,4])
+[1] "GET" "GET" "GET" "GET" "GET" "GET"
+[02:38] 34> table(ans[,4])
+
+   GET HBESPY   HEAD   POST WFZWXO 
+  8457      1     84      5      1 
+[02:42] 35> grep("HBESPY|WFZWXO", ll, value = TRUE)
+[1] "169.237.224.18 - - [01/Nov/2015:11:06:38 -0800] \"HBESPY / HTTP/1.1\" 200 - \"-\" \"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)\""
+[2] "169.237.224.18 - - [03/Nov/2015:09:39:03 -0800] \"WFZWXO / HTTP/1.1\" 200 - \"-\" \"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)\""
+[03:07] 36> length(unique(ans[,1])
++ )
+[1] 707
+[04:02] 37> dim(ans)
+[1] 8548   10
+[04:06] 38> names(ans)
+ [1] "" "" "" "" "" "" "" "" "" ""
+[04:18] 39> Rprof("tm.prof")
+[04:37] 40> ans = getCaptures(rx, ll)
+[04:56] 41> Rprof(NULL)
+[05:10] 42> head(summaryRprof("tm.prof")$by.self, 20)
+a                          self.time self.pct total.time total.pct
+"deparse"                      2.06    14.76       6.04     43.27
+"%in%"                         1.28     9.17       3.50     25.07
+".deparseOpts"                 1.06     7.59       2.54     18.19
+"<Anonymous>"                  1.04     7.45      13.48     96.56
+"structure"                    0.62     4.44      11.62     83.24
+"pmatch"                       0.58     4.15       0.60      4.30
+"mode"                         0.48     3.44       2.00     14.33
+"as.data.frame"                0.42     3.01      11.56     82.81
+"as.data.frame.vector"         0.42     3.01       1.32      9.46
+"paste"                        0.40     2.87       4.00     28.65
+"gregexpr"                     0.40     2.87       0.40      2.87
+"c"                            0.38     2.72       0.38      2.72
+"sys.call"                     0.36     2.58       0.36      2.58
+"rbind"                        0.34     2.44       1.68     12.03
+"any"                          0.34     2.44       0.34      2.44
+"as.data.frame.character"      0.30     2.15       5.94     42.55
+"make.names"                   0.30     2.15       0.90      6.45
+"length"                       0.24     1.72       0.24      1.72
+"order"                        0.20     1.43       0.56      4.01
+"[["                           0.18     1.29       1.08      7.74
+[05:24] 43> debug(deparse)
+[05:46] 44> ans = getCaptures(rx, ll)
+debugging in: deparse(expr, width.cutoff, ...)
+debug: .Internal(deparse(expr, width.cutoff, backtick, .deparseOpts(control), 
+    nlines))
+Browse[2]> where
+where 1: deparse(expr, width.cutoff, ...)
+where 2: paste(deparse(expr, width.cutoff, ...), collapse = collapse)
+where 3: deparse1(substitute(x))
+where 4: as.data.frame.character(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors)
+where 5: as.data.frame(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors)
+where 6: (function (..., row.names = NULL, check.rows = FALSE, check.names = TRUE, 
+    fix.empty.names = TRUE, stringsAsFactors = FALSE) 
+{
+    data.row.names <- if (check.rows && is.null(row.names)) 
+        function(current, new, i) {
+            if (is.character(current)) 
+                new <- as.character(new)
+            if (is.character(new)) 
+                current <- as.character(current)
+            if (anyDuplicated(new)) 
+                return(current)
+            if (is.null(current)) 
+                return(new)
+            if (all(current == new) || all(current == "")) 
+                return(new)
+            stop(gettextf("mismatch of row names in arguments of 'data.frame', item %d", 
+                i), domain = NA)
+        }
+    else function(current, new, i) {
+        if (is.null(current)) {
+            if (anyDuplicated(new)) {
+                warning(gettextf("some row.names duplicated: %s --> row.names NOT used", 
+                  paste(which(duplicated(new)), collapse = ",")), 
+                  domain = NA)
+                current
+            }
+            else new
+        }
+        else current
+    }
+    object <- as.list(substitute(list(...)))[-1L]
+    mirn <- missing(row.names)
+    mrn <- is.null(row.names)
+    x <- list(...)
+    n <- length(x)
+    if (n < 1L) {
+        if (!mrn) {
+            if (is.object(row.names) || !is.integer(row.names)) 
+                row.names <- as.character(row.names)
+            if (anyNA(row.names)) 
+                stop("row names contain missing values")
+            if (anyDuplicated(row.names)) 
+                stop(gettextf("duplicate row.names: %s", paste(unique(row.names[duplicated(row.names)]), 
+                  collapse = ", ")), domain = NA)
+        }
+        else row.names <- integer()
+        return(structure(list(), names = character(), row.names = row.names, 
+            class = "data.frame"))
+    }
+    vnames <- names(x)
+    if (length(vnames) != n) 
+        vnames <- character(n)
+    no.vn <- !nzchar(vnames)
+    vlist <- vnames <- as.list(vnames)
+    nrows <- ncols <- integer(n)
+    for (i in seq_len(n)) {
+        xi <- if (is.character(x[[i]]) || is.list(x[[i]])) 
+            as.data.frame(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors)
+        else as.data.frame(x[[i]], optional = TRUE)
+        nrows[i] <- .row_names_info(xi)
+        ncols[i] <- length(xi)
+        namesi <- names(xi)
+        if (ncols[i] > 1L) {
+            if (length(namesi) == 0L) 
+                namesi <- seq_len(ncols[i])
+            vnames[[i]] <- if (no.vn[i]) 
+                namesi
+            else paste(vnames[[i]], namesi, sep = ".")
+        }
+        else if (length(namesi)) {
+            vnames[[i]] <- namesi
+        }
+        else if (fix.empty.names && no.vn[[i]]) {
+            tmpname <- deparse(object[[i]], nlines = 1L)[1L]
+            if (startsWith(tmpname, "I(") && endsWith(tmpname, 
+                ")")) {
+                ntmpn <- nchar(tmpname, "c")
+                tmpname <- substr(tmpname, 3L, ntmpn - 1L)
+            }
+            vnames[[i]] <- tmpname
+        }
+        if (mirn && nrows[i] > 0L) {
+            rowsi <- attr(xi, "row.names")
+            if (any(nzchar(rowsi))) 
+                row.names <- data.row.names(row.names, rowsi, 
+                  i)
+        }
+        nrows[i] <- abs(nrows[i])
+        vlist[[i]] <- xi
+    }
+    nr <- max(nrows)
+    for (i in seq_len(n)[nrows < nr]) {
+        xi <- vlist[[i]]
+        if (nrows[i] > 0L && (nr%%nrows[i] == 0L)) {
+            xi <- unclass(xi)
+            fixed <- TRUE
+            for (j in seq_along(xi)) {
+                xi1 <- xi[[j]]
+                if (is.vector(xi1) || is.factor(xi1)) 
+                  xi[[j]] <- rep(xi1, length.out = nr)
+                else if (is.character(xi1) && inherits(xi1, "AsIs")) 
+                  xi[[j]] <- structure(rep(xi1, length.out = nr), 
+                    class = class(xi1))
+                else if (inherits(xi1, "Date") || inherits(xi1, 
+                  "POSIXct")) 
+                  xi[[j]] <- rep(xi1, length.out = nr)
+                else {
+                  fixed <- FALSE
+                  break
+                }
+            }
+            if (fixed) {
+                vlist[[i]] <- xi
+                next
+            }
+        }
+        stop(gettextf("arguments imply differing number of rows: %s", 
+            paste(unique(nrows), collapse = ", ")), domain = NA)
+    }
+    value <- unlist(vlist, recursive = FALSE, use.names = FALSE)
+    vnames <- as.character(unlist(vnames[ncols > 0L]))
+    if (fix.empty.names && any(noname <- !nzchar(vnames))) 
+        vnames[noname] <- paste0("Var.", seq_along(vnames))[noname]
+    if (check.names) {
+        if (fix.empty.names) 
+            vnames <- make.names(vnames, unique = TRUE)
+        else {
+            nz <- nzchar(vnames)
+            vnames[nz] <- make.names(vnames[nz], unique = TRUE)
+        }
+    }
+    names(value) <- vnames
+    if (!mrn) {
+        if (length(row.names) == 1L && nr != 1L) {
+            if (is.character(row.names)) 
+                row.names <- match(row.names, vnames, 0L)
+            if (length(row.names) != 1L || row.names < 1L || 
+                row.names > length(vnames)) 
+                stop("'row.names' should specify one of the variables")
+            i <- row.names
+            row.names <- value[[i]]
+            value <- value[-i]
+        }
+        else if (!is.null(row.names) && length(row.names) != 
+            nr) 
+            stop("row names supplied are of the wrong length")
+    }
+    else if (!is.null(row.names) && length(row.names) != nr) {
+        warning("row names were found from a short variable and have been discarded")
+        row.names <- NULL
+    }
+    class(value) <- "data.frame"
+    if (is.null(row.names)) 
+        attr(value, "row.names") <- .set_row_names(nr)
+    else {
+        if (is.object(row.names) || !is.integer(row.names)) 
+            row.names <- as.character(row.names)
+        if (anyNA(row.names)) 
+            stop("row names contain missing values")
+        if (anyDuplicated(row.names)) 
+            stop(gettextf("duplicate row.names: %s", paste(unique(row.names[duplicated(row.names)]), 
+                collapse = ", ")), domain = NA)
+        row.names(value) <- row.names
+    }
+    value
+})("114.188.183.88", "-", "01/Nov/2015:03:41:50 -0800", "GET", 
+    "/stat141/Code/Session1.txt", "HTTP", "1.1", "404", "223", 
+    "https://www.google.co.jp/", check.names = TRUE, fix.empty.names = TRUE, 
+    stringsAsFactors = FALSE)
+where 7: do.call(data.frame, c(x, alis))
+where 8: as.data.frame.list(as.list(ans), stringsAsFactors = FALSE, make.names = FALSE)
+where 9 at getCaptures.R#20: as.data.frame(as.list(ans), stringsAsFactors = FALSE, make.names = FALSE)
+where 10 at getCaptures.R#20: structure(as.data.frame(as.list(ans), stringsAsFactors = FALSE, 
+    make.names = FALSE), names = attr(m, "capture.names"))
+where 11: (function(str, m, asDataFrame = FALSE)
+{
+    st = attr(m, "capture.start");
+    ans =  substring(str, st, st + attr(m, "capture.length") - 1L)
+    if(asDataFrame)
+        structure(as.data.frame(as.list(ans), stringsAsFactors = FALSE, make.names = FALSE),
+                  names = attr(m, "capture.names"))
+    else
+        ans
+})(dots[[1L]][[1L]], dots[[2L]][[1L]], asDataFrame = TRUE)
+where 12 at getCaptures.R#5: mapply(getCapture, x, matches, MoreArgs = list(asDataFrame = asDataFrame), 
+    SIMPLIFY = SIMPLIFY)
+where 13: getCaptures(rx, ll)
+
+Browse[2]> as.data.frame
+function (x, row.names = NULL, optional = FALSE, ...) 
+{
+    if (is.null(x)) 
+        return(as.data.frame(list()))
+    UseMethod("as.data.frame")
+}
+<bytecode: 0x7feb3aa07130>
+<environment: namespace:base>
+Browse[2]> ?as.data.frame
+debugging in: deparse(expr, width.cutoff, ...)
+debug: .Internal(deparse(expr, width.cutoff, backtick, .deparseOpts(control), 
+    nlines))
+Browse[4]> 
+exiting from: deparse(expr, width.cutoff, ...)
+WARNING: terminal is not fully functional
+-  (press RETURN) 
+as.data.frame               package:base               R Documentation
+
+Coerce to a Data Frame
+
+Description:
+
+     Functions to check if an object is a data frame, or coerce it if
+     possible.
+
+Usage:
+
+     as.data.frame(x, row.names = NULL, optional = FALSE, ...)
+     
+     ## S3 method for class 'character'
+     as.data.frame(x, ...,
+                   stringsAsFactors = FALSE)
+     
+     ## S3 method for class 'list'
+:q
+Browse[2]> 
+debugging in: deparse(x[[1L]])
+debug: .Internal(deparse(expr, width.cutoff, backtick, .deparseOpts(control), 
+    nlines))
+Browse[3]> Q
+[07:12] 46> names(summaryRprof("tm.prof"))
+debugging in: deparse(object[[i]], nlines = 1L)
+debug: .Internal(deparse(expr, width.cutoff, backtick, .deparseOpts(control), 
+    nlines))
+Browse[2]> c
+exiting from: deparse(object[[i]], nlines = 1L)
+debugging in: deparse(object[[i]], nlines = 1L)
+debug: .Internal(deparse(expr, width.cutoff, backtick, .deparseOpts(control), 
+    nlines))
+Browse[2]> Q
+[07:12] 46> names(summaryRprof("tm.prof"))
+debugging in: deparse(object[[i]], nlines = 1L)
+debug: .Internal(deparse(expr, width.cutoff, backtick, .deparseOpts(control), 
+    nlines))
+Browse[2]> Q
+[07:12] 46> undebug(deparse)
+[07:30] 47> names(summaryRprof("tm.prof"))
+[1] "by.self"         "by.total"        "sample.interval"
+[4] "sampling.time"  
+[07:32] 48> summaryRprof("tm.prof")$sampling.time
+[1] 13.96
+[07:40] 49> Rprof("tm.prof")
+[07:49] 50> source("getCaptures.R")
+[07:56] 51> ans = getCaptures(rx, ll)
+[08:19] 52> Rprof(NULL)
+[08:22] 53> summaryRprof("tm.prof")$sampling.time
+[1] 14.56
+[08:25] 54> source("getCaptures.R")
+[09:43] 55> source("getCaptures.R")
+[09:45] 56> Rprof("tm.prof")
+[09:48] 57> ans = getCaptures(rx, ll)
+[09:52] 58> Rprof(NULL)
+[10:09] 59> head(summaryRprof("tm.prof")$by.self, 20)
+                  self.time self.pct total.time total.pct
+"gregexpr"             0.42    47.73       0.42     47.73
+"<Anonymous>"          0.08     9.09       0.42     47.73
+"as.list"              0.08     9.09       0.14     15.91
+"substring"            0.08     9.09       0.08      9.09
+"as.list.default"      0.06     6.82       0.06      6.82
+"mapply"               0.04     4.55       0.82     93.18
+"FUN"                  0.04     4.55       0.04      4.55
+"structure"            0.02     2.27       0.20     22.73
+"any"                  0.02     2.27       0.02      2.27
+"c"                    0.02     2.27       0.02      2.27
+"getExprSrcref"        0.02     2.27       0.02      2.27
+[10:15] 60> summaryRprof("tm.prof")$sampling.time
+[1] 0.88
+[12:17] 61> 
