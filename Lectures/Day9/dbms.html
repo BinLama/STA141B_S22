@@ -35,6 +35,7 @@ class: center, middle
 
 +  Be able to read SQL code and have an understanding of what it is doing.
 +  Be able to interact with an SQL/Relational database to get data from it.  Basics of SQL.
++  Perform some computations in the database and then process the results in R.
 +  Understand when using a database is a good idea.
 
 
@@ -42,7 +43,7 @@ class: center, middle
 # Relational Database Management Systems - DBMS
 
 + Widely used in industry, academia
-+ Data repository for institution
++ Data repository for an institution, company, etc.
 
 + Many (most) databases use a client-server model
 
@@ -59,18 +60,32 @@ class: center, middle
 # Large Data
 
 + Databases capable of handling very large data
+
 + Efficient computational model to query and combine data
+
 + Efficient storage
    +  Minimize redundancies of repeating the same value.
+
+
+---
+# Key Concepts
+
++ One database made up of one or more tables.
+
++ Merge records/rows across tables to create new tables/*views*.
 
 ---
 # Tabular Data
 
 + A database is made up of related tables
 + Each table is rectangular
+
    + has rows and columns
+
    + like a data frame in R
+
    + rows/observations are called tuples
+
    + columns are called attributes
 
 + Order of the rows does not matter.
@@ -79,8 +94,11 @@ class: center, middle
 # Schema
 
 + Each table created with a SCHEMA
+
 + Columns have specified types
+
    + TEXT/VARCHAR, INTEGER, REAL, BOOL, BINARY, BLOB
+
 + Indicator for whether NA/NULL values are allowed
 
 
@@ -88,52 +106,82 @@ class: center, middle
 # Creating Databases
 
 + Simple to do basics
-+ But careful design to create efficient, flexible databases
+
++ But need careful design to create efficient, flexible databases
+
 + Typically, statisticians &amp; data scientists  work with existing databases
+
    + extract data
+
    + less frequently insert data
-   + much less common to build databases
+
+   + much less common to design/build databases
 
 
 ---
 # Avoiding Duplication in a Table.
 
 + Consider a University.
+
 + Students
+
 + Course
+
 + Instructors
+
 + Grades
 
 ---
 # Student
+
 + First Name
+
 + Last Name
+
 + Major
+
 + Address1, Address2, Address3
+
+   + street, city, state/country
+
 + Date enrolled
+
 + Date graduated
 
 ---
 # Course
+
 + Subject  (e.g. STA)
+
 + Number  (e.g. 141B)
+
 + Instructor
+
 + Lecture Time
+
 + Title
+
 + Description
 
 ---
-# Combine?
+# Avoid Redundancy
 
 + Don't want to have
+
   + Student details repeated in each course
+
   + instructor name repeated for each student in the course
+
   + title and description repeated for each offering the same course across years
 
+--
 + Put information in different tables
   + Student Metadata: SID, Name, Major, ...
+
   + Instructor Metadata: IID, Name, Department, ...
+
   + Course Metadata: CourseMeta ID, title and description, subject, number
+
   + Course Offerings:  CID, CourseMeta ID, IID, year, quarter
   + Class: tuples of  student-ID, CID
   + Rooms: tuples of CID, RoomID, Start & End times
@@ -152,22 +200,32 @@ class: center, middle
 + Pronounced sequel or spell out SQL
 
 + Language for querying the database
+
   + Domain Specific Language - like regular expressions
 
 + Declarative language
+
    + Say what you want to have happen
+
    + Not how to do it.
+
    + Not a regular programming language.
 
 + International Standard
-  + Each implementation/dialect has own additions
+
+  + Common core syntax, functionality.
+
+  + However, each implementation/dialect has own additions
 
 ---
 # SQLite
 
 + Standalone and embeded database
+
 + Stores tables in a file
+
 + Not a client-server model
+
   + Only single user at a time
 
 + Used in many applications, e.g. Firefox, OSX, ...
@@ -185,7 +243,7 @@ class: center, middle
 
 
 + Shell/terminal command to run sqlite3
-```
+```shell
 sqlite cookies.sqlite
 ```
 
@@ -211,7 +269,7 @@ moz_cookies
 ```
 .schema moz_cookies
 ```
-```
+```sql
 CREATE TABLE moz_cookies(id INTEGER PRIMARY KEY,
                          originAttributes TEXT NOT NULL DEFAULT '',
                          name TEXT,
@@ -237,7 +295,7 @@ CREATE TABLE moz_cookies(id INTEGER PRIMARY KEY,
 + SELECT is the primary operation
 
 + We'll find the number of rows
-```
+```sql
 SELECT COUNT(*) FROM moz_cookies;
 ```
 
@@ -257,28 +315,28 @@ SELECT COUNT(*) FROM moz_cookies;
 # Rows
 
 + Get all rows for all columns/attributes in table
-```
+```sql
 SELECT * FROM moz_cookies;
 ```
 
 + Get all rows for single column
-```
+```sql
 SELECT host FROM moz_cookies;
 ```
 
 + Get unique/distinct entries in host
-```
+```sql
 SELECT DISTINCT host FROM moz_cookies ;
 ```
 
 
 + Get counts for each host
-```
+```sql
 SELECT host, COUNT(*) FROM moz_cookies GROUP BY host;
 ```
 
 + Filter/Condition rows
-```
+```sql
 SELECT * FROM moz_cookies WHERE host = "www.nytimes.com";
 ```
 ```
@@ -294,15 +352,15 @@ SELECT * FROM moz_cookies WHERE host = "www.nytimes.com";
 
 + **Install** the DBI and RSQLite packages.
 + DBI provides a common interface to multiple database servers/engines
-   + Same commands but implemented in differently
+   + Same commands but implemented differently
 
 +  Load the package
-```
+```r
 library(RSQLite)
 ```
 
 + Connect to the database
-```
+```r
 db = dbConnect(SQLite(), "cookies.sqlite")
 ```
 
@@ -310,19 +368,19 @@ db = dbConnect(SQLite(), "cookies.sqlite")
 # dbListTables() & dbListFields()
 
 + Names of the tables in the database
-```
+```r
 dbListTables(db)
 ```
 
 + Names of the fields in a table
-```
+```r
 dbListFields(db, "moz_cookies")
 ```
   + name of table
 
 
 + List fields of all tables
-```
+```r
 lapply(dbListTables(db), function(tbl) dbListFields(db, tbl))
 ```
 
@@ -332,13 +390,13 @@ lapply(dbListTables(db), function(tbl) dbListFields(db, tbl))
 
 
 + R Command dbGetQuery()
-```
+```r
 dbGetQuery(db, "SELECT COUNT(*) FROM moz_cookies")
 ```
 
 + 1st Argument - Connection to the database
   + Created one time
-```
+```r
 db = dbConnect(SQLite(), "/path/to/sqlite/database/file")
 ```
 

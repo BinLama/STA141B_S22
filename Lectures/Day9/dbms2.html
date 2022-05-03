@@ -47,24 +47,24 @@ class: center, middle
 # Subsetting
 
 +  WHERE
-```
+```sql
 SELECT * FROM moz_cookies WHERE expiry > 1632529635
 ```
 
 + equality operator `=`
-```
+```sql
 SELECT * FROM moz_cookies WHERE host = 'www.nytimes.com'
 ```
 
 + Also `<`, `<=`, `>=`, etc.
 
 + Also !=, but can also use NOT
-```
+```sql
 SELECT COUNT(*) FROM moz_cookies WHERE host != 'www.nytimes.com' 
 ```
 
 + But there is a more general NOT operator
-```
+```sql
 SELECT count(*) FROM moz_cookies WHERE NOT host = 'www.nytimes.com' 
 ```
 
@@ -72,16 +72,13 @@ SELECT count(*) FROM moz_cookies WHERE NOT host = 'www.nytimes.com'
 # Other Predicate Tests
 
 + `BETWEEN val1 AND  val2`
-```
+```sql
 SELECT * FROM moz_cookies
     WHERE expiry BETWEEN 1000000 AND 2000000
 ```
 
-
-WHERE host LIKE ('%.org')
-
 + ` IN (val, val, ...)`
-```
+```sql
 SELECT * FROM moz_cookies
    WHERE host IN ('www.nytimes.com', 'www.washingtonpost.com')
 ```
@@ -89,28 +86,33 @@ SELECT * FROM moz_cookies
 + IS NULL
    + for detecting values that are NULL or empty.
 
++ `WHERE host LIKE '%.org'`
+
 ---
 # Simple Pattern Matching - LIKE
 
 +  `LIKE 'pattern'`
 
 + Different from regular expressions
+
   + Some DBMS provide regular expression functions.
+
     + built-in or via extensions
 
 +  _ - matches any character
+
 +  % - matches 0 or more (any) characters 
 
 + e.g. host values that end with .org
-```
+```sql
 SELECT host FROM moz_cookies
-   WHERE  host LIKE '%.org'
+            WHERE  host LIKE '%.org'
 ```
 
 + e.g. host name that starts with `www.`, ends with `.com` and has three characters in between
-```
+```sql
 SELECT host FROM moz_cookies
-   WHERE  host LIKE 'www.___.com'
+            WHERE  host LIKE 'www.___.com'
 ```
 
 
@@ -119,7 +121,7 @@ SELECT host FROM moz_cookies
 
 + With these operators beyond =, we need NOT as more general version than !=
 
-```
+```sql
 WHERE NOT expiry BETWEEN 1000000 AND 2000000
 
 WHERE NOT host IN ('www.nytimes.com', 'www.washingtonpost.com')
@@ -133,7 +135,7 @@ WHERE NOT host LIKE ('%.org')
 
 + Combine logical tests/predicates
   + AND, OR
-```
+```sql
 SELECT * FROM moz_cookies
     WHERE   host = 'www.nytimes.com'
              OR host = 'www.washingtonpost.com'
@@ -143,19 +145,21 @@ SELECT * FROM moz_cookies
 # Naming Columns in the Result - `AS`
 
 + Sometimes names of columns are inconvenient
-```
+```sql
 a = dbGetQuery(con, "SELECT host, COUNT(*) FROM moz_cookies GROUP BY host")
 names(a)
 ```
+  + second coulmn's name is `"COUNT(*)"`
 
 
 + Use AS keyword in query to map name to column in results
+
   + Only in the results, not in the original table(s) in the DBMS.
 
-```
+```sql
 SELECT  var  AS name FROM table;
 ```
-```
+```sql
 SELECT  COUNT(*) AS num FROM table;
 ```
 
@@ -170,34 +174,42 @@ names(a)
 # Operations on Columns
 
 + Can transform  variables with functions and arithmetic
-```
+```sql
 SELECT age / 10, log (weight), weight/height, substr(IPAddress, 1, 3) FROM table;
 ```
 + NOTE:  SQLite has very few built-in math functions
 
 + These work tuple by tuple and return a value for each tuple
+
   + Scalar functions
+
   + Different from aggregate functions such as COUNT(), MIN(), MAX(), AVG()
+
     + operate one tuple at a time but only return a single result, not per tuple.
+
+---
+# Operations on Columns (ctd.)
 
 + Use AS to rename these columns, as desired
 
 + Can also use the new variable name  in the WHERE clause
-```
+```sql
 SELECT DISTINCT host, length(host) AS Len FROM moz_cookies
   WHERE Len > 10
 ```
-     COUNT (DISTINCT var)
-        dbGetQuery(con, "SELECT COUNT(name) AS Num FROM moz_cookies ")
-        dbGetQuery(con, "SELECT COUNT( DISTINCT host) AS Num FROM moz_cookies ")
 
++ `COUNT (DISTINCT var)`
+```r
+ dbGetQuery(con, "SELECT COUNT(name) AS Num FROM moz_cookies ")
+ dbGetQuery(con, "SELECT COUNT( DISTINCT host) AS Num FROM moz_cookies ")
+```
 ---
 # Subset based on value computed from table
 
 + Suppose we want to get the rows that have a value of expiry greater than the log of the mean of expiry
 
 + In R
-```
+```r
 df[ df$expiry > mean(log(df$expiry)), ]
 ```
 or
@@ -213,6 +225,9 @@ dbGetQuery(con, "SELECT * FROM moz_cookies WHERE log(expiry) > AVG(log(expiry))"
 ```
 
 + Doesn't work - get an error message.
+```
+Error: misuse of aggregate function AVG()
+```
 
 ---
 # Nested Queries
