@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Relational Databases 4</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Relational Databases - 5
+
+
+
+### Duncan Temple Lang
+
+<div style="clear: both"/>
+
+
+---
+# Question 3
+
++ How many answers are posted **after** an answer is accepted?
+
++ Need to compare times of accepted answer and other answers
+  + Connect to original question.
+
++ Three-level self-join
+  +  question,
+  + accepted answer,
+  + other answers
+
+```sql
+SELECT q.Id, COUNT(o.Id) AS numAnswersAfterAccepted,
+       (julianday(o.CreationDate) - julianday(a.CreationDate))*86400 AS diff
+FROM Posts AS q, Posts AS a, Posts AS o
+WHERE  q.Id = a.ParentId
+   AND q.Id = o.ParentId
+   AND q.AcceptedAnswerId = a.Id
+   AND diff > 0
+GROUP BY q.Id
+```
+
+---
++ Putting time comparison directly in WHERE 
+```sql
+SELECT q.Id, COUNT(o.Id) AS numAnswersAfterAccepted,
+FROM Posts AS q, Posts AS a, Posts AS o
+WHERE  q.Id = a.ParentId
+   AND q.Id = o.ParentId
+   AND q.AcceptedAnswerId = a.Id
+   AND julianday(o.CreationDate) > julianday(a.CreationDate)
+GROUP BY q.Id      
+```
+
++ No longer in result set
+   + Was using it to validate results
+
+---
+# Question 4
+
++ What are the most common tags?
+
++ Tags field in Posts
+
+```
+&lt;database-theory&gt;&lt;relational-algebra&gt;&lt;finite-model-theory&gt;
+```
++ Approaches
+   + Need to split these into individual tags.
+      + split on "><"
+   + Could count the number of >< and add 1.
+   + SQLite doesn't have the functions we want
+
+---
+# Separate Table with Individual Tags and Question Id
+
++ `TagPosts` table has the individual/separated tags
+  rather than the string with multiple tags in the Posts table.
+
++ Most common Tags
+
+```sql
+SELECT Tag, COUNT(Tag) AS count 
+FROM TagPosts 
+GROUP BY Tag
+ORDER BY count DESC;
+```
+    
+
+---
+# Do the counts in the Tags table match those in the Posts?    
+
+<!-- Shows a GROUP_CONCAT() -->
+
++ Combine the Tags in TagPosts by question to form same string as in Posts
+  + Have to worry about the order of the tags in each question.
+  + Database doesn't guarantee order
+
++ 
+```sql
+SELECT Id, GROUP_CONCAT('<' || Tag || '>', '') AS tag 
+FROM TagPosts 
+GROUP BY Id;
+```
+
++ 
+So now we can combine this table with the Posts by JOINing on question Id
+```sql
+SELECT p.Id, Tags, tp.tag
+FROM Posts AS p, 
+     (SELECT Id, GROUP_CONCAT('<' || Tag || '>', '') AS tag 
+        FROM TagPosts 
+        GROUP BY Id ) AS tp
+WHERE p.Id = tp.Id
+```
+
+---
+#   To compare the two sets
+
+```sql     
+CREATE VIEW  tmpTags AS 
+SELECT p.Id, Tags, tp.tag
+FROM Posts AS p, 
+     (SELECT Id, GROUP_CONCAT('<' || Tag || '>', '') AS tag 
+        FROM TagPosts 
+        GROUP BY Id ) AS tp
+WHERE p.Id = tp.Id
+
+SELECT Id, Tags, tag FROM tmpTags WHERE Tags != tag;
+```     
+
+---
+# Cumulative Sum
+
++ How to compute the cumulative sum in SQL?
+  + across rows/tuples,
+  + but not a single answer
+
++ Let's make a simple table for exploring
+
+```sql
+CREATE TABLE A (
+  year INTEGER,
+  val INTEGER
+);
+INSERT INTO A VALUES
+(2004, 2), (2003, 12), (2002, 3), (2005, 5);
+
+2004|2
+2003|12
+2002|3
+2005|5
+```
+
++ Want to compute  cumulative sum across years of val
+```
+year a  cumulativeSum
+2002|3 |3
+2003|12|15
+2004|2 |17
+2005|5 |22
+```
+
+---
+# Window functions and the OVER operator
+
++ aggregate functions (e.g. SUM, MIN, AVG) compute over all tuples in a group or entire table.
+  + typically reduce to one result
+
++ Window functions work on one or more  rows,
+   + but returns a value for each tuple.
+
+```sql
+SELECT year, val, SUM(val) OVER (ORDER BY year DESC)
+FROM A;
+```
+
++ Order the result (not the window function) by year
+
+```sql
+SELECT year, val, SUM(val) OVER (ORDER BY year DESC)
+FROM A
+ORDER BY year;
+```
+
++   Or can "name" the window, creating it later in the query
+
+```sql
+SELECT a, SUM(a) OVER win
+FROM A
+WINDOW win AS (ORDER BY a DESC);
+```
+
+
+---
+# Compute differences between values
+
++ Differences between years
+   + e.g. 2003's value - 2002's value,
+   + 2005's value - 2004's value
+
++ Let's add a new year
+```sql
+INSERT INTO A VALUES (2010, 32);
+```
+
++ Want to get
+```
+2002|
+2003|1
+2004|1
+2005|1
+2010|5
+```
+
+---
+# Refer to previous row
+
++ lag() function
+
+```sql
+select year,  year - lag(year) OVER win
+FROM A
+WINDOW win AS (ORDER BY year);
+```
+
+
+<!--
+select year,  year - lag(year, 1, 0) OVER win
+FROM A
+WINDOW win AS (ORDER BY year);
+-->
+
+
+---
+# Getting Data from the Web
+
++ How would you approach
+
+   + Downloading today's questions on StackOverflow
+   + Downloading the posts on Piazza
+   + Getting election results.
+
++ Think about it for Thursday's class.
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
