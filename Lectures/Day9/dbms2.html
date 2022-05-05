@@ -107,24 +107,24 @@ dbGetQuery(db, "SELECT COUNT(*) FROM moz_cookies LIMIT 20" )
 # Subsetting
 
 +  WHERE
-```
+```sql
 SELECT * FROM moz_cookies WHERE expiry > 1632529635
 ```
 
 + equality operator `=`
-```
+```sql
 SELECT * FROM moz_cookies WHERE host = 'www.nytimes.com'
 ```
 
 + Also `<`, `<=`, `>=`, etc.
 
 + Also !=, but can also use NOT
-```
+```sql
 SELECT COUNT(*) FROM moz_cookies WHERE host != 'www.nytimes.com' 
 ```
 
 + But there is a more general NOT operator
-```
+```sql
 SELECT count(*) FROM moz_cookies WHERE NOT host = 'www.nytimes.com' 
 ```
 
@@ -132,16 +132,13 @@ SELECT count(*) FROM moz_cookies WHERE NOT host = 'www.nytimes.com'
 # Other Predicate Tests
 
 + `BETWEEN val1 AND  val2`
-```
+```sql
 SELECT * FROM moz_cookies
     WHERE expiry BETWEEN 1000000 AND 2000000
 ```
 
-
-WHERE host LIKE ('%.org')
-
 + ` IN (val, val, ...)`
-```
+```sql
 SELECT * FROM moz_cookies
    WHERE host IN ('www.nytimes.com', 'www.washingtonpost.com')
 ```
@@ -149,28 +146,33 @@ SELECT * FROM moz_cookies
 + IS NULL
    + for detecting values that are NULL or empty.
 
++ `WHERE host LIKE '%.org'`
+
 ---
 # Simple Pattern Matching - LIKE
 
 +  `LIKE 'pattern'`
 
 + Different from regular expressions
+
   + Some DBMS provide regular expression functions.
+
     + built-in or via extensions
 
 +  _ - matches any character
+
 +  % - matches 0 or more (any) characters 
 
 + e.g. host values that end with .org
-```
+```sql
 SELECT host FROM moz_cookies
-   WHERE  host LIKE '%.org'
+            WHERE  host LIKE '%.org'
 ```
 
 + e.g. host name that starts with `www.`, ends with `.com` and has three characters in between
-```
+```sql
 SELECT host FROM moz_cookies
-   WHERE  host LIKE 'www.___.com'
+            WHERE  host LIKE 'www.___.com'
 ```
 
 
@@ -179,7 +181,7 @@ SELECT host FROM moz_cookies
 
 + With these operators beyond =, we need NOT as more general version than !=
 
-```
+```sql
 WHERE NOT expiry BETWEEN 1000000 AND 2000000
 
 WHERE NOT host IN ('www.nytimes.com', 'www.washingtonpost.com')
@@ -193,7 +195,7 @@ WHERE NOT host LIKE ('%.org')
 
 + Combine logical tests/predicates
   + AND, OR
-```
+```sql
 SELECT * FROM moz_cookies
     WHERE   host = 'www.nytimes.com'
              OR host = 'www.washingtonpost.com'
@@ -203,19 +205,21 @@ SELECT * FROM moz_cookies
 # Naming Columns in the Result - `AS`
 
 + Sometimes names of columns are inconvenient
-```
+```sql
 a = dbGetQuery(con, "SELECT host, COUNT(*) FROM moz_cookies GROUP BY host")
 names(a)
 ```
+  + second coulmn's name is `"COUNT(*)"`
 
 
 + Use AS keyword in query to map name to column in results
+
   + Only in the results, not in the original table(s) in the DBMS.
 
-```
+```sql
 SELECT  var  AS name FROM table;
 ```
-```
+```sql
 SELECT  COUNT(*) AS num FROM table;
 ```
 
@@ -230,34 +234,42 @@ names(a)
 # Operations on Columns
 
 + Can transform  variables with functions and arithmetic
-```
+```sql
 SELECT age / 10, log (weight), weight/height, substr(IPAddress, 1, 3) FROM table;
 ```
 + NOTE:  SQLite has very few built-in math functions
 
 + These work tuple by tuple and return a value for each tuple
+
   + Scalar functions
+
   + Different from aggregate functions such as COUNT(), MIN(), MAX(), AVG()
+
     + operate one tuple at a time but only return a single result, not per tuple.
+
+---
+# Operations on Columns (ctd.)
 
 + Use AS to rename these columns, as desired
 
 + Can also use the new variable name  in the WHERE clause
-```
+```sql
 SELECT DISTINCT host, length(host) AS Len FROM moz_cookies
   WHERE Len > 10
 ```
-     COUNT (DISTINCT var)
-        dbGetQuery(con, "SELECT COUNT(name) AS Num FROM moz_cookies ")
-        dbGetQuery(con, "SELECT COUNT( DISTINCT host) AS Num FROM moz_cookies ")
 
++ `COUNT (DISTINCT var)`
+```r
+ dbGetQuery(con, "SELECT COUNT(name) AS Num FROM moz_cookies ")
+ dbGetQuery(con, "SELECT COUNT( DISTINCT host) AS Num FROM moz_cookies ")
+```
 ---
 # Subset based on value computed from table
 
 + Suppose we want to get the rows that have a value of expiry greater than the log of the mean of expiry
 
 + In R
-```
+```r
 df[ df$expiry > mean(log(df$expiry)), ]
 ```
 or
@@ -273,6 +285,11 @@ dbGetQuery(con, "SELECT * FROM moz_cookies WHERE log(expiry) > AVG(log(expiry))"
 ```
 
 + Doesn't work - get an error message.
+```
+Parse error: misuse of aggregate function AVG()
+  SELECT * FROM moz_cookies WHERE log(expiry) > AVG(log(expiry));
+                                  error here ---^
+```
 
 ---
 # Nested Queries
@@ -284,8 +301,11 @@ SELECT * FROM moz_cookies
 ```
 
 + Another approach is 2 queries from R
+
    + Get the mean
+
    + Insert that value into a second query
+
 ```{r}
 expiry.mean = dbGetQuery(con, "SELECT AVG(log(expiry)) FROM moz_cookies")[1, 1]
 qry = sprintf("SELECT * FROM moz_cookies WHERE log(expiry) > %lf", expiry.mean)
@@ -296,14 +316,16 @@ ans = dbGetQuery(con, qry)
 # Grouping 
 
 + Want to operate separately on groups of rows group by one or more variables
+
 + Like tapply(), by(), aggregate() in R
+
 + Not just want the rows from the DBMS arranged by this grouping variable
    + Then just use ORDER BY to arrange the rows
 
 
-+  GROUP BY
-```
-dbGetQuery(con, "SELECT COUNT(host) FROM moz_cookies GROUP BY host")
++ `GROUP BY`
+```sql
+SELECT COUNT(host) FROM moz_cookies GROUP BY host;
 ```
 
 +  Almost always also want the group value
@@ -312,14 +334,18 @@ dbGetQuery(con, "SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host
 ```
 
 ---
-# ORDER BY
+# `ORDER BY`
 
 + And often want to order the results
   + could do it in R, but also in DBMS
 
+```sql
+SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host ORDER BY Num;
 ```
-dbGetQuery(con, "SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host ORDER BY Num")
-dbGetQuery(con, "SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host ORDER BY Num DESC")
+
++ Control order
+```sql
+SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host ORDER BY Num DESC;
 ```
 ---
 # Subsetting the Groups
@@ -329,10 +355,14 @@ dbGetQuery(con, "SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host
 + Can subset/post-process the results in R.
 
 + In SQL, can use nested SELECT
-```
+```sql
 SELECT host, COUNT(*)
    FROM
-      (SELECT * FROM moz_cookies WHERE host IN ('www.nytimes.com', 'www.washingtonpost.com', '.wikipedia.org'))
+      (SELECT * FROM moz_cookies
+                WHERE
+                   host IN ('www.nytimes.com',
+                            'www.washingtonpost.com',
+                            '.wikipedia.org'))
    GROUP BY host
 ```
 
@@ -341,7 +371,8 @@ SELECT host, COUNT(*)
 
 + Alternatively, subset the results based on a dynamic/data-based value
   + e.g. groups where the count > 10 or average count
-```
+
+```sql
 # WRONG 
 SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host WHERE Num > 10
 ```
@@ -350,7 +381,8 @@ SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host WHERE Num > 10
 + WHERE needs to apply to the rows created via the SELECT-FROM
 
 + Instead, use HAVING for subsetting the results of GROUP BY
-```
+
+```sql
 SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host HAVING Num > 10
 ```
 
@@ -358,17 +390,30 @@ SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host HAVING Num > 10
 # Working in Chunks
 
 + Query that generates large amount of data
+
    + Don't want to have it all in R at the same time
+
 + Or want to process each group and do something with related other data
+
 + Or want to work asynchronously
+
    + Have database work on query while we continue do something else (in R session) as we wait
+
    + Check back with the database to 
+
 + `rs = dbSendQuery(db, sql)`
+
    + Send query and immediately return to R
+
    + don't wait for the result
 
-+ Returned object is a `result set`
+---
+# Working with Chunks (ctd.)
+
++ Returned object from `dbSendQuery()` is a `result set`
+
    + Can query it to see if there are rows available
+
    + read `n` of those rows.
 
 
@@ -382,11 +427,14 @@ SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host HAVING Num > 10
 # VIEW
 
 + Ordinarily, the result set disappears after query.
+
 + Sometimes we want to operate on the result set with several subsequent queries.
+
 + Use a VIEW - virtual table that wasn't in defined in the original DBMS
+
    + Will disappear when we disconnect from the DBMS
 
-```
+```sql
 CREATE VIEW OrgCookies
  AS SELECT * FROM moz_cookies WHERE host LIKE '%.org';
 
@@ -394,7 +442,8 @@ SELECT COUNT(*) FROM OrgCookies;
 ```
 
 +  Can explicitly discard view with `DROP VIEW`
-```
+
+```sql
 DROP VIEW OrgCookies
 ```
 
@@ -406,9 +455,11 @@ DROP VIEW OrgCookies
 + *Thanks to Nick Ulle and Clark Fitzgerald for examples.*
 
 + Simple example
+
 + 2 tables
 
 + Company name, stock ticker string, income and SIC code(?)
+
   + `fang_info`
 ```
   ticker   company_name sic_code  net_income
@@ -421,8 +472,11 @@ DROP VIEW OrgCookies
 ---
 
 + SIC code is a Standard Industrial Classification for an industry
+
 + Table of SIC codes and descriptions
+
    + fang_sic
+
 ```
    SIC                            Description
 1 3292                       Abestos Products
@@ -458,8 +512,11 @@ DROP VIEW OrgCookies
 4   NFLX    NETFLIX INC     7841   186678000 7841             Video Tape Rental
 ```
    + all rows from fang_info
+
    + Description and SIC from fang_sic when they match
+
    + NULL (or missing values  in R) when no match
+
    + ** LEFT JOIN**
 
 ---
