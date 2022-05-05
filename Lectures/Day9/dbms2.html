@@ -33,14 +33,74 @@ class: center, middle
 ---
 # Previously.....
 
++ Motivation for relational databases
 + sqlite3 command line in shell/terminal
 + DBI and RSQLite packages in R
 + dbConnect()
-+ dbListTables(db)
-+ dbListFields()
 + `SELECT  variables FROM table`
 + dbGetQuery()
-+ LIMIT
+
+
+
+---
+# dbListTables() & dbListFields()
+
++ Names of the tables in the database
+```
+dbListTables(db)
+```
+
++ Names of the fields in a table
+```
+dbListFields(db, "moz_cookies")
+```
+  + name of table
+
+
++ List fields of all tables
+```
+lapply(dbListTables(db), function(tbl) dbListFields(db, tbl))
+```
+
+
+---
+# SELECT Query - number of rows
+
+
++ R Command dbGetQuery()
+```
+dbGetQuery(db, "SELECT COUNT(*) FROM moz_cookies")
+```
+
++ 1st Argument - Connection to the database
+  + Created one time
+```
+db = dbConnect(SQLite(), "/path/to/sqlite/database/file")
+```
+
++ 2nd Argument is SQL command as a string
+  + Analogous to regular expression in `grep(rx, str)`
+     + interpreted by regular expression engine.
+     + not interpreted by R
+
+---
+#  LIMIT
+
++ Like the head() function, want to see only the first n rows in the result.
+
++ Use LIMIT
+
+```r
+dbGetQuery(db, "SELECT COUNT(*) FROM moz_cookies LIMIT 20" )
+```
+
+
+---
+# Single Table versus Two or more tables
+
++ Today we'll start with one table and build up the elements of SQL
+
++ Then move  to 2+ tables.
 
 
 ---
