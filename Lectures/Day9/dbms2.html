@@ -235,7 +235,8 @@ names(a)
 
 + Can transform  variables with functions and arithmetic
 ```sql
-SELECT age / 10, log (weight), weight/height, substr(IPAddress, 1, 3) FROM table;
+SELECT age / 10, log (weight), weight/height, substr(IPAddress, 1, 3)
+  FROM table;
 ```
 + NOTE:  SQLite has very few built-in math functions
 
@@ -340,12 +341,18 @@ dbGetQuery(con, "SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host
   + could do it in R, but also in DBMS
 
 ```sql
-SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host ORDER BY Num;
+SELECT host, COUNT( host) AS Num
+FROM moz_cookies
+GROUP BY host
+ORDER BY Num;
 ```
 
 + Control order
 ```sql
-SELECT host, COUNT( host) AS Num FROM moz_cookies GROUP BY host ORDER BY Num DESC;
+SELECT host, COUNT( host) AS Num
+FROM moz_cookies
+GROUP BY host
+ORDER BY Num DESC;
 ```
 ---
 # Subsetting the Groups
@@ -374,7 +381,10 @@ SELECT host, COUNT(*)
 
 ```sql
 # WRONG 
-SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host WHERE Num > 10
+SELECT host, COUNT(*) As Num
+FROM moz_cookies
+GROUP BY host
+WHERE Num > 10
 ```
   + Syntax error
 
@@ -383,7 +393,10 @@ SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host WHERE Num > 10
 + Instead, use HAVING for subsetting the results of GROUP BY
 
 ```sql
-SELECT host, COUNT(*) As Num FROM moz_cookies GROUP BY host HAVING Num > 10
+SELECT host, COUNT(*) As Num
+FROM moz_cookies
+GROUP BY host
+HAVING Num > 10
 ```
 
 ---
