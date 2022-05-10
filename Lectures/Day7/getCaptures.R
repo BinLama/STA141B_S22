@@ -18,8 +18,9 @@ function(str, m, asDataFrame = FALSE)
     st = attr(m, "capture.start");
     ans =  substring(str, st, st + attr(m, "capture.length") - 1L)
     if(asDataFrame)
-        structure(as.data.frame(as.list(ans), stringsAsFactors = FALSE, make.names = FALSE),
-                  names = attr(m, "capture.names"))
+        structure(as.data.frame(as.list(ans), stringsAsFactors = FALSE, make.names = FALSE, row.names = NULL),
+#        structure(as.list(ans), class = "data.frame",
+                   names = attr(m, "capture.names"))
     else
         ans
 }
