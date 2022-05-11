@@ -400,6 +400,49 @@ HAVING Num > 10
 ```
 
 ---
+# HAVING clause
+
++ Often use HAVING on COUNT() which has aggregated the records in a sub-group to a single tuple
+
++ However, HAVING works row by row within each sub-group
+  + COUNT() is a special case where only one tuple in each sub-group.
+
++ See havingEg.sql
+
+
+---
+# Test Database
+
++ Create database with a table
+```sql
+CREATE TABLE Foo (
+ g INTEGER,
+ age  INTEGER
+);
+```
+
++ Populate with sample values
+```sql
+INSERT INTO Foo VALUES
+(1, 20),
+(1, 30),
+(1, 10),
+(2, 55),
+(2, 27);
+```
+
++ Test query
+```sql
+select * FROM Foo
+GROUP BY g
+HAVING age = MIN(age);
+1|10
+2|27
+```
+
+
+
+---
 # Working in Chunks
 
 + Query that generates large amount of data
@@ -475,7 +518,7 @@ DROP VIEW OrgCookies
 
   + `fang_info`
 ```
-  ticker   company_name sic_code  net_income
+	      ticker   company_name sic_code  net_income
 1   AMZN AMAZON COM INC     5961  2371000000
 2 GOOGLE  ALPHABET INC.     7370 19478000000
 3     FB   FACEBOOK INC     7370 10188000000
@@ -515,8 +558,8 @@ DROP VIEW OrgCookies
    + matched the sic_code to SIC and got Description
    + **INNER JOIN**
 
-
-+ Alternative, may want
+---
+# Alternative, may want
 ```
    ticker   company_name sic_code  net_income  SIC                   Description
 1   AMZN AMAZON COM INC     5961  2371000000 5961 Catalog and Mail-Order Houses
@@ -555,8 +598,9 @@ DROP VIEW OrgCookies
 ```
 
 + Obtain with
-```
-SELECT * FROM fang_info JOIN fang_sic"
+```sql
+SELECT * FROM fang_info
+JOIN fang_sic
 ```
 
 ---
@@ -568,7 +612,7 @@ SELECT * FROM fang_info JOIN fang_sic"
    + e.g.  fang_info.sic_code
 
 +  Example 
-```
+```sql
 SELECT * FROM fang_info, fang_sic
     WHERE fang_info.sic_code = fang_sic.SIC;
 
@@ -581,13 +625,13 @@ SELECT * FROM fang_info, fang_sic
 
 + Can drop tableName in tableName.columnName if unambiguous
    + i.e. name not in two or more tables
-```
+```sql
 SELECT * FROM fang_info, fang_sic 
     WHERE sic_code = SIC;
 ```
 
 + Can also use AS to give short name for table
-```
+```sql
 SELECT * FROM fang_info AS fi, fang_sic AS sic
     WHERE fi.sic_code = sic.SIC;
 ```
@@ -597,21 +641,21 @@ SELECT * FROM fang_info AS fi, fang_sic AS sic
 # INNER JOIN
 
 + Want
-```
+```sql
   ticker   company_name sic_code net_income  SIC                   Description
 1   AMZN AMAZON COM INC     5961 2371000000 5961 Catalog and Mail-Order Houses
 2   NFLX    NETFLIX INC     7841  186678000 7841             Video Tape Rental
 ```
 
 
-```
+```sql
 SELECT * FROM fang_info
   INNER JOIN fang_sic
   ON fang_info.sic_code = fang_sic.SIC;
 ```
 
 + Same as
-```
+```sql
 SELECT * FROM fang_info, fang_sic
     WHERE fang_info.sic_code = fang_sic.SIC;
 ```
@@ -621,7 +665,7 @@ SELECT * FROM fang_info, fang_sic
 
 + Result has a row for each row in the left table
   + NULL values when no match in the right table
-```
+```sql
 SELECT * FROM fang_info
   LEFT JOIN fang_sic
   ON fang_info.sic_code = fang_sic.SIC;
@@ -629,11 +673,14 @@ SELECT * FROM fang_info
 
 
 ---
-# Matches don't have to 1 tuple to a single tuple
+# Tuple Matches Many Tuples
+
++ Matches don't have to match one tuple to a single tuple
+
 
 + 3rd table  fang_prices
 ```
-   ticker       date    high
+	   ticker       date    high
 1    AMZN 2018-02-07 1460.99
 2      FB 2018-02-07  185.08
 3  GOOGLE 2018-02-07 1086.53
@@ -667,22 +714,264 @@ SELECT * FROM fang_info AS i
 10   NFLX    NETFLIX INC     7841   186678000   NFLX 2018-02-07  272.45
 ```
 
+```sql
+SELECT *
+FROM fang_info AS i,
+     fang_prices AS p
+WHERE i.ticker = p.ticker;
+```
+
 ---
 # Note
 
 + 
-```
+```sql
 SELECT * FROM fang_info AS i
    INNER JOIN fang_prices AS p
            ON i.ticker = p.ticker;
 ```
 + Note the use of AS for the table names
+
 + The need to differentiate the two ticker columns
 
 + The result contains two columns named ticker
 ```
     ticker   company_name sic_code  net_income ticker       date    high
 ```
+
+---
+# Order of Evaluation of SQL Query
+
++ Understanding how the different elements of a query are evaluated helps to reason and debug
+
++ Consider the stackexchange data
+
+```sql
+SELECT  PostTypeId, value, COUNT(PostTypeId) 
+ FROM Posts AS p, PostTypeIdMap AS m  
+ WHERE PostTypeId = m.Id 
+   AND value IN ('Question', 'Answer')
+ GROUP BY PostTypeId 
+```
+
+
+
+---
+# Evaluation Order
+
+
++ FROM or JOIN 
+
++ WHERE - selects the rows to be operated on.
+   + executed before both the aggregate functions and the SELECT statement.
+
++ GROUP BY
+   + any grouping levels eliminated by the WHERE will not appear as groups.
+
++ HAVING evaluated after the aggregation functions
+
++ SELECT - creates a new table with columns specified and the rows produced by the clauses before
+
++ DISTINCT - after SELECT has created a new table
+
++ ORDER BY 
+
++ LIMIT 
+
+---
+# What about Nested Queries?
+
++ They are evaluated according to the same order as above.
+
++ Whatever step in which the nested query occurs
+
+
+
+
+---
+# Reasoning about JOINs
+
++ Two tables <!-- - A and B -->
++ Compatible columns in each x and y
+
+```sql
+select * FROM fang_info;
+
+AMZN|AMAZON COM INC|5961|2371000000.0
+GOOGLE|ALPHABET INC.|7370|19478000000.0
+FB|FACEBOOK INC|7370|10188000000.0
+NFLX|NETFLIX INC|7841|186678000.0
+```
+
+```sql
+select * FROM fang_sic;
+
+3292|Abestos Products
+5182|Wine and Distilled Alcoholic Beverages
+5961|Catalog and Mail-Order Houses
+7841|Video Tape Rental
+```
+
+---
+# TIMES/Cartesian Product/CROSS JOIN
+
++ Consider all possible pairs of tuples between the two tables
+
+```sql
+SELECT * FROM fang_info CROSS JOIN fang_sic;
+
+AMZN|AMAZON COM INC|5961|2371000000.0|3292|Abestos Products
+AMZN|AMAZON COM INC|5961|2371000000.0|5182|Wine and Distilled Alcoholic Beverages
+AMZN|AMAZON COM INC|5961|2371000000.0|5961|Catalog and Mail-Order Houses
+AMZN|AMAZON COM INC|5961|2371000000.0|7841|Video Tape Rental
+GOOGLE|ALPHABET INC.|7370|19478000000.0|3292|Abestos Products
+GOOGLE|ALPHABET INC.|7370|19478000000.0|5182|Wine and Distilled Alcoholic Beverages
+GOOGLE|ALPHABET INC.|7370|19478000000.0|5961|Catalog and Mail-Order Houses
+GOOGLE|ALPHABET INC.|7370|19478000000.0|7841|Video Tape Rental
+FB|FACEBOOK INC|7370|10188000000.0|3292|Abestos Products
+FB|FACEBOOK INC|7370|10188000000.0|5182|Wine and Distilled Alcoholic Beverages
+FB|FACEBOOK INC|7370|10188000000.0|5961|Catalog and Mail-Order Houses
+FB|FACEBOOK INC|7370|10188000000.0|7841|Video Tape Rental
+NFLX|NETFLIX INC|7841|186678000.0|3292|Abestos Products
+NFLX|NETFLIX INC|7841|186678000.0|5182|Wine and Distilled Alcoholic Beverages
+NFLX|NETFLIX INC|7841|186678000.0|5961|Catalog and Mail-Order Houses
+NFLX|NETFLIX INC|7841|186678000.0|7841|Video Tape Rental
+```
+
+---
+# WHERE 
+
++ INNER JOIN
++ Keep only the rows where sic_code = sic
+
+
+<pre>
+AMZN|AMAZON COM INC|5961|2371000000.0|3292|Abestos Products
+AMZN|AMAZON COM INC|5961|2371000000.0|5182|Wine and Distilled Alcoholic Beverages
+<a style="color:red">AMZN|AMAZON COM INC|5961|2371000000.0|5961|Catalog and Mail-Order Houses</a>
+AMZN|AMAZON COM INC|5961|2371000000.0|7841|Video Tape Rental
+GOOGLE|ALPHABET INC.|7370|19478000000.0|3292|Abestos Products
+GOOGLE|ALPHABET INC.|7370|19478000000.0|5182|Wine and Distilled Alcoholic Beverages
+GOOGLE|ALPHABET INC.|7370|19478000000.0|5961|Catalog and Mail-Order Houses
+GOOGLE|ALPHABET INC.|7370|19478000000.0|7841|Video Tape Rental
+FB|FACEBOOK INC|7370|10188000000.0|3292|Abestos Products
+FB|FACEBOOK INC|7370|10188000000.0|5182|Wine and Distilled Alcoholic Beverages
+FB|FACEBOOK INC|7370|10188000000.0|5961|Catalog and Mail-Order Houses
+FB|FACEBOOK INC|7370|10188000000.0|7841|Video Tape Rental
+NFLX|NETFLIX INC|7841|186678000.0|3292|Abestos Products
+NFLX|NETFLIX INC|7841|186678000.0|5182|Wine and Distilled Alcoholic Beverages
+NFLX|NETFLIX INC|7841|186678000.0|5961|Catalog and Mail-Order Houses
+<a style="color:red">NFLX|NETFLIX INC|7841|186678000.0|7841|Video Tape Rental</a>
+</pre>
+
+
+
+---
+# LEFT JOIN
+
++ Same as INNER JOIN
+   + THEN
++ Append the rows/tuples that had no match with the second/right table
+  + rows from left/first table
+  + NULL values for all the columns  from second/right table.
+  
+
+
+---
+# Cumulative Sum
+
++ How to compute the cumulative sum in SQL?
+  + across rows/tuples,
+  + but not a single answer
+
++ Let's make a simple table for exploring
+
+```sql
+CREATE TABLE A (
+  year INTEGER,
+  val INTEGER
+);
+INSERT INTO A VALUES
+(2004, 2), (2003, 12), (2002, 3), (2005, 5);
+
+2004|2
+2003|12
+2002|3
+2005|5
+```
+
++ Want to compute  cumulative sum across years of val
+```
+year a  cumulativeSum
+2002|3 |3
+2003|12|15
+2004|2 |17
+2005|5 |22
+```
+
+---
+# Window functions and the OVER operator
+
++ aggregate functions (e.g. SUM, MIN, AVG) compute over all tuples in a group or entire table.
+  + typically reduce to one result
+
++ Window functions work on one or more  rows,
+   + but returns a value for each tuple.
+
+```sql
+SELECT year, val, SUM(val) OVER (ORDER BY year DESC)
+FROM A;
+```
+
++ Order the result (not the window function) by year
+
+```sql
+SELECT year, val, SUM(val) OVER (ORDER BY year DESC)
+FROM A
+ORDER BY year;
+```
+
++   Or can "name" the window, creating it later in the query
+
+```sql
+SELECT a, SUM(a) OVER win
+FROM A
+WINDOW win AS (ORDER BY a DESC);
+```
+
+
+---
+# Compute differences between values
+
++ Differences between years
+   + e.g. 2003's value - 2002's value,
+   + 2005's value - 2004's value
+
++ Let's add a new year
+```sql
+INSERT INTO A VALUES (2010, 32);
+```
+
++ Want to get
+```
+2002|
+2003|1
+2004|1
+2005|1
+2010|5
+```
+
+---
+# Refer to previous row
+
++ lag() function
+
+```sql
+select year,  year - lag(year) OVER win
+FROM A
+WINDOW win AS (ORDER BY year);
+```
+
 
 
     </textarea>
