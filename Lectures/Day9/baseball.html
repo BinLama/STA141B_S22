@@ -58,22 +58,194 @@ Fielding             Salaries
 
 ---
 # In 2003, what were the three highest salaries?
+ Who were the players receiving these salaries?
+<!-- Q10 -->
 
 ---
+
+```sql
+SELECT salary 
+FROM Salaries AS A
+WHERE yearID = 2003 
+ORDER BY salary DESC
+LIMIT 3;
+```
+
+--
++ This just gives the salaries
+
++ Can get the other columns in the Salaries table.
+
+  + But doesn't have the player names.
+
+---
+# Getting the player information for these salaries
+
++ Join with the Master table
 
 ```sql  
 SELECT * 
 FROM Salaries AS A, Master AS B 
 WHERE yearID = 2003 
   AND A.playerID = B.playerID 
-ORDER BY salary LIMIT 3
+ORDER BY salary DESC
+LIMIT 3;
+```
+
+
+---
+# Getting only the columns we want
+
+```sql
+SELECT   nameFirst || ' ' || nameLast AS Name,
+         yearID,
+         debut,
+         salary,
+         teamID,
+         lgID
+FROM Salaries AS A, Master AS B 
+WHERE yearID = 2003 
+  AND A.playerID = B.playerID 
+ORDER BY salary DESC
+LIMIT 3;
+```
+
++ Concatenate/paste the first and last name into a single string
+
++ Same as
+
+```sql
+SELECT *
+FROM Salaries AS A
+INNER JOIN Master AS B
+ON A.playerID = B.playerID 
+WHERE yearID = 2003 
+ORDER BY salary DESC
+LIMIT 3;
+```
+---
+# How do we include the name of the team
+
+--
+
++ Need to join with Teams table
+
+--
+
++ Caution: Not correct
+
+```sql
+SELECT   nameFirst || ' ' || nameLast AS Name,
+         yearID,
+         debut,
+         salary,
+         teamID,
+         lgID,
+         name
+FROM Salaries AS A, Master AS B, Teams AS T
+WHERE A.yearID = 2003 
+  AND A.playerID = B.playerID
+  AND T.teamID = A.teamID
+ORDER BY salary DESC
+LIMIT 3;
+```
+```
+  ambiguous column name: yearID
+```
+
++ What's the problem(s)?
+
+
+<!--
+
+# From R
+
+```r
+library(RSQLite)
+db = dbConnect(SQLite(), "lahman2016.sqlite")
+z = dbGetQuery(db, "SELECT   nameFirst || ' ' || nameLast AS Name,
+         yearID,
+         debut,
+         salary,
+         teamID,
+         lgID,
+         name
+FROM Salaries AS A, Master AS B, Teams AS T
+WHERE A.yearID = 2003 
+  AND A.playerID = B.playerID
+  AND T.teamID = A.teamID
+ORDER BY salary DESC
+LIMIT 3;")
+```
+-->
+
+---
+# Caution: Not correct
+
+```sql
+SELECT   nameFirst || ' ' || nameLast AS Name,
+         A.yearID,
+         debut,
+         salary,
+         A.teamID,
+         A.lgID,
+         T.name
+FROM Salaries AS A, Master AS B, Teams AS T
+WHERE A.yearID = 2003 
+  AND A.playerID = B.playerID
+  AND T.teamID = A.teamID
+ORDER BY salary DESC
+LIMIT 3;
+```
+
+```
+Name            yearID  debut       salary      teamID  lgID  name         
+--------------  ------  ----------  ----------  ------  ----  -------------
+Alex Rodriguez  2003    1994-07-08  22000000.0  TEX     AL    Texas Rangers
+Alex Rodriguez  2003    1994-07-08  22000000.0  TEX     AL    Texas Rangers
+Alex Rodriguez  2003    1994-07-08  22000000.0  TEX     AL    Texas Rangers
+```
+
++ What's wrong?
+
+---
+# Add the Name of Team
+
+--
+
++ Multiple rows in Teams for each team, but different years.
+
+  + So T.teamID = A.teamID matches multiple rows for different year.
+
+  + Need to restrict that `T.yearID = 2003`
+
+     +   or equivalently  `T.yearID = A.yearID`
+
+--
+
+```sql
+SELECT   nameFirst || ' ' || nameLast AS Name,
+         A.yearID,
+         debut,
+         salary,
+         A.teamID,
+         A.lgID,
+         T.name
+FROM Salaries AS A, Master AS B, Teams AS T
+WHERE A.yearID = 2003
+  AND T.yearID = A.yearID                <---------
+  AND A.playerID = B.playerID
+  AND T.teamID = A.teamID
+ORDER BY salary DESC
+LIMIT 3;
 ```
 
 ---
-# Finding the corresponding players
+# Finding **all** the players with these salaries
 
++ In case of ties for salary, there may be more than three.
 
-+ To get all of the players with these 3 salaries, we use a nested query
++ To get all of the players with these 3 salaries, we can use a nested query
 
 ```sql
 SELECT * 
@@ -82,86 +254,42 @@ WHERE yearID = 2003 AND A.playerID = B.playerID
   AND salary IN (SELECT salary 
                    FROM Salaries 
 			      WHERE yearID = 2003 
-				  LIMIT 3
+				ORDER BY salary DESC
+                                LIMIT 3);
 ```
 
 ---
-# How many players are there in each year, from 2000 to 2013?
-  Do all teams have the same number of players?
-
-
-<!--
-SELECT yearID, COUNT(DISTINCT playerID) AS numPlayers 
-FROM Appearances
-WHERE yearID BETWEEN 2000 and 2013
-GROUP BY yearID;
-   -->
-
----
-# For 2010, compute the total payroll of each of the different teams.
-
----
-
-```sql
-SELECT t.name, SUM(s.salary) AS payroll, s.yearID, t.teamID
-FROM Salaries AS s,
-     Teams AS t
-WHERE s.yearID = 2010
-  AND t.yearID = 2010
-  AND t.teamID = s.teamID
-GROUP BY s.teamID  
-ORDER BY payroll DESC;
-```
-
----
-# Payrol for all years
-
-+ we need to modify our query above by
-
-    + removing the restriction to only 2010
-
-    + ensuring that the yearID values from the two tables are the same
-
-    + GROUP BY  both teamID and yearID
-
-    + order the results by year and payroll within year.
-
----
-
-```sql
-SELECT t.name, SUM(s.salary) AS payroll, s.yearID, t.teamID
-FROM Salaries AS s,
-     Teams AS t
-WHERE s.yearID = t.yearID
-   AND t.teamID = s.teamID
-GROUP BY s.teamID, s.yearID   
-ORDER BY s.yearID DESC, payroll DESC;
-```
-
-
----
-# What team won the World Series in 2010?
-
-+ Include the name of the team, the league and division.
-
----
-```sql
-
-   SELECT t.yearID, t.name, t.lgID, t.divID, s.teamIDWinner
-FROM SeriesPost AS s, 
-     Teams AS t
-WHERE s.yearID = 2010
-  AND s.round = 'WS'
-  AND t.yearID = 2010
-     AND s.teamIDwinner = t.teamID
-```
-
----
-# What team **won** the World Series each year?
-
+# What team *won* the World Series each year?
+<!-- Q6  Zhaoyang did but doing it again to introduce SeriesPost table. -->
 + include the name of the team, league and division.
 
++ Which tables?
+
+--
+   + SeriesPost
+
+
+--
++ Simple approach with only SeriesPost table
+
+```sql
+SELECT * FROM SeriesPost WHERE round = 'WS' LIMIT 10;
+```
+
++ Just the winners
+```
+SELECT yearID, teamIDwinner, lgIDwinner, wins
+FROM SeriesPost
+WHERE round = 'WS'
+ORDER BY yearID DESC
+LIMIT 10;
+```
+
 ---
+# Want the Team Name, etc.
+
++ Join on Teams
+
 ```sql
 SELECT t.yearID, t.name, t.lgID, t.divID, s.teamIDloser
 FROM SeriesPost AS s, 
@@ -172,13 +300,38 @@ WHERE s.yearID = t.yearID
 ORDER BY t.yearID DESC
 ```
 
++ We included the ID of the losing team.
+  + Want the Name of that team.
+
 
 ---
-# Compute the table that has both the winner and runner-up for the World Series in each tuple/row for all years,
+# Compute the table that has both the winner and runner-up for the World Series in each
+tuple/row for all years
 
-+ with the name of the team, league and division, and also the number of games the losing team won in the series.
++ Include
+  + the name of the team,
+  + league and division,
+  + the number of games the losing team won in the series.
+
+<!-- Q8  -->
+
+The result should look something like
+
+```
+yearID  name                     lgID  divID  name                     lgID  divID  losses
+------  -----------------------  ----  -----  -----------------------  ----  -----  ------
+2016    Chicago Cubs             NL    C      Cleveland Indians        AL    C      3     
+2015    Kansas City Royals       AL    C      New York Mets            NL    E      1     
+2014    San Francisco Giants     NL    W      Kansas City Royals       AL    C      3     
+2013    Boston Red Sox           AL    E      St. Louis Cardinals      NL    C      3     
+2012    San Francisco Giants     NL    W      Detroit Tigers           AL    C      0     
+```
+
++ How do we go about doing this?
 
 ---
+# Adding the losing team name
+
 
 ```sql
 SELECT s.yearID, w.name, w.lgID, w.divID, 
@@ -191,6 +344,100 @@ WHERE s.round = 'WS'
   AND l.teamID = s.teamIDLoser
 ORDER BY s.yearID DESC;  
 ```
+
+
+---
+# Has the distribution of home runs for players increased over the years?
+
++ Maximum number of home runs by a single player?
+
++ Total number of home runs by all players?
+
+--
+
+```sql
+SELECT yearID, MAX(HR) AS maxHR
+FROM Batting
+GROUP BY yearID
+ORDER BY maxHR DESC;
+```
+
+---
+# Total number of Home Runs by Year
+
+```sql
+SELECT yearID, MAX(HR) AS maxHR
+FROM Batting
+GROUP BY yearID
+ORDER BY maxHR DESC;
+```
+
+
+---
+# Total Team Salary by Year
+
++ Start simple
+
+  + Look at the Salaries table
+  + Group by teamID
+  + Sum the salaries
+
++ Caution: Wrong
+```sql
+SELECT SUM(salary) AS payroll, yearID, teamID
+FROM Salaries
+GROUP BY teamID;
+```
+
+---
+# Group by yearID and teamID
+
++ Summing across all years for a given team
+
+```sql
+SELECT SUM(salary) AS payroll, yearID, teamID
+FROM Salaries
+GROUP BY teamID;
+```
+
++ Probably want to reverse the order
+```sql
+ORDER BY yearID DESC
+```
+
++ And probably by total salary
+
+```sql
+SELECT SUM(salary) AS payroll, yearID, teamID
+FROM Salaries
+GROUP BY teamID
+ORDER BY yearID DESC, payroll DESC;
+```
+
+---
+# Want the team name, the league (NL or AL)
+
++ Approach
+
+--
+
++ Join with the Teams table.
+
+```sql
+SELECT t.name, SUM(s.salary) AS payroll, s.yearID, t.teamID
+FROM Salaries AS s,
+     Teams AS t
+WHERE s.yearID = t.yearID
+  AND t.teamID = s.teamID
+GROUP BY s.teamID, s.yearID
+ORDER BY s.yearID DESC, payroll DESC;
+```
+
+---
+# Challenge
+
++ Add a column indicating whether won the world series or not
+
 
 
 
