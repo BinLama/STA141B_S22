@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Relational Databases 2</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Relational Databases - 3
+
+
+### Duncan Temple Lang
+
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+
++ [Baseball databases](https://github. com/WebucatorTraining/lahman-baseball-mysql/raw/master/lahmansbaseballdb.sqlite.)  Up to 2013
++ Data compiled by Sean Lahman
++ [Documentation](http://seanlahman.com/files/database/readme2013.txt)
+
+---
+
+```sh
+sqlite3 lahman2013.sqlite
+```
+
+```sql
+sqlite> .tables
+AllstarFull          FieldingOF           Schools            
+Appearances          FieldingPost         SchoolsPlayers     
+AwardsManagers       HallOfFame           SeriesPost         
+AwardsPlayers        Managers             Teams              
+AwardsShareManagers  ManagersHalf         TeamsFranchises    
+AwardsSharePlayers   Master               TeamsHalf          
+Batting              Pitching             temp               
+BattingPost          PitchingPost       
+Fielding             Salaries           
+```
+
+
+---
+# In 2003, what were the three highest salaries?
+
+---
+
+```sql  
+SELECT * 
+FROM Salaries AS A, Master AS B 
+WHERE yearID = 2003 
+  AND A.playerID = B.playerID 
+ORDER BY salary LIMIT 3
+```
+
+---
+# Finding the corresponding players
+
+
++ To get all of the players with these 3 salaries, we use a nested query
+
+```sql
+SELECT * 
+FROM  Salaries AS A, Master AS B  
+WHERE yearID = 2003 AND A.playerID = B.playerID 
+  AND salary IN (SELECT salary 
+                   FROM Salaries 
+			      WHERE yearID = 2003 
+				  LIMIT 3
+```
+
+---
+# How many players are there in each year, from 2000 to 2013?
+  Do all teams have the same number of players?
+
+
+<!--
+SELECT yearID, COUNT(DISTINCT playerID) AS numPlayers 
+FROM Appearances
+WHERE yearID BETWEEN 2000 and 2013
+GROUP BY yearID;
+   -->
+
+---
+# For 2010, compute the total payroll of each of the different teams.
+
+---
+
+```sql
+SELECT t.name, SUM(s.salary) AS payroll, s.yearID, t.teamID
+FROM Salaries AS s,
+     Teams AS t
+WHERE s.yearID = 2010
+  AND t.yearID = 2010
+  AND t.teamID = s.teamID
+GROUP BY s.teamID  
+ORDER BY payroll DESC;
+```
+
+---
+# Payrol for all years
+
++ we need to modify our query above by
+
+    + removing the restriction to only 2010
+
+    + ensuring that the yearID values from the two tables are the same
+
+    + GROUP BY  both teamID and yearID
+
+    + order the results by year and payroll within year.
+
+---
+
+```sql
+SELECT t.name, SUM(s.salary) AS payroll, s.yearID, t.teamID
+FROM Salaries AS s,
+     Teams AS t
+WHERE s.yearID = t.yearID
+   AND t.teamID = s.teamID
+GROUP BY s.teamID, s.yearID   
+ORDER BY s.yearID DESC, payroll DESC;
+```
+
+
+---
+# What team won the World Series in 2010?
+
++ Include the name of the team, the league and division.
+
+---
+```sql
+
+   SELECT t.yearID, t.name, t.lgID, t.divID, s.teamIDWinner
+FROM SeriesPost AS s, 
+     Teams AS t
+WHERE s.yearID = 2010
+  AND s.round = 'WS'
+  AND t.yearID = 2010
+     AND s.teamIDwinner = t.teamID
+```
+
+---
+# What team **won** the World Series each year?
+
++ include the name of the team, league and division.
+
+---
+```sql
+SELECT t.yearID, t.name, t.lgID, t.divID, s.teamIDloser
+FROM SeriesPost AS s, 
+     Teams AS t
+WHERE s.yearID = t.yearID 
+  AND s.round = 'WS'  
+  AND s.teamIDwinner = t.teamID
+ORDER BY t.yearID DESC
+```
+
+
+---
+# Compute the table that has both the winner and runner-up for the World Series in each tuple/row for all years,
+
++ with the name of the team, league and division, and also the number of games the losing team won in the series.
+
+---
+
+```sql
+SELECT s.yearID, w.name, w.lgID, w.divID, 
+                 l.name, l.lgID, l.divID, s.losses
+FROM SeriesPost AS s, Teams AS w, Teams AS l
+WHERE s.round = 'WS'
+  AND s.yearID = w.yearID
+  AND s.yearID = l.yearID  
+  AND w.teamID = s.teamIDWinner
+  AND l.teamID = s.teamIDLoser
+ORDER BY s.yearID DESC;  
+```
+
+
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
