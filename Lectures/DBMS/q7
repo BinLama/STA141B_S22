@@ -1,0 +1,135 @@
+Create a table with a tuple for each Post,
+repeated by as many badges as the OwnerUserId had
+for that post has,
+and then the tuple from Users corresponding to the OwnerUserId
+
+
+SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id;
+
+This takes a bit of time as we get back 41 million rows.
+
+Should the last ON be Badges.UserId = Users.Id.
+Either way, we get back the same *number* of tuples.
+
+
+We look for an OwnerUserId with more than 2 posts in Posts
+tt2 = table(p$OwnerUserId)
+id = names(tt2)[tt2 > 1][100]
+id = "100624"
+
+tt2[id]
+shows 4 posts
+
+This individual has 7 badges
+sum(b$UserId == id)
+
+Let's see how many tuples there are in our query for just this Id
+SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+ WHERE Posts.OwnerUserId = "100624" AND Users.Id = "100624" AND Badges.UserId == "100624";
+
+We don't need
+ WHERE Posts.OwnerUserId = "100624" AND Users.Id = "100624" AND Badges.UserId == "100624";
+ - just any one of them is fine.
+
+
+If we GROUP BY Posts.OwnerUserId,
+we can compute
++ the total number of posts by that person
++ the number of questions (PostTypeId = 1),
++ the number of answers
++ the number of badges
+
+
+
+
+What if we JOIN the Badges and Users based on
+     Badges.UserId = Users.Id
+When there is no badge, we should get no user info.     
+     
+SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+ WHERE Users.Id = "6892";
+
+This gives no result as 6892 had no posts.
+But if we change the order of the JOINs to have Users
+first, this individual would be present.
+
+
+But let's find somebody who had a post but has no badges
+p$OwnerUserId[ !(p$OwnerUserId %in% b$UserId) ]
+Many NAs.
+
+id = "102334"
+
+2 posts in Posts
+No badges
+
+
+SELECT COUNT(*)
+FROM Posts
+WHERE Posts.OwnerUserId = "102334";
+
+2 tuples
+
+
+SELECT COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+   ON Posts.OwnerUserId = Badges.UserId
+WHERE Posts.OwnerUserId = "102334";
+
+
+
+SELECT COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+WHERE Posts.OwnerUserId = "102334";
+
+
+
+Compare the tuples for the following
+
+SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+WHERE Posts.OwnerUserId = "102334";
+
+
+
+SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Badges.UserId = Users.Id
+WHERE Posts.OwnerUserId = "102334";
+
+
+Both have 2 tuples.
+
+The Id from the Users table (column 34) is
+
+a:  [1] "102334" "102334"
+b:  [1] NA NA
+
+
