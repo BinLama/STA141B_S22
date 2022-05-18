@@ -253,14 +253,15 @@ ORDER BY p1.Id;
 
 
 
-<!--
 
-From this, you can compute the the
-number of answers, the number
+From this, you can compute the 
++ number of answers per question, 
++ number of comments per question,
++ number of comments on all of the answers for a given question
 
 ## Number of Answers per Question
 
-Now let's calculate the number of answers for each question
+Now manually let's calculate the number of answers for each question
 
 We should get
 
@@ -268,13 +269,13 @@ We should get
 + Q2, 0 answers
 + Q3, 4 answers
 
-We clearly have 12 rows for Q1.
+We clearly have 12 rows for Q1. 
 How many DISTINCT values of Answer Id values do we have 
-This is the 5th column and within the rows for Q1, we have values 2, 3, 4 
-and so 3 answers.
+This is the 5th column and within the 12 rows for Q1, we have unique values 2, 3, 4 
+and so 3 answers.  (There are 4 instances of 2, 2 instances of 3, 6 instances of 4.)
 
 For the row corresponding to Q2, we have an NA and we ignore this
-as `COUNT(DISTINCT )` does.
+as `COUNT(DISTINCT )` does to get a count of 0.
 
 So `COUNT(DISTINCT p2.Id)` gives us the number of answers to each question
 when we `GROUP BY p1.Id`, i.e., by Question.
@@ -283,12 +284,14 @@ when we `GROUP BY p1.Id`, i.e., by Question.
 ## Number of Comments Per Question
 
 We should get
+
 + Q1 = 2
 + Q2 = 1
 + Q3 = 0
 
 
-We look at the Id column in the final/second Comments table that was merged, i.e., Comments (Question).
+We look at the Id column in the final table, the second Comments table that we merged, i.e.,
+Comments (Question).  Ths is the comments connected  directly to the question, not any answers.
 
 For Q1, we have 2 distinct Ids - 1, 2
 
@@ -312,11 +315,17 @@ For the answers, we should have
 + A6 = 1
 + A7 = 4
 
-Again, `COUNT(DISTINCT c1.Id)` gives us these counts.
+Again, `COUNT(DISTINCT c1.Id)` gives us these counts
+but aggregated across an entire question. 
+So this will sum to 5 for Q1 since A1, A2 and A2 are attached to Q1.
+Similarly, this will give 0 for Q2 and 4 for question 3 (3 + 1 + 4).
 
 
+We are grouping by question, so we get question-related aggregates.
+So we are summing across answers-within-questions.
 
 ## Putting it All Together
+
 
 ```sql
 SELECT p1.Id AS QId, 
@@ -343,4 +352,4 @@ ORDER BY QId;
 ```
 
 
--->
+
