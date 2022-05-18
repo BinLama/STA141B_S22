@@ -1,0 +1,154 @@
+<p>Consider the following ….</p>
+<p>For each user, we want + the number of questions (PostTypeId = 1), + the number of answers + the number of badges + the total number of posts by that person</p>
+<p>As we discussed in class on Tuesday, we can do this with 3 separate queries and the JOIN these. That is fine, but one has to verify that it gets the correct answer and doesn’t double count any tuples or omit any and that we get answers for all users.</p>
+<p>However, here we will do it with a single query in which we combine the User information, the Badges, the Questions from the Posts table and then the Answers from the Posts tables as 4 different tables. So this shows subsetting Posts when we JOIN it for the Questions and again for the Answers.</p>
+<p>The question focuses on users so we want to end up with tuples corresponding to each user and therefore GROUP BY user.</p>
+<p>Since we also want to include Users who do not have badges as well as those with badges we can do a left join on Users. That should come first.</p>
+<p>There is a sample database in this directory with Users, Badges and Posts tables. These are very small and you can check what the results should be manually (or in R.) The information is in the <a href="README.md">README.md</a> file</p>
+<p>To get the tuples, we might use</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">FROM</span> Users</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Badges</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>       <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> Badges.UserId</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Posts <span class="kw">AS</span> Q</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>      <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> Q.UserId <span class="kw">AND</span> Badges.UserId <span class="op">=</span> Q.UserId <span class="kw">AND</span> Q.PostTypeId <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Posts <span class="kw">AS</span> A</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>      <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> A.UserId <span class="kw">AND</span> Badges.UserId <span class="op">=</span> A.UserId <span class="kw">AND</span> A.PostTypeId <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+<p>Note that we are + doing LEFT JOINs + matching the Users’ Id to the Badges’ UserId + combining the Posts as Questions by + matching Users’ Id to Posts.Id and + the Badges’ and Posts’ UserId and + restricting the PostTypeId to equal 1 + similarly for matching the Posts as Answers</p>
+<p>Do we need the match on Badges.UserId = Q.UserId?</p>
+<p>The following version does not have the constraint on Badges.UserId = Q.UserId and returns one more row.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">FROM</span> Users</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Badges</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>       <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> Badges.UserId</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Posts <span class="kw">AS</span> Q</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>      <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> Q.UserId <span class="kw">AND</span> Q.PostTypeId <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Posts <span class="kw">AS</span> A</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>      <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> A.UserId <span class="kw">AND</span> A.PostTypeId <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
+<p>Let’s simplify this to only join Users, Badges and Posts as Questions and perform the two queries</p>
+<pre class="{r}"><code>db = dbConnect(SQLite(), &quot;test&quot;)
+do = function(q) dbGetQuery(db, q)</code></pre>
+<pre class="{r}"><code>a = do(&quot;SELECT *
+FROM Users
+LEFT JOIN Badges
+       ON Users.Id = Badges.UserId
+LEFT JOIN Posts AS Q
+      ON Users.Id = Q.UserId AND Badges.UserId = Q.UserId AND Q.PostTypeId = 1&quot;)
+
+
+
+
+a2 = do(&quot;SELECT *
+FROM Users
+LEFT JOIN Badges
+       ON Users.Id = Badges.UserId
+LEFT JOIN Posts AS Q
+      ON Users.Id = Q.UserId AND Q.PostTypeId = 1&quot;)</code></pre>
+<pre><code>a:
+   Id UserId Badge   Id UserId PostTypeId ParentId
+1  u1     u1     A   p4     u1          1         
+2  u1     u1     A   p8     u1          1         
+3  u1     u1     B   p4     u1          1         
+4  u1     u1     B   p8     u1          1         
+5  u2     u2     A   p6     u2          1         
+6  u2     u2     C   p6     u2          1         
+7  u2     u2     D   p6     u2          1         
+8  u3   &lt;NA&gt;  &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+9  u4   &lt;NA&gt;  &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+10 u5     u5     A &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+11 u5     u5     C &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+12 u5     u5     W &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+13 u5     u5     X &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+14 u5     u5     Z &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+
+
+a2:
+
+   Id UserId Badge   Id UserId PostTypeId ParentId
+1  u1     u1     A   p4     u1          1         
+2  u1     u1     A   p8     u1          1         
+3  u1     u1     B   p4     u1          1         
+4  u1     u1     B   p8     u1          1         
+5  u2     u2     A   p6     u2          1         
+6  u2     u2     C   p6     u2          1         
+7  u2     u2     D   p6     u2          1         
+8  u3   &lt;NA&gt;  &lt;NA&gt;   p1     u3          1         
+9  u3   &lt;NA&gt;  &lt;NA&gt;   p2     u3          1         
+10 u4   &lt;NA&gt;  &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+11 u5     u5     A &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+12 u5     u5     C &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+13 u5     u5     W &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+14 u5     u5     X &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+15 u5     u5     Z &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;</code></pre>
+<p>The second version has an additional row for u3. However, it also includes the details for the questions from User u3, while the first version has NAs for these. This is because in the first query’s table (a), the Badges.UserId is NULL/NA and so doesn’t match the Posts.UserId values.</p>
+<p>So we want to remove that extra constraint as it fails to handle the cases where there are no Badges.</p>
+<p>So let’s look at the tuples we get back from our “correct” query:</p>
+<pre class="{r}"><code>d = do(&quot;SELECT *
+FROM Users
+LEFT JOIN Badges
+       ON Users.Id = Badges.UserId
+LEFT JOIN Posts AS Q
+      ON Users.Id = Q.UserId AND Q.PostTypeId = 1
+LEFT JOIN Posts AS A
+      ON Users.Id = A.UserId AND A.PostTypeId = 2&quot;)</code></pre>
+<pre><code>Users   Badges             Posts: Questions               Posts: Answers
+----- -------------  -----------------------------   ----------------------------
+   Id UserId Badge   Id UserId PostTypeId ParentId   Id UserId PostTypeId ParentId
+1  u1     u1     A   p4     u1          1            p3     u1          2       p2
+2  u1     u1     A   p8     u1          1            p3     u1          2       p2
+3  u1     u1     B   p4     u1          1            p3     u1          2       p2
+4  u1     u1     B   p8     u1          1            p3     u1          2       p2
+5  u2     u2     A   p6     u2          1            p5     u2          2       p1
+6  u2     u2     C   p6     u2          1            p5     u2          2       p1
+7  u2     u2     D   p6     u2          1            p5     u2          2       p1
+8  u3   &lt;NA&gt;  &lt;NA&gt;   p1     u3          1          &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+9  u3   &lt;NA&gt;  &lt;NA&gt;   p2     u3          1          &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+10 u4   &lt;NA&gt;  &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt; &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;
+11 u5     u5     A &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;   p7     u5          2       p6
+12 u5     u5     C &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;   p7     u5          2       p6
+13 u5     u5     W &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;   p7     u5          2       p6
+14 u5     u5     X &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;   p7     u5          2       p6
+15 u5     u5     Z &lt;NA&gt;   &lt;NA&gt;         NA     &lt;NA&gt;   p7     u5          2       p6</code></pre>
+<p>We’ll compute the answers we expect first in R:</p>
+<p>How many badges does each user have? We count the number of unique Badge names (or their unique identifier if two badges can have the same name.)</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>nb =<span class="st"> </span><span class="kw">tapply</span>(d<span class="op">$</span>Badge, d<span class="op">$</span>Id, <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x[<span class="op">!</span><span class="kw">is.na</span>(x)])))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>u1 u2 u3 u4 u5 </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a> <span class="dv">2</span>  <span class="dv">3</span>  <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">5</span> </span></code></pre></div>
+<p>To compute how many questions, we count the number of unique Id values from the Posts:Questions table:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>nq =<span class="st"> </span><span class="kw">tapply</span>(d[[<span class="dv">4</span>]], d<span class="op">$</span>Id, <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x[<span class="op">!</span><span class="kw">is.na</span>(x)])))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>u1 u2 u3 u4 u5 </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a> <span class="dv">2</span>  <span class="dv">1</span>  <span class="dv">2</span>  <span class="dv">0</span>  <span class="dv">0</span> </span></code></pre></div>
+<p>Will these already be unique? or will some be duplicated because of the JOIN.</p>
+<p>To compute how many questions, we count the number of unique Id values from the Posts:Questions table:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>na =<span class="st"> </span><span class="kw">tapply</span>(d[[<span class="dv">8</span>]], d<span class="op">$</span>Id, <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x[<span class="op">!</span><span class="kw">is.na</span>(x)])))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>u1 u2 u3 u4 u5 </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a> <span class="dv">1</span>  <span class="dv">1</span>  <span class="dv">0</span>  <span class="dv">0</span>  <span class="dv">1</span> </span></code></pre></div>
+<p>The combined results are</p>
+<pre><code>   nq na nb
+u1  2  1  2
+u2  1  1  3
+u3  2  0  0
+u4  0  0  0
+u5  0  1  5</code></pre>
+<p>(questions, answers and badges.)</p>
+<p>Let’s compute these in SQL</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>ans =<span class="st"> </span><span class="kw">do</span>(<span class="st">&quot;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="st">SELECT COUNT(DISTINCT Q.Id) AS NumQuestions,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="st">       COUNT(DISTINCT A.Id) AS NumAnswers,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="st">       COUNT(DISTINCT Badge) AS NumBadges </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="st">FROM Users</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a><span class="st">LEFT JOIN Badges</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a><span class="st">       ON Users.Id = Badges.UserId</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a><span class="st">LEFT JOIN Posts AS Q</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a><span class="st">      ON Users.Id = Q.UserId AND Q.PostTypeId = 1</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a><span class="st">LEFT JOIN Posts AS A</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a><span class="st">      ON Users.Id = A.UserId AND A.PostTypeId = 2</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a><span class="st">GROUP By Users.Id;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a><span class="st">&quot;</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a>  NumQuestions NumAnswers NumBadges</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a><span class="dv">1</span>            <span class="dv">2</span>          <span class="dv">1</span>         <span class="dv">2</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a><span class="dv">2</span>            <span class="dv">1</span>          <span class="dv">1</span>         <span class="dv">3</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a><span class="dv">3</span>            <span class="dv">2</span>          <span class="dv">0</span>         <span class="dv">0</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a><span class="dv">4</span>            <span class="dv">0</span>          <span class="dv">0</span>         <span class="dv">0</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a><span class="dv">5</span>            <span class="dv">0</span>          <span class="dv">1</span>         <span class="dv">5</span></span></code></pre></div>
