@@ -1,5 +1,11 @@
 <p>Consider the following ….</p>
-<p>For each user, we want + the number of questions (PostTypeId = 1), + the number of answers + the number of badges + the total number of posts by that person</p>
+<p>For each user, we want</p>
+<ul>
+<li>the number of questions (PostTypeId = 1),</li>
+<li>the number of answers</li>
+<li>the number of badges</li>
+<li>the total number of posts by that person</li>
+</ul>
 <p>As we discussed in class on Tuesday, we can do this with 3 separate queries and the JOIN these. That is fine, but one has to verify that it gets the correct answer and doesn’t double count any tuples or omit any and that we get answers for all users.</p>
 <p>However, here we will do it with a single query in which we combine the User information, the Badges, the Questions from the Posts table and then the Answers from the Posts tables as 4 different tables. So this shows subsetting Posts when we JOIN it for the Questions and again for the Answers.</p>
 <p>The question focuses on users so we want to end up with tuples corresponding to each user and therefore GROUP BY user.</p>
@@ -14,7 +20,18 @@
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>      <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> Q.UserId <span class="kw">AND</span> Badges.UserId <span class="op">=</span> Q.UserId <span class="kw">AND</span> Q.PostTypeId <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> Posts <span class="kw">AS</span> A</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>      <span class="kw">ON</span> Users.<span class="kw">Id</span> <span class="op">=</span> A.UserId <span class="kw">AND</span> Badges.UserId <span class="op">=</span> A.UserId <span class="kw">AND</span> A.PostTypeId <span class="op">=</span> <span class="dv">2</span></span></code></pre></div>
-<p>Note that we are + doing LEFT JOINs + matching the Users’ Id to the Badges’ UserId + combining the Posts as Questions by + matching Users’ Id to Posts.Id and + the Badges’ and Posts’ UserId and + restricting the PostTypeId to equal 1 + similarly for matching the Posts as Answers</p>
+<p>Note that we are</p>
+<ul>
+<li>doing LEFT JOINs</li>
+<li>matching the Users’ Id to the Badges’ UserId</li>
+<li>combining the Posts as Questions by
+<ul>
+<li>matching Users’ Id to Posts.Id and</li>
+<li>the Badges’ and Posts’ UserId and</li>
+<li>restricting the PostTypeId to equal 1</li>
+</ul></li>
+<li>similarly for matching the Posts as Answers</li>
+</ul>
 <p>Do we need the match on Badges.UserId = Q.UserId?</p>
 <p>The following version does not have the constraint on Badges.UserId = Q.UserId and returns one more row.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
