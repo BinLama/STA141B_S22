@@ -1,6 +1,14 @@
+---
+title: JOINing Users, Badges, Questions, Answers
+author: DTL
+date: May 18, 2022
+---
+
+
 Consider the following ....
 
 For each user, we want 
+
 + the number of questions (PostTypeId = 1),
 + the number of answers
 + the number of badges
@@ -39,7 +47,9 @@ LEFT JOIN Posts AS Q
 LEFT JOIN Posts AS A
       ON Users.Id = A.UserId AND Badges.UserId = A.UserId AND A.PostTypeId = 2
 ```
+
 Note that we are 
+
 + doing LEFT JOINs
 + matching the Users' Id to the Badges' UserId
 + combining the Posts as Questions by
@@ -67,12 +77,12 @@ LEFT JOIN Posts AS A
 
 Let's simplify this to only join Users, Badges and Posts as Questions
 and perform the two queries
-```{r}
+```r
 db = dbConnect(SQLite(), "test")
 do = function(q) dbGetQuery(db, q)
 ```
 
-```{r}
+```r
 a = do("SELECT *
 FROM Users
 LEFT JOIN Badges
@@ -138,10 +148,9 @@ the Posts.UserId values.
 So we want to remove that extra constraint as it fails to handle the cases where there are no Badges.
 
 
-
 So let's look at the tuples we get back from our "correct" query:
 
-```{r}
+```r
 d = do("SELECT *
 FROM Users
 LEFT JOIN Badges
