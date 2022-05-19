@@ -1,61 +1,140 @@
-Create a table with a tuple for each Post,
+
+This is related to question 7 in the assignment (#3).
+```
+Do users with badges tend to answer more questions than they ask?
+```
+
+For each user, we want 
++ the number of questions (PostTypeId = 1),
++ the number of answers
++ the number of badges
++ the total number of posts by that person
+
+Since we want Users without badges as well as those with badges
+we can do a left join on Users.
+
+
+What if we LEFT JOIN Users and Badges and then Posts for Questions
+and Posts for Answers.
+
+```
+Users  Badges Posts Posts
+```
+Assuming we match the tuples appropriately, can we then COUNT()
+the number of badges, the number of questions and the number of Answers
+for each User.
+
+
+
+
+
+Goal:   Create a table with a tuple for each Post,
 repeated by as many badges as the OwnerUserId had
 for that post has,
 and then the tuple from Users corresponding to the OwnerUserId
 
 
+Is this the right goal. Shouldn't it be about Users, not Posts.
+Or can we answer the question with this table.
+
+
+
+
+We could try the following:
+```sql
 SELECT *
 FROM Posts
 LEFT JOIN Badges
  ON Posts.OwnerUserId = Badges.UserId
 LEFT JOIN Users
  ON Posts.OwnerUserId = Users.Id;
+```
+This would take a bit of time as we get back 41 million rows.
+We know this as we can change the * to COUNT(*) and run it more quickly but
+can get the number of rows to check if it makes sense.
 
-This takes a bit of time as we get back 41 million rows.
 
-Should the last ON be Badges.UserId = Users.Id.
+¿ Should the last `ON` clause  be `Badges.UserId = Users.Id`?
+
 Either way, we get back the same *number* of tuples.
+Are they the same tuples?
 
 
-We look for an OwnerUserId with more than 2 posts in Posts
+To help debug/verify this query **before we run it on the entire data**,
+we can restrict it to a particular Id.
+In this situation, we can look for an OwnerUserId with more than 2 posts in Posts.
+
+We'll do some exploration in R to find this. It is not part of our SQL query,
+just our verification the results are correct.
+
+`p` is the Posts table in R.
+
+So we find a User Id that has more than post (question or answer)
+in Posts:
+```
 tt2 = table(p$OwnerUserId)
 id = names(tt2)[tt2 > 1][100]
 id = "100624"
-
 tt2[id]
-shows 4 posts
+```
+This shows this user has 4 posts.
+
 
 This individual has 7 badges
+```r
 sum(b$UserId == id)
+```
+where `b` is the Badges table.
+
 
 Let's see how many tuples there are in our query for just this Id
-SELECT *
+```sql
+SELECT COUNT(*)
 FROM Posts
 LEFT JOIN Badges
  ON Posts.OwnerUserId = Badges.UserId
 LEFT JOIN Users
  ON Posts.OwnerUserId = Users.Id
  WHERE Posts.OwnerUserId = "100624" AND Users.Id = "100624" AND Badges.UserId == "100624";
+```
 
-We don't need
+We don't need all of the conditions in 
+```sql
  WHERE Posts.OwnerUserId = "100624" AND Users.Id = "100624" AND Badges.UserId == "100624";
- - just any one of them is fine.
+```
+- just any one of them is fine to get the same result. Verify
 
 
-If we GROUP BY Posts.OwnerUserId,
-we can compute
-+ the total number of posts by that person
-+ the number of questions (PostTypeId = 1),
-+ the number of answers
-+ the number of badges
+We get 28 tuples.
+This is consistent with 4 posts and 7 badges for the user.
+Take a look at these.
 
 
 
 
-What if we JOIN the Badges and Users based on
-     Badges.UserId = Users.Id
+```
+SELECT COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+ ON Posts-.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+GROUP BY Posts.OwnerUserId
+LIMIT 20;
+```
+
+
+
+
+
+What if we also JOIN the Badges and Users based on
+```
+Badges.UserId = Users.Id
+```
 When there is no badge, we should get no user info.     
-     
+   
+   
+```sql   
 SELECT *
 FROM Posts
 LEFT JOIN Badges
@@ -63,6 +142,7 @@ LEFT JOIN Badges
 LEFT JOIN Users
  ON Posts.OwnerUserId = Users.Id
  WHERE Users.Id = "6892";
+```
 
 This gives no result as 6892 had no posts.
 But if we change the order of the JOINs to have Users

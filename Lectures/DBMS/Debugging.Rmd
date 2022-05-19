@@ -1,0 +1,412 @@
+---
+title: Debugging SQL
+author: DTL
+date: May, 2022
+---
+
+When we are dealing with tables that are more than a few records,
+it can be difficult to know whether we have the right results.
+For example, see  the 
+[first query](DBMS/SampleBadgePostData/query.html)
+which is too restrictive and gets almost the right result but not quite.
+
+
+Our sample problem involves
+JOINing the Posts table with the Badges table and then with the Users table.
+```sql
+SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id;
+```
+
+How do we check the results are correct.
+
+
+We can pick a Post or a User at random and then carefully work through the results.
+We can restrict the query to that user via `WHERE Users.Id = "10003"`, say.
+
+Rather than pick randomly, let's be intentional.
+If we got our JOIN wrong and left some users out (e.g., by an INNER/regular JOIN rather than a LEFT
+JOIN)
+we might not see this.
+
+We can look for an OwnerUserId  with more than 2 posts in Posts.
+
+We'll do some exploration in R to find this. It is not part of our SQL query,
+just our verification the results are correct.
+
+`p` is the Posts table in R.
+We can get it via `dbReadTable()` and we'll get Users and Badges also
+```r
+p = dbReadTable(db, "Posts")
+u = dbReadTable(db, "Users")
+b = dbReadTable(db, "Badges")
+```
+
+So we find a User Id (100624) that has more than post (question or answer)
+in Posts:
+```r
+tt2 = table(p$OwnerUserId)
+id = names(tt2)[tt2 > 1][100]  # pick the 100th one for no particular reason.
+tt2[id]
+```
+This shows this user has 4 posts.
+
+
+This individual has 7 badges
+```r
+sum(b$UserId == id)
+```
+where `b` is the Badges table.
+
+
+Let's see how many tuples there are in our query for just this Id
+```sql
+SELECT COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+ WHERE Posts.OwnerUserId = "100624" AND Users.Id = "100624" AND Badges.UserId == "100624";
+```
+We get 28 rows.
+This seems to correspond to the 4 tuples repeated for each of the 7 badges.
+
+
+
+We don't need all of the conditions in 
+```sql
+ WHERE Posts.OwnerUserId = "100624" AND Users.Id = "100624" AND Badges.UserId == "100624";
+```
+- just any one of them is fine to get the same result. Verify
+
+
+We get 28 tuples.
+This is consistent with 4 posts and 7 badges for the user.
+Take a look at these in R.
+
+```r
+x = do('SELECT *
+        FROM Posts
+        LEFT JOIN Badges
+               ON Posts.OwnerUserId = Badges.UserId
+        LEFT JOIN Users
+               ON Posts.OwnerUserId = Users.Id
+            WHERE Posts.OwnerUserId = "100624";')
+```
+
+Count the number of actual NAs in each column:
+```r
+nna = sapply(x, function(x) sum(is.na(x)))
+any(nna > 0)
+```
+So there are no NAs resulting from the LEFT JOIN.
+
+
+
+
+Next we'll do this for more than one user Id, but not for all of the uses and posts.
+We want to check the number of tuples for each Post to get a sense if they are realistic and
+what we expect.
+
+We will only get the number of tuples.
+This allows the database to take shortcuts to not compute the entire table
+and to only count the number of tuples, not that actual tuples.
+```sql
+SELECT Posts.OwnerUserId, COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+GROUP BY Posts.OwnerUserId
+LIMIT 20;
+```
+
+```
+   OwnerUserId COUNT(*)
+1           -1      411
+2           10        3
+3        10000       12
+4       100000       24
+5        10001        5
+6       100014        1
+7       100015        3
+8       100017       40
+9        10002        1
+10      100021        3
+11      100022        1
+12      100027        3
+13       10003        5
+14      100030      288
+15      100034        3
+16      100038        1
+17       10004        1
+18      100040       24
+19      100041        3
+20      100047        1
+```
+
+No we might examine one of these, say OwnerUserId "10000" with a count of 12.
+
+
+
+We want to ensure that a User with no Badges appears in the 
+results.
+
+We can find a User with no badges
+```
+id = setdiff(u$Id , b$UserId)
+```
+We pick the 10th which is Id = "377".
+
+So we rerun our query with this Id
+```
+y  = do('SELECT *
+        FROM Posts
+        LEFT JOIN Badges
+               ON Posts.OwnerUserId = Badges.UserId
+        LEFT JOIN Users
+               ON Posts.OwnerUserId = Users.Id
+            WHERE Posts.OwnerUserId = "377";')
+```
+We get no rows in our data.frame.
+
+
+We actually want information by User and we want to include the
+Users who had no Badges and/or no Posts.
+So we will do a LEFT JOIN with Users first and then Badges and Posts.
+
+   
+```sql   
+SELECT *
+FROM Users
+LEFT JOIN Badges
+       ON Users.Id = Badges.UserId
+LEFT JOIN Posts
+       ON Posts.OwnerUserId = Users.Id
+WHERE Users.Id = "377";
+```
+
+
+
+
+Let's find somebody who had a post but has no badges
+```r
+id = p$OwnerUserId[ !(p$OwnerUserId %in% b$UserId) ]
+head(id)
+```
+We get many NAs.
+
+Let's compute a frequency table of number of posts
+for these users that have no badges.
+
+We'll select the first user Id for which there are two posts
+```
+tt = table(id)
+id = (names(tt)[ tt == 2])[1]
+```
+This is "102334"
+
+So we have 2 posts in Posts and no badges.
+
+
+We can confirm there are 2 Posts with this user id
+```
+SELECT COUNT(*)
+FROM Posts
+WHERE Posts.OwnerUserId = "102334";
+```
+2 tuples
+
+
+```
+SELECT COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+   ON Posts.OwnerUserId = Badges.UserId
+WHERE Posts.OwnerUserId = "102334";
+```
+We get a count of 2 tuples.
+
+We can get the tuples so that we can verify the 
+```r
+x = do('SELECT *
+FROM Posts
+LEFT JOIN Badges
+   ON Posts.OwnerUserId = Badges.UserId
+WHERE Posts.OwnerUserId = "102334";')
+```
+AcceptedAnswerId AnswerCount
+1               NA          NA
+2               NA          NA
+                                                                                                                                                                                                                                                                                                                    Body
+1                                                                                                                        <p>Are you trying to compare proportions between 2 groups? If yes I think you can use Z-test where Z= (p1-p2)/sqrt(p(1-p)/(1/n1+1/n2)) and p is the proportion when 2 groups are combined.</p> 
+2 <p>P[x &lt; a | x > b] means to estimate P(xb. So assuming a>b, it equals to P(Xb)/P(x>b) = N-1(b)-N-1(a)/(1-N-1(b))</p>  <p>Similarly P[|x|>c] is P(X&lt;-c or X>c) assuming c>0, which equals to  N-1(-c)+1-N-1(c)</p>  <p>N-1 is the inverse cdf for normal and the above assumes the sd=1 and mu=0 for your x</p> 
+  ClosedDate CommentCount CommunityOwnedDate ContentLicense
+1         NA            3                 NA   CC BY-SA 3.0
+2         NA            0                 NA   CC BY-SA 3.0
+             CreationDate FavoriteCount     Id
+1 2016-01-29 14:28:43.000            NA 193096
+2 2016-02-01 21:25:47.000            NA 193549
+         LastActivityDate LastEditDate LastEditorDisplayName
+1 2016-01-29 14:28:43.000           NA                    NA
+2 2016-02-01 21:25:47.000           NA                    NA
+  LastEditorUserId OwnerDisplayName OwnerUserId ParentId PostTypeId
+1               NA               NA      102334   193014          2
+2               NA               NA      102334   193541          2
+  Score Tags Title ViewCount Class Date   Id Name TagBased UserId
+1     0   NA    NA        NA  <NA> <NA> <NA> <NA>     <NA>   <NA>
+2    -1   NA    NA        NA  <NA> <NA> <NA> <NA>     <NA>   <NA>
+```
+Note the difference between NA and <NA>.
+The former is the string NA that is in the database;
+the latter are R's missing value NA that come from
+NULL values in the database.
+
+The final 6 values Class, Date, Id, Name, TagBased, UserId
+come from the Badges table and these are all <NA>
+
+
+Next we JOIN the Users table
+```
+SELECT COUNT(*)
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+WHERE Posts.OwnerUserId = "102334";
+```
+
+
+Compare the tuples for the following
+two queries
+
+```sql
+x = do('SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Posts.OwnerUserId = Users.Id
+WHERE Posts.OwnerUserId = "102334";')
+```
+
+```
+ AcceptedAnswerId AnswerCount
+1               NA          NA
+2               NA          NA
+                                                                                                                                                                                                                                                                                                                    Body
+1                                                                                                                        <p>Are you trying to compare proportions between 2 groups? If yes I think you can use Z-test where Z= (p1-p2)/sqrt(p(1-p)/(1/n1+1/n2)) and p is the proportion when 2 groups are combined.</p> 
+2 <p>P[x &lt; a | x > b] means to estimate P(xb. So assuming a>b, it equals to P(Xb)/P(x>b) = N-1(b)-N-1(a)/(1-N-1(b))</p>  <p>Similarly P[|x|>c] is P(X&lt;-c or X>c) assuming c>0, which equals to  N-1(-c)+1-N-1(c)</p>  <p>N-1 is the inverse cdf for normal and the above assumes the sd=1 and mu=0 for your x</p> 
+  ClosedDate CommentCount CommunityOwnedDate ContentLicense
+1         NA            3                 NA   CC BY-SA 3.0
+2         NA            0                 NA   CC BY-SA 3.0
+             CreationDate FavoriteCount     Id
+1 2016-01-29 14:28:43.000            NA 193096
+2 2016-02-01 21:25:47.000            NA 193549
+         LastActivityDate LastEditDate LastEditorDisplayName
+1 2016-01-29 14:28:43.000           NA                    NA
+2 2016-02-01 21:25:47.000           NA                    NA
+  LastEditorUserId OwnerDisplayName OwnerUserId ParentId PostTypeId
+1               NA               NA      102334   193014          2
+2               NA               NA      102334   193541          2
+  Score Tags Title ViewCount Class Date   Id Name TagBased UserId
+1     0   NA    NA        NA  <NA> <NA> <NA> <NA>     <NA>   <NA>
+2    -1   NA    NA        NA  <NA> <NA> <NA> <NA>     <NA>   <NA>
+  AboutMe AccountId            CreationDate DisplayName DownVotes
+1      NA   7736082 2016-01-29 14:28:43.000      userll         0
+2      NA   7736082 2016-01-29 14:28:43.000      userll         0
+      Id          LastAccessDate Location ProfileImageUrl Reputation
+1 102334 2016-02-11 20:09:20.000       NA              NA          1
+2 102334 2016-02-11 20:09:20.000       NA              NA          1
+  UpVotes Views WebsiteUrl
+1       0     0         NA
+2       0     0         NA
+```
+
+and
+
+```sql
+y = do('SELECT *
+FROM Posts
+LEFT JOIN Badges
+ ON Posts.OwnerUserId = Badges.UserId
+LEFT JOIN Users
+ ON Badges.UserId = Users.Id
+WHERE Posts.OwnerUserId = "102334";')
+```
+
+```
+  AcceptedAnswerId AnswerCount
+1               NA          NA
+2               NA          NA
+                                                                                                                                                                                                                                                                                                                    Body
+1                                                                                                                        <p>Are you trying to compare proportions between 2 groups? If yes I think you can use Z-test where Z= (p1-p2)/sqrt(p(1-p)/(1/n1+1/n2)) and p is the proportion when 2 groups are combined.</p> 
+2 <p>P[x &lt; a | x > b] means to estimate P(xb. So assuming a>b, it equals to P(Xb)/P(x>b) = N-1(b)-N-1(a)/(1-N-1(b))</p>  <p>Similarly P[|x|>c] is P(X&lt;-c or X>c) assuming c>0, which equals to  N-1(-c)+1-N-1(c)</p>  <p>N-1 is the inverse cdf for normal and the above assumes the sd=1 and mu=0 for your x</p> 
+  ClosedDate CommentCount CommunityOwnedDate ContentLicense
+1         NA            3                 NA   CC BY-SA 3.0
+2         NA            0                 NA   CC BY-SA 3.0
+             CreationDate FavoriteCount     Id
+1 2016-01-29 14:28:43.000            NA 193096
+2 2016-02-01 21:25:47.000            NA 193549
+         LastActivityDate LastEditDate LastEditorDisplayName
+1 2016-01-29 14:28:43.000           NA                    NA
+2 2016-02-01 21:25:47.000           NA                    NA
+  LastEditorUserId OwnerDisplayName OwnerUserId ParentId PostTypeId
+1               NA               NA      102334   193014          2
+2               NA               NA      102334   193541          2
+  Score Tags Title ViewCount Class Date   Id Name TagBased UserId
+1     0   NA    NA        NA  <NA> <NA> <NA> <NA>     <NA>   <NA>
+2    -1   NA    NA        NA  <NA> <NA> <NA> <NA>     <NA>   <NA>
+  AboutMe AccountId CreationDate DisplayName DownVotes   Id
+1    <NA>      <NA>         <NA>        <NA>        NA <NA>
+2    <NA>      <NA>         <NA>        <NA>        NA <NA>
+  LastAccessDate Location ProfileImageUrl Reputation UpVotes Views
+1           <NA>     <NA>            <NA>         NA      NA    NA
+2           <NA>     <NA>            <NA>         NA      NA    NA
+  WebsiteUrl
+1       <NA>
+2       <NA>
+```
+
+Both have 2 tuples.
+Is there any difference.
+This is where we don't want to examine the 
+output by eye.
+
+Instead, we programmatically compare `x` and `y`:
+```r
+all.equal(x, y)
+```
+
+```
+ [1] "Component “AboutMe”: 'is.NA' value mismatch: 2 in current 0 in target"        
+ [2] "Component “AccountId”: 'is.NA' value mismatch: 2 in current 0 in target"      
+ [3] "Component “CreationDate”: 'is.NA' value mismatch: 2 in current 0 in target"   
+ [4] "Component “DisplayName”: 'is.NA' value mismatch: 2 in current 0 in target"    
+ [5] "Component “DownVotes”: 'is.NA' value mismatch: 2 in current 0 in target"      
+ [6] "Component “Id”: 'is.NA' value mismatch: 2 in current 0 in target"             
+ [7] "Component “LastAccessDate”: 'is.NA' value mismatch: 2 in current 0 in target" 
+ [8] "Component “Location”: 'is.NA' value mismatch: 2 in current 0 in target"       
+ [9] "Component “ProfileImageUrl”: 'is.NA' value mismatch: 2 in current 0 in target"
+[10] "Component “Reputation”: 'is.NA' value mismatch: 2 in current 0 in target"     
+[11] "Component “UpVotes”: 'is.NA' value mismatch: 2 in current 0 in target"        
+[12] "Component “Views”: 'is.NA' value mismatch: 2 in current 0 in target"          
+[13] "Component “WebsiteUrl”: 'is.NA' value mismatch: 2 in current 0 in target"     
+```
+
+The Id from the Users table (column 34) has
+```
+x:  [1] "102334" "102334"
+y:  [1] NA NA
+```
+
+Why did we get this difference?
+
+
