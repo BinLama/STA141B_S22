@@ -407,6 +407,8 @@ x:  [1] "102334" "102334"
 y:  [1] NA NA
 ```
 
+Indeed, all 13 columns identified in the output are from the Users table.
+
 Why did we get this difference?
 
 
