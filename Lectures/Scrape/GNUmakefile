@@ -1,0 +1,1 @@
+../DBMS/SampleLeftJoinData/GNUmakefile

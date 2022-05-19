@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="DTL" />
+  <title>Web Scraping a StatsExchange Post</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Web Scraping a StatsExchange Post</h1>
+<p class="author">DTL</p>
+<p class="date">May 2022</p>
+</header>
+<p>We start by loading R packages to</p>
+<ul>
+<li>perform HTTP/HTTPS requests</li>
+<li>parse HTML or XML content</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(RCurl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(XML)</span></code></pre></div>
+<p>There are other similar packages - curl, xml2, httr</p>
+<p>We’ll get the information from the following post</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>u =<span class="st"> &quot;https://stats.stackexchange.com/questions/112451/maximum-likelihood-estimation-mle-in-layman-terms&quot;</span></span></code></pre></div>
+<p>We fetch it from the Web server with <code>getURLContent()</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>txt =<span class="st"> </span><span class="kw">getURLContent</span>(u, <span class="dt">followlocation =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p>We could work with the text, but we want the HTML tree as a structured object of nodes and their children and attributes.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>doc =<span class="st"> </span><span class="kw">htmlParse</span>(txt)</span></code></pre></div>
+<p>We can explore the HTML document for the patterns to find + question + answers + comments</p>
+<p>We can also do this programmatically. Probably best to do it manually at first using a text editor</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">cat</span>(txt, <span class="dt">file =</span> <span class="st">&quot;so.html&quot;</span>)</span></code></pre></div>
+<p>So now we explore this in our text editor.</p>
+<p>Look for the text of the question or title. Then go back up the “tree” looking for attributes that identify this as the title or question.</p>
+<p>On line 689, we have</p>
+<pre><code>&lt;div class=&quot;question&quot; data-questionid=&quot;112451&quot; data-position-on-page=&quot;0&quot; data-score=&quot;117&quot;  id=&quot;question&quot;&gt;</code></pre>
+<p>The class is question. The id is question.</p>
+<p>class and id are attributes on an HTML node named div.</p>
+<ul>
+<li>Nodes are started by <code>\&lt;nodeName</code> and there can be name=value attributes and then an ending &gt;</li>
+<li>Then the contents of the node can be other nodes and/or text.</li>
+<li>Then the end/close of the is <code>&lt;/nodeName&gt;</code></li>
+</ul>
+<p>The contents of the node are child nodes. They can have their own children, and attributes.</p>
+<p>A node that has not sub-content can be opened and closed with</p>
+<pre><code>&lt;nodeName /&gt;</code></pre>
+<p>It can also have attributes before the <code>/&gt;</code>.</p>
+<p>Let’s look for the answers. Again, we can look for the text of the first answer. Alternatively, we can look for <code>class="answer"</code> to see if it is present and parallels the class attribute for the question.</p>
+<p>We find</p>
+<pre><code>&lt;div class=&quot;answers-subheader d-flex ai-center mb8&quot;&gt;</code></pre>
+<p>and nex</p>
+<pre><code>&lt;div id=&quot;answer-112458&quot; class=&quot;answer js-answer accepted-answer&quot; data-answerid=&quot;112458&quot; data-parentid=&quot;112451&quot; data-score=&quot;90&quot; data-position-on-page=&quot;1&quot; data-highest-scored=&quot;1&quot; data-question-has-accepted-highest-score=&quot;1&quot;  itemprop=&quot;acceptedAnswer&quot; itemscope itemtype=&quot;https://schema.org/Answer&quot;&gt;</code></pre>
+<p>The first is a container for all the answers for this page.</p>
+<p>The second looks like a specific answer.</p>
+<ul>
+<li>The id attribute starts with answer and then the answer Id.</li>
+<li>the class attribute starts with answer</li>
+<li>there is a data-answerid attribute.</li>
+<li>we have a data-parentid attribute.</li>
+<li>we see itemprop=“acceptedAnswer”.</li>
+</ul>
+Let’s programmatically find all the
+<div>
+<p>nodes that have a data-answerid attribute. We will use XPath. (Consider the alternatives and how horrible they would be!)</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>ans =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//div[@data-answerid]&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="kw">length</span>(ans)</span></code></pre></div>
+<p>We found 14 of these nodes and there are 14 answers. Looking good.</p>
+<p>We’ll come back to how to process each of these nodes to get the answer text/body, the user, when it was posted, …</p>
+<p>Next, let’s look for comments. The first comment starts with “It’s unclear what kind of answer”. So let’s go back to the top of the file in our editor and look for this.</p>
+<p>If we look for It’s, we don’t find any matches. Probably some smart apostrophe. So let’s look for “unclear what kind”</p>
+<p>We find</p>
+<pre><code> &lt;span class=&quot;comment-copy&quot;&gt;It&amp;#39;s unclear what kind of answer you&amp;#39;re after. Do you know what likelihood is, for example? If not, better to find out that first.&lt;/span&gt;</code></pre>
+<p>That’s the comment. This is inside</p>
+<pre><code>    &lt;div class=&quot;post-layout--right js-post-comments-component&quot;&gt;
+        &lt;div id=&quot;comments-112451&quot; class=&quot;comments js-comments-container bt bc-black-075 mt12 &quot; data-post-id=&quot;112451&quot; data-min-length=&quot;15&quot;&gt;
+            &lt;ul class=&quot;comments-list js-comments-list&quot;
+                    data-remaining-comments-count=&quot;0&quot;
+                    data-canpost=&quot;false&quot;
+                    data-cansee=&quot;true&quot;
+                    data-comments-unavailable=&quot;false&quot;
+                    data-addlink-disabled=&quot;true&quot;&gt;
+
+                        &lt;li id=&quot;comment-215516&quot; class=&quot;comment js-comment &quot; data-comment-id=&quot;215516&quot; data-comment-owner-id=&quot;805&quot; data-comment-score=&quot;9&quot;&gt;
+        &lt;div class=&quot;js-comment-actions comment-actions&quot;&gt;
+            &lt;div class=&quot;comment-score js-comment-edit-hide&quot;&gt;
+                    &lt;span title=&quot;number of &amp;#x27;useful comment&amp;#x27; votes received&quot;
+                            class=&quot;warm&quot;&gt;9&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;comment-text  js-comment-text-and-form&quot;&gt;
+            &lt;div class=&quot;comment-body js-comment-edit-hide&quot;&gt;
+                &lt;span class=&quot;d-none&quot;&gt;$egingroup$&lt;/span&gt;
+                &lt;span class=&quot;comment-copy&quot;&gt;It&amp;#39;s unclear what kind of answer you&amp;#39;re after. Do you know what likelihood is, for example? If not, better to find out that first.&lt;/span&gt;
+                &lt;span class=&quot;d-none&quot;&gt;$endgroup$&lt;/span&gt;
+              &lt;div class=&quot;d-inline-flex ai-center&quot;&gt;
+&amp;ndash;&amp;nbsp;&lt;a href=&quot;/users/805/glen-b&quot;
+                            title=&quot;259,366 reputation&quot;
+                            class=&quot;comment-user&quot;&gt;Glen_b&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;span class=&quot;comment-date&quot; dir=&quot;ltr&quot;&gt;&lt;span title=&quot;2014-08-19 12:56:32Z, License: CC BY-SA 3.0&quot; class=&quot;relativetime-clean&quot;&gt;Aug 19, 2014 at 12:56&lt;/span&gt;&lt;/span&gt;
+                        &lt;span title=&quot;this comment was edited 1 time&quot;&gt;
+                            &lt;svg aria-hidden=&quot;true&quot; class=&quot;va-text-bottom o50 svg-icon iconPencilSm&quot; width=&quot;14&quot; height=&quot;14&quot; viewBox=&quot;0 0 14 14&quot;&gt;&lt;path d=&quot;m11.1 1.71 1.13 1.12c.2.2.2.51 0 .71L11.1 4.7 9.21 2.86l1.17-1.15c.2-.2.51-.2.71 0ZM2 10.12l6.37-6.43 1.88 1.88L3.88 12H2v-1.88Z&quot;/&gt;&lt;/svg&gt;
+                        &lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/li&gt;</code></pre>
+We see more
+<div>
+<p>nodes with <span class="citation" data-cites="class">@class</span> starting with “comments”, “comment-text”, “comment-body”.</p>
+If you know what you are looking for, you see
+<li>
+and
+</li>
+and also the
+<ul>
+before the
+<li>
+.
+<ul>
+starts an unnumbered list and the
+<li>
+<p>are “list items”.</p>
+The
+<li>
+<p>has a class attribute that starts with the string <code>comment</code> and it also has a data-comment-id attribute.</p>
+Within the
+<li>
+<p>we have the comment’s</p>
+<ul>
+<li>text,</li>
+<li>user name</li>
+<li>date in the title attribute</li>
+<li>text of the date and time</li>
+<li>owner-id</li>
+</ul>
+<p>Let’s programmatically find all the comments</p>
+<pre><code>a = getNodeSet(doc, &quot;//li[starts-with(@class, &#39;comment&#39;)]&quot;)
+b = getNodeSet(doc, &quot;//li[@data-comment-id]&quot;)</code></pre>
+<p>Both return 34 nodes and <code>identical(a, b)</code> is <code>TRUE</code>, so either approach gives the same answer - in this case!</p>
+<p>We do want to be able to associate each comment with the question or specific answer. So we want to be able to find this question/anser from the comment, or find the comments from this question/answer.</p>
+<h2 id="processing-the-page---extracting-the-question-answer-comments">Processing the Page - Extracting the Question, Answer, Comments</h2>
+<p>Before we process the page, we need to decide what structure we want at the end.</p>
+<p>We might have a data.frame like the Posts table that contains the Question, the Answers.</p>
+<ul>
+<li>What information do we want from the Question?</li>
+<li>from each Answer</li>
+<li>Where do we put the Comments?</li>
+</ul>
+<h2 id="processing-an-answer">Processing an Answer</h2>
+<p>We want to extract</p>
+<ul>
+<li>the text</li>
+<li>the parent Id</li>
+<li>whether it was the accepted answer</li>
+<li>the user name</li>
+<li>the user id</li>
+<li>the date posted</li>
+<li>date accepted if it is the accepted answer</li>
+<li>whether it was edited, and if so
+<ul>
+<li>how many times</li>
+<li>by whom</li>
+<li>when</li>
+</ul></li>
+</ul>
+It appears the text is in a
+<div>
+<p>with class “s-prose js-post-body”.</p>
+<ul>
+<li>Are there other
+<div>
+children of this answer node that have this same class?</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">length</span>(<span class="kw">getNodeSet</span>(ans[[<span class="dv">1</span>]], <span class="st">&quot;.//div[@class=&#39;s-prose js-post-body&#39;]&quot;</span>))</span></code></pre></div>
+<p>So there appears to be only one. So we possibly can find the text with this.</p>
+The text for the answers is a child of a
+<div>
+<p>node with a <span class="citation" data-cites="class">@class</span> that starts with <code>answercell</code>. We can be more specific by saying that the s-prose div node has to be a child of a div node that has a class with answercell in the <span class="citation" data-cites="class">@class</span> value.</p>
+<h2 id="processing-a-comment">Processing a Comment</h2>
+<p>The comment Id is an attribute - data-comment-id - in the <code>&lt;li&gt;</code> introducing the comment. Similarly, the user id is in the data-comment-owner-id</p>
+<p>Text is in</p>
+<pre><code>&lt;div class=&quot;comment-text ...&quot;&gt;
+  &lt;div class=&quot;comment-body ...&quot;&gt;
+    &lt;span class=&quot;comment-copy&quot;&gt;</code></pre>
+<p>The date is in a <span> node with class = comment-date and within the title of a child <span> node.</p>
+<h2 id="getting-the-additional-comments">Getting the Additional Comments</h2>
+<p>For this answer, we see near the end “Show <b>6</b> more comments”. Are a) these comments in the HTML but hidden, or b) does the Web browser have to go back to the server to fetch these 6 other comments? If b), how do we get them.</p>
+<p>If we click on the “Show 6 more comments”, look at the new comment and then try to find the corresponding text (“need to clearly specify”), it doesn’t seem to be present. So it looks like b).</p>
+<p>We’ll use the Web browser’s Developer Tools to see what happens when we click on the next set of “Show more comments” link.</p>
+<p>In Firefox, open the developer tools subwindow/panel via the key combinatin Option-Command I or via the menu <code>Tools -&gt; Browser Tools -&gt; Developer Tools</code>.</p>
+<p>Click on the Network tab in the developer tools. We see something like</p>
+<p><img src="InitialDeveloperTools.png" /></p>
+<p>We have scrolled to the next “Show 6 more comments”. Now we click on that.</p>
+<p>We then get</p>
+<p><img src="DevTools2.png" /></p>
+<p>There are two lines. We click on one and we get a new panel on the right. This has tabs Headers, Cookies, Request, Response, Timings, … We will click on the Response and look at the results for each of these two lines in that tab. The first has none. The second shows the HTML of these additional comments.</p>
+<p>We click on the Headers tab to see the details of the HTTP request to get this sub-document.</p>
+<p>How do we know if there are additional comments we need to fetch? The <code>\&lt;ul\&gt;</code> for the comments has an attribute named <code>data-remaining-comments-count</code>:</p>
+<pre><code>  &lt;ul class=&quot;comments-list js-comments-list&quot;
+      data-remaining-comments-count=&quot;6&quot;
+      data-canpost=&quot;false&quot;</code></pre>
+</body>
+</html>
