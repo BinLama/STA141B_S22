@@ -36,8 +36,8 @@ The URL `u` has
 + the domain www.cybercoders.com
 + the file path /search/
 + a collection of parameters of the form name=value, 
-   + separated from each other by &
-   + from the file path via ?
+    + separated from each other by &
+    + from the file path via ?
    
 The parameters are part of a HTTPS GET request as part of a 'form'.
 
@@ -462,6 +462,7 @@ or provide enhanced text descriptions?
 
 
 We want to find
+
 + education level
 + experience
 + technical skills, adding to those skills in the job summary on the results page.
@@ -595,14 +596,16 @@ This is a good way to find related jobs and explore their characteristics.
 
 Let's next look at the second &lt;H4&gt; node's  &lt;DIV&gt; node:
 ```html
-<div class="section-data section-data-title" data-section="7"><!--START_SECTION_7-->Bachelors degree<br/>4+ years of experience in data analysis in a customer relationship management, marketing, or consumer research environment<br/>
+<div class="section-data section-data-title" data-section="7">
+<!--START_SECTION_7-->Bachelors degree<br/>
+4+ years of experience in data analysis in a customer relationship management, marketing, or consumer research environment<br/>
 Python and/or R<br/>
 Writing and understanding SQL queries<br/>
 Highly functional knowledge of CRM software<br/><br/><br/>
 Plus skills:<br/>
 Ability to develop scripts to enable Natural Language Processing (NLP) solutions to support consumer analysis<!--END_SECTION_7--></div> 
 ```
-The authors are using &lt;BR&;gt; nodes to separate the text on lines.
+The authors are using &lt;BR&gt; nodes to separate the text on lines.
 This is basically a list.
 We'll group by &lt;br&gt;
 
@@ -751,6 +754,7 @@ grep("[0-9]+\\+? .* experience", txt)
 
 
 <!--
+
 ```r
 brp = getNodeSet(doc, "//br/..")
 ```
@@ -766,7 +770,7 @@ sapply(g, function(x) sapply(x[names(x) != "br"], xmlValue))
 
 
 
-###
+### Putting it All Together
 
 See [funs.R](funs.R)
 for the outline of functions putting the steps above together.
