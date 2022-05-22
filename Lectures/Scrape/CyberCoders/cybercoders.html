@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="DTL" />
+  <title>CyberCoders.com</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CyberCoders.com</h1>
+<p class="author">DTL</p>
+<p class="date">May, 2022</p>
+</header>
+<p>We’ll be using the RCurl and XML packages to make HTTPS requests and parsing the HTML documents, respectively.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(RCurl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">library</span>(XML)</span></code></pre></div>
+<p>In our Web browser, we go to https://www.cybercoders.com and entere <code>Data Scientist</code> as a query. This brings us to the URL</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>u =<span class="st"> &quot;https://www.cybercoders.com/search/?searchterms=Data+Scientist&amp;searchlocation=&amp;newsearch=true&amp;originalsearch=true&amp;sorttype=&quot;</span></span></code></pre></div>
+<p>We’ll do the same thing but programmatically in R. The URL <code>u</code> has</p>
+<ul>
+<li>the protocol HTTPS</li>
+<li>the domain www.cybercoders.com</li>
+<li>the file path /search/</li>
+<li>a collection of parameters of the form name=value,
+<ul>
+<li>separated from each other by &amp;</li>
+<li>from the file path via ?</li>
+</ul></li>
+</ul>
+<p>The parameters are part of a HTTPS GET request as part of a ‘form’.</p>
+<p>We’ll create a connection that can be used in multiple queries. and we’ll have it follow redirects and also not concern itself with checking SSL certificates. We should fix this but we won’t focus on that now. <!-- XXX Fix --></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>BaseURL =<span class="st"> &quot;https://www.cybercoders.com/search/&quot;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>con =<span class="st"> </span><span class="kw">getCurlHandle</span>(<span class="dt">followlocation =</span> <span class="ot">TRUE</span>, <span class="dt">ssl.verifypeer =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<p>Note that the final / on the BaseURL value is essential later in calls to getRelativeURL().</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>tt =<span class="st"> </span><span class="kw">getForm</span>(BaseURL, <span class="dt">searchterms=</span><span class="st">&quot;Data Scientist&quot;</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>             <span class="dt">searchlocation=</span><span class="st">&quot;&quot;</span>, <span class="dt">newsearch=</span><span class="st">&quot;true&quot;</span>, <span class="dt">originalsearch=</span><span class="st">&quot;true&quot;</span>, <span class="dt">sorttype=</span><span class="st">&quot;&quot;</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>             <span class="dt">curl =</span> con)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">nchar</span>(tt)</span></code></pre></div>
+<p>Looking for the first question, we see it as a descendant of a node</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;job-listing-item&quot;</span><span class="kw">&gt;</span></span></code></pre></div>
+<p>There is also a <code>div</code> with a class of “job-listing-container”. There is only one of these.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>doc =<span class="st"> </span><span class="kw">htmlParse</span>(tt)    </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>j =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//div[@class = &#39;job-listing-container&#39;]&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="kw">length</span>(j)</span></code></pre></div>
+<p>Let’s count the job-listing-item nodes.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>j =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//div[@class = &#39;job-listing-item&#39;]&quot;</span>)</span></code></pre></div>
+<p>How many jobs are there on this page? <code>length(j)</code>.</p>
+<p>In the Web browser, we see that the page says 24 jobs. However, we have 21. Scrolling to the bottom of the page, we see a button for the next page of results.</p>
+<p>There are 4 on that page. Why do we have 25 in total? There appears to be one “job” in the list that is an advertisement for cybercoders.com itself.</p>
+<p><img src="AdPost.png" /></p>
+<p>It appears to be the fifth one on the first page. Looking at this node - <code>j[[5]]</code> -, we see that it is this advertisement/signup.</p>
+<p>So we seem to have 20 real posts on the first page and 4 on the next.</p>
+<p>How do we get the next page?</p>
+<p>The next button and the page number buttons look like</p>
+<p><img src="NextButtons.png" /></p>
+<p>It is hard to search for 1 or 2 or the &gt; image. We can mouse over one of the buttons and see what the link is in the Web browser’s status bar at the bottom of the window. Also we can right-click on one of the buttons and Copy Link into the clipboard and then examine it</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>https<span class="op">:</span><span class="er">//</span>www.cybercoders.com<span class="op">/</span>search<span class="op">/</span>?page=<span class="dv">2</span><span class="op">&amp;</span>searchterms=Data%20Scientist<span class="op">&amp;</span>searchlocation=<span class="er">&amp;</span>newsearch=true<span class="op">&amp;</span>originalsearch=true<span class="op">&amp;</span>sorttype=</span></code></pre></div>
+<p>So now we know what we are looking for, although the domain part may not be in the HTML, i.e. the https://www.cybercoders.com/search/.</p>
+<p>So let’s look an <a> node with a href attribute that contains page=2. We can do this in the text editor or with XPath</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>nx =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//a[contains(@href, &#39;page=2&#39;)]&quot;</span>)</span></code></pre></div>
+<p>We get 3 matching nodes. One is for the 2 button, another for the » button and third with the label Next for the button. This Next doesn’t seem to appear on the page.</p>
+<p>We could explore why it doesn’t appear, but the key is that all three of these nodes have the same value for the href attribute. That is because there are only 2 pages. We want the one for the » or Next as that is the next page.</p>
+<pre><code>nx = getNodeSet(doc, &quot;//a[. = &#39;Next&#39;]/@href&quot;)
+next.url = getRelativeURL(nx[[1]], BaseURL)  # the final / is important.</code></pre>
+<p>Let’s fetch this and find the 4 job postings</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>p2 =<span class="st"> </span><span class="kw">getURLContent</span>(next.url , <span class="dt">ssl.verifypeer =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>doc2 =<span class="st"> </span><span class="kw">htmlParse</span>(p2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>j2 =<span class="st"> </span><span class="kw">getNodeSet</span>(doc2, <span class="st">&quot;//div[@class = &#39;job-listing-item&#39;]&quot;</span>)</span></code></pre></div>
+<p>We only get 3 posts. Is this because</p>
+<ul>
+<li>they are counting the ad post?</li>
+<li>we miscounted? or</li>
+<li>the second page has changed between when we made the initial query and fetching the second page?</li>
+</ul>
+<p>Regardless, we have the jobs on the second pages.</p>
+<h2 id="processing-each-post">Processing Each Post</h2>
+<p>Now that we have found these posts, we want to extract the information from each of these and also the full description for each post.</p>
+<p>Each post looks something like</p>
+<p><img src="Post.png" /></p>
+<p>We want the</p>
+<ul>
+<li>√ title - Data Scientist</li>
+<li>√ location - New York</li>
+<li>√ salary</li>
+<li>√ salary type - Full-time</li>
+<li>√ text</li>
+<li>√ the items at the bottom identifying key characteristics of the job, e.g., Python, R, SQL.</li>
+<li>√ the URL for the full description</li>
+<li>√ date posted</li>
+</ul>
+<p>The node is</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;job-listing-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;job-title&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/data-scientist-job-639658&quot;</span><span class="kw">&gt;</span>Data Scientist<span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>    <span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;job-posted posted&quot;</span><span class="kw">&gt;&lt;span&gt;</span>Posted<span class="kw">&lt;/span&gt;</span> 05/19/2022<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;details&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>                    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;location&quot;</span><span class="kw">&gt;&lt;span</span><span class="ot"> class=</span><span class="st">&quot;ico-house&quot;</span><span class="kw">/&gt;</span>New York, NY<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>        <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;salary-type&quot;</span><span class="kw">&gt;&lt;span</span><span class="ot"> class=</span><span class="st">&quot;ico-briefcase&quot;</span><span class="kw">/&gt;</span> Full-time<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true"></a>            <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;salary&quot;</span><span class="kw">&gt;&lt;span</span><span class="ot"> class=</span><span class="st">&quot;ico-money&quot;</span><span class="kw">/&gt;</span> $110k - $130k<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true"></a>    <span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true"></a>    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;description&quot;</span><span class="kw">&gt;</span>Job Title: Data Scientist Job Location: 3x per week onsite in Financial District, NY   Salary: $110-130k   Requirements: 4+ years experience Data Analytics, Python and/or R. SQL, Machine Learning    W...<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true"></a>        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/data-scientist-job-639658&quot;</span><span class="ot"> class=</span><span class="st">&quot;apply-button&quot;</span><span class="kw">&gt;</span>Apply Now <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;apply&quot;</span><span class="kw">/&gt;&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true"></a><span class="dv">&amp;#13;</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true"></a>        <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;skills&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true"></a>            <span class="kw">&lt;ul</span><span class="ot"> class=</span><span class="st">&quot;skill-list&quot;</span><span class="kw">&gt;&lt;li</span><span class="ot"> class=</span><span class="st">&quot;skill-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true"></a>                        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/search/data-analytics-skills/&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;left-off&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;skill-name&quot;</span><span class="kw">&gt;</span>Data Analytics<span class="kw">&lt;/span&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;right&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true"></a>                        <span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true"></a>                    <span class="kw">&lt;/li&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true"></a>                    <span class="kw">&lt;li</span><span class="ot"> class=</span><span class="st">&quot;skill-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true"></a>                        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/search/crm-software-skills/&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;left-off&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;skill-name&quot;</span><span class="kw">&gt;</span>CRM Software<span class="kw">&lt;/span&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;right&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true"></a>                        <span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true"></a>                    <span class="kw">&lt;/li&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true"></a>                    <span class="kw">&lt;li</span><span class="ot"> class=</span><span class="st">&quot;skill-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true"></a>                        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/search/python-skills/&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;left-off&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;skill-name&quot;</span><span class="kw">&gt;</span>Python<span class="kw">&lt;/span&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;right&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true"></a>                        <span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true"></a>                    <span class="kw">&lt;/li&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true"></a>                    <span class="kw">&lt;li</span><span class="ot"> class=</span><span class="st">&quot;skill-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true"></a>                        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/search/r-skills/&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;left-off&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;skill-name&quot;</span><span class="kw">&gt;</span>R<span class="kw">&lt;/span&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;right&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true"></a>                        <span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true"></a>                    <span class="kw">&lt;/li&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true"></a>                    <span class="kw">&lt;li</span><span class="ot"> class=</span><span class="st">&quot;skill-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true"></a>                        <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/search/sql-skills/&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;left-off&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;skill-name&quot;</span><span class="kw">&gt;</span>SQL<span class="kw">&lt;/span&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true"></a>                            <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;right&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true"></a>                        <span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true"></a>                    <span class="kw">&lt;/li&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true"></a>            <span class="kw">&lt;/ul&gt;&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true"></a><span class="kw">&lt;/div&gt;</span> </span></code></pre></div>
+<h3 id="the-title">The Title</h3>
+<p>We want the title This is the text in the &lt;a&gt; node within the &lt;div class=“job-title”&gt; (The &amp;#13; is an entity that represents a new line.)</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>a =<span class="st"> </span><span class="kw">getNodeSet</span>(node, <span class="st">&quot;.//div[@class=&#39;job-title&#39;]/a&quot;</span>)</span></code></pre></div>
+<p>Note the . at the start of the XPath expression. This is essential so that we search the descendants of this node and not the etire document in which the node is located.</p>
+<p>We want the the text within this node and we use xmlValue()</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>title =<span class="st"> </span><span class="kw">xmlValue</span>(a)</span></code></pre></div>
+<h3 id="full-description-url">Full Description URL</h3>
+<p>We also want the URL for the full description and this is the href attribute of this &lt;a&gt; node.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>full =<span class="st"> </span><span class="kw">xmlGetAttr</span>(a, <span class="st">&quot;href&quot;</span>)</span></code></pre></div>
+<p>We need to use getRelativeURL() again to get the full URL.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>full =<span class="st"> </span><span class="kw">getRelativeURL</span>(full, BaseURL)</span></code></pre></div>
+<h3 id="date">Date</h3>
+<p>The date the job was posted is in</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a> <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;job-posted posted&quot;</span><span class="kw">&gt;&lt;span&gt;</span>Posted<span class="kw">&lt;/span&gt;</span> 05/19/2022<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span></code></pre></div>
+<p>We want the text node directly under the &lt;div&gt;, not the one in the &lt;span&gt;</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>date =<span class="st"> </span><span class="kw">xpathSApply</span>(node, <span class="st">&quot;.//div[starts-with(@class, &#39;job-posted&#39;)]/text()&quot;</span>, xmlValue)</span></code></pre></div>
+<p>We may have to be more general with other job postings as this may not be the class.</p>
+<p>We can check this quickly on all</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>pt =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//div[starts-with(@class, &#39;job-posted&#39;)]&quot;</span>)</span></code></pre></div>
+<p>There are 20 as we hoped.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="kw">xpathSApply</span>(doc, <span class="st">&quot;//div[starts-with(@class, &#39;job-posted&#39;)]&quot;</span>, xmlValue)</span></code></pre></div>
+<p>So all of these also have Posted in the text.</p>
+<h4 id="skils">Skils</h4>
+<p>The skills/job characteristics such as R, SQL are in sub-nodes</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="kw">&lt;li</span><span class="ot"> class=</span><span class="st">&quot;skill-item&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>    <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/search/python-skills/&quot;</span><span class="kw">&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a>        <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;left-off&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>        <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;skill-name&quot;</span><span class="kw">&gt;</span>Python<span class="kw">&lt;/span&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>        <span class="kw">&lt;span</span><span class="ot"> class=</span><span class="st">&quot;right&quot;</span><span class="kw">/&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>    <span class="kw">&lt;/a&gt;</span><span class="dv">&amp;#13;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a><span class="kw">&lt;/li&gt;</span></span></code></pre></div>
+<p>So we can get the span with a class <code>skill-name</code></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>skills =<span class="st"> </span><span class="kw">xpathSApply</span>(node, <span class="st">&quot;.//span[@class = &#39;skill-name&#39;]&quot;</span>, xmlValue)</span></code></pre></div>
+<h4 id="location">Location</h4>
+<p>Here we want the</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>  <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;location&quot;</span><span class="kw">&gt;&lt;span</span><span class="ot"> class=</span><span class="st">&quot;ico-house&quot;</span><span class="kw">/&gt;</span>New York, NY<span class="kw">&lt;/div&gt;</span><span class="dv">&amp;#13;</span></span></code></pre></div>
+<p>We get it with</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>loc =<span class="st"> </span><span class="kw">xpathSApply</span>(node, <span class="st">&quot;.//div[@class=&#39;location&#39;]&quot;</span>, xmlValue)</span></code></pre></div>
+<h4 id="salary">Salary</h4>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>salary =<span class="st"> </span><span class="kw">xpathSApply</span>(node, <span class="st">&quot;.//div[@class=&#39;salary&#39;]&quot;</span>, xmlValue)</span></code></pre></div>
+<h4 id="salary-type">Salary Type</h4>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>salary =<span class="st"> </span><span class="kw">xpathSApply</span>(node, <span class="st">&quot;.//div[@class=&#39;salary-type&#39;]&quot;</span>, xmlValue)</span></code></pre></div>
+<p>Some of these are similar we could write a general function to each one and sapply that, e.g.,</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="kw">lapply</span>(<span class="kw">c</span>(<span class="st">&quot;salary&quot;</span>, <span class="st">&quot;salary-type&quot;</span>, <span class="st">&quot;location&quot;</span>),</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>         <span class="cf">function</span>(k) </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>            <span class="kw">xpathSApply</span>(node, <span class="kw">sprintf</span>(<span class="st">&quot;.//div[@class=&#39;%s&#39;]&quot;</span>, k), xmlValue))</span></code></pre></div>
+<h2 id="full-job-description">Full Job Description</h2>
+<p>We’ll look at a specific job’s detailed post:</p>
+<p><img src="FullDescription.png" /></p>
+<p>Parts of this are repeated from the summary description on the results page. These are the more structured/regular content on the page. The other information is more free-form and semi-structured. It has some structure as humans are reading it so there are</p>
+<ul>
+<li>section titles,</li>
+<li>paragraphs</li>
+<li>lists</li>
+</ul>
+<p>The lists may be explicit HTML &lt;ul&gt;/&lt;li&gt; elements, or as in this case, text that have explicit line breaks (&lt;br/&gt;.) So this will not be straightforward to read.</p>
+<p>We fetch the page’s contents and parse the HTML:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>u =<span class="st"> &quot;https://www.cybercoders.com/data-scientist-job-639658&quot;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>tt =<span class="st"> </span><span class="kw">getURLContent</span>(u, <span class="dt">ssl.verifypeer =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>doc =<span class="st"> </span><span class="kw">htmlParse</span>(tt)</span></code></pre></div>
+<p>We can look for explicit header elements. In HTML, these are H1, H2, …, H6. We can use XPath to find any of these with</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>h =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//h1|//h2|//h3|//h4|//h5|//h6&quot;</span>)</span></code></pre></div>
+<p>There are 9 of these.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="kw">table</span>(<span class="kw">sapply</span>(h, xmlName))</span></code></pre></div>
+<pre><code>h1 h3 h4 
+ 1  5  3 </code></pre>
+<p>We can learn from this post, but it may not generalize to other job posts.</p>
+<ul>
+<li>The h1 node is the title - Data Scientist</li>
+<li>The h4 nodes are</li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>h[<span class="kw">sapply</span>(h, xmlName) <span class="op">==</span><span class="st"> &quot;h4&quot;</span>]</span></code></pre></div>
+<pre><code>[[1]]
+&lt;h4 class=&quot;section-title&quot;&gt;What You Will Be Doing&lt;/h4&gt; 
+
+[[2]]
+&lt;h4 class=&quot;section-title&quot;&gt;What You Need for this Position&lt;/h4&gt; 
+
+[[3]]
+&lt;h4 class=&quot;section-title&quot;&gt;Preferred Skills&lt;/h4&gt; </code></pre>
+<p>The H3 nodes are CyberCoders’ own generic elements not specific to this job description. We may be able to use this information for other posts to filter these.</p>
+<p>The section title Preferred Skills is hopefully something most full descriptions will have, if not with the exact same name. This presumably provides information about</p>
+<ul>
+<li>education level</li>
+<li>experience</li>
+<li>technical skills, adding to those skills in the job summary on the results page.</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>brp =<span class="st"> </span><span class="kw">getNodeSet</span>(doc, <span class="st">&quot;//br/..&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>k =<span class="st"> </span><span class="kw">xmlChildren</span>(brp[[<span class="dv">1</span>]])</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a>k =<span class="st"> </span>k[<span class="kw">names</span>(k) <span class="op">!=</span><span class="st"> &quot;comment&quot;</span>]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true"></a>g =<span class="st"> </span><span class="kw">split</span>(k, <span class="kw">cumsum</span>(<span class="kw">names</span>(k) <span class="op">==</span><span class="st"> &quot;br&quot;</span>))</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true"></a><span class="kw">sapply</span>(g, <span class="cf">function</span>(x) <span class="kw">sapply</span>(x[<span class="kw">names</span>(x) <span class="op">!=</span><span class="st"> &quot;br&quot;</span>], xmlValue))</span></code></pre></div>
+</body>
+</html>
