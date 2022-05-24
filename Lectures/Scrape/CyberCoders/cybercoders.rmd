@@ -36,8 +36,8 @@ The URL `u` has
 + the domain www.cybercoders.com
 + the file path /search/
 + a collection of parameters of the form name=value, 
-    + separated from each other by &
-    + from the file path via ?
+    + separated from each other by the `&` character,
+    + from the file path via the `?` character
    
 The parameters are part of a HTTPS GET request as part of a 'form'.
 

@@ -49,7 +49,7 @@ function(node, con)
 {
     a = getNodeSet(node, ".//div[@class='job-title']/a")
 
-    full = xmlGetAttr(a[[1]], "href")
+    full = getRelativeURL(xmlGetAttr(a[[1]], "href"), BaseURL)
 
     ans = data.frame(title = xmlValue(a[[1]]),
                      fullDescriptionURL = full,
