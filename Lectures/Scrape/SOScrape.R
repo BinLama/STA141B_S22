@@ -24,6 +24,10 @@ function(baseURL = "https://stats.stackexchange.com/questions?tab=newest&pagesiz
 
 
 processResults =
+    #
+    # For now just do the minimal which is 
+    #
+    #
 function(doc, con, baseURL)
 {
     urls = getNodeSet(doc, "//div[starts-with(@id, 'question-summary') and @data-post-id]//h3/a[@class='s-link']/@href")

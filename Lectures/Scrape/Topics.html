@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>STA141B Spring 2022 - Day 1 Challenge </title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# STA141B Spring 2022
+
+## Web Scraping
+
+### Duncan Temple Lang
+### Professor, Statistics
+### Associate Dean, Graduate Studies
+
+
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+layout: true
+<div style="float:right"><i>STA141B-S22</i></div>
+
+---
+# Steps in Scraping Data
+
++ See if the data are available in another form
+
+   + Download files
+       + CSV, xlsx, sqlite/access 
+	   
+   + API
+
++ Check Terms of Service (ToS)
+ 
+   + Legal to scrape on this site?
+
+
+---
+# Technical Steps
+
++ HTTP(S) request relevant documents
+
++ Result Type
+
+   + JSON - convert and subset
+   
+   + protobuf - convert and subset
+   
+   + XML - parse and extract relevant content
+      + XPath or generic conversion
+
+   + HTML !
+   
+---
+# Scraping HTML
+
++ Manually find pattern for each node of interest
+
++ XPath to extract  node(s)
+
++ Process the node
+
+   + more XPath
+   + direct manipulation of the sub-tree
+   
+   
+   
+
+---
+# Common HTML
+
++ Read a table from an HTML page
+   + readHTMLTable()
+   
++ Get all links
+   + getHTMLLinks()
+   
++ May need to customize   
+
+
+---
+# Table
+
++ Countries and their populations
+
+   + https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population
+
+```r
+library(RCurl)
+txt = getURLContent("https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population")
+```
+
+```r
+doc = htmlParse(txt)
+tbls = readHTMLTable(doc)
+sapply(tbls, nrow)
+```
+
+```r
+tbls[[1]]
+```
++ A data.frame
+
++ Can specify the colClasses.
+
+
+---
+# Non-Generic HTML
+   
+   
++ Processing a StatsExchange question and answers
+
+  + From Thursday
+  + See [R session transcript](RSession_May24)
+  
++ SO posts.
+
+  + Get the intial results page
+  + Process question results on page
+  + Get next page of results.
+ 
+
+---
++ Start at [https://stats.stackexchange.com/](https://stats.stackexchange.com/)
+
+
++ Find the link to each question on this results page.
+
++ Examine the HTML
+
++ Search for text of first question
+
+  + This will have changed if you do it now.
+
+
+---
+
+```html
+<div id="qlist-wrapper" class="flush-left">
+    <div id="question-mini-list">
+        <div>
+                        
+
+
+<div id="question-summary-574018" class="s-post-summary js-post-summary" data-post-id="574018" data-post-type-id="1">
+    <div class="s-post-summary--stats js-post-summary-stats">
+        
+
+                <div class="s-post-summary--stats-item s-post-summary--stats-item__emphasized" title="Score of 2">
+            <span class="s-post-summary--stats-item-number">2</span>
+            <span class="s-post-summary--stats-item-unit">votes</span>
+        </div>
+        <div class="s-post-summary--stats-item has-answers " title="1 answer">
+            <span class="s-post-summary--stats-item-number">1</span>
+            <span class="s-post-summary--stats-item-unit">answer</span>
+        </div>
+        <div class="s-post-summary--stats-item " title="60 views">
+            <span class="s-post-summary--stats-item-number">60</span>
+            <span class="s-post-summary--stats-item-unit">views</span>
+        </div>
+
+
+<div class="s-post-summary--stats-item has-bounty" title="this question has an open bounty worth 50 reputation">+50</div>
+    </div>
+    <div class="s-post-summary--content">
+
+        <h3 class="s-post-summary--content-title">
+
+            
+
+            <a href="/questions/574018/why-do-fixed-effects-in-a-logistic-regression-model-differ-depending-on-the-pres" class="s-link">Why do fixed effects in a logistic regression model differ depending on the presence of a random slope?</a>
+        </h3>
+        <div class="s-post-summary--meta">
+            <div class="s-post-summary--meta-tags tags js-tags t-r t-regression t-mixed-model t-lme4-nlme t-sigmoid-curve">
+
+<a href="/questions/tagged/r" class="post-tag flex--item mt0 js-tagname-r" title="show questions tagged &#39;r&#39;" rel="tag">r</a> <a href="/questions/tagged/regression" class="post-tag flex--item mt0 js-tagname-regression" title="show questions tagged &#39;regression&#39;" rel="tag">regression</a> <a href="/questions/tagged/mixed-model" class="post-tag flex--item mt0 js-tagname-mixed-model" title="show questions tagged &#39;mixed-model&#39;" rel="tag">mixed-model</a> <a href="/questions/tagged/lme4-nlme" class="post-tag flex--item mt0 js-tagname-lme4-nlme" title="show questions tagged &#39;lme4-nlme&#39;" rel="tag">lme4-nlme</a> <a href="/questions/tagged/sigmoid-curve" class="post-tag flex--item mt0 js-tagname-sigmoid-curve" title="show questions tagged &#39;sigmoid-curve&#39;" rel="tag">sigmoid-curve</a> 
+            </div>
+            
+
+
+<div class="s-user-card s-user-card__minimal">
+
+            <a href="/users/164061/sextus-empiricus" class="s-avatar s-avatar__16 s-user-card--avatar">        <div class="gravatar-wrapper-16 js-user-hover-target" data-user-id="164061">
+            <img src="https://i.stack.imgur.com/RZLo7.png?s=32&amp;g=1" alt="user avatar" width="16" , height="16" class="s-avatar--image" />
+        </div>
+</a>
+
+    <div class="s-user-card--info">
+            <div class="s-user-card--link d-flex gs4" >
+                <a href="/users/164061/sextus-empiricus" class="flex--item">Sextus Empiricus</a>
+            </div>
+        
+                <ul class="s-user-card--awards">
+            <li class="s-user-card--rep"><span class="todo-no-class-here" title="reputation score 46,479" dir="ltr">46.5k</span></li>
+
+        </ul>
+
+        
+    </div>
+
+        <time class="s-user-card--time">
+                <a href="/questions/574018/why-do-fixed-effects-in-a-logistic-regression-model-differ-depending-on-the-pres?lastactivity" class="s-link s-link__muted">modified <span title="2022-05-24 14:24:05Z" class="relativetime">9 mins ago</span></a>
+            </time>
+</div>
+
+        </div>
+    </div>
+</div>
+```
+
+
+
+---
+# ID or URL/Link
+
++ We can get the full link
+
+   +  or the data-post-id
+
++ We know if we have the link, we can get the page.
+
+   + However, having the full link will save a fraction of a second
+      + but for 200,000 questions!
+
+```r
+u = "https://stats.stackexchange.com"
+txt = getURLContent(u)
+doc = htmlParse(txt)
+```
+
+
++ Get the IDs
+
+```r
+getNodeSet(doc, "//div[starts-with(@id, 'question-summary') and @data-post-id]/@data-post-id")
+```
+
+
++ Get the full links
+
+```r
+urls = getNodeSet(doc, "//div[starts-with(@id, 'question-summary') and @data-post-id]//h3/a[@class='s-link']/@href")
+```
+
+---
+# Full versus Relative URLs
+
++ The URLs are relative
+
+```
+/questions/576445/how-many-components-of-a-gaussian-mixtures-do-i-need-to-match-moments-up-to-the
+```
+
++ Need domain, protocol
+
++ Relative to https://stats.stackexchange.com/
+
+   + Original URL we queried to get these links.
+
+
+
+```r
+full.urls = getRelativeURL(unlist(urls), "https://stats.stackexchange.com/")
+
+"https://stats.stackexchange.com/questions/576445/how-many-components-of-a-gaussian-mixtures-do-i-need-to-match-moments-up-to-the"
+```
+
+---
+# Collect Auxiliary Information
+
++ From the results page
+
++ We can get number of
+   + votes
+   + views
+   + answers
+
++ Tags
++ Questioner
++ Date/time
+
+
++ Can also get this from the question's full page.
+
+
+---
+# Other Questions
+
++ Can select Month
+
++ Brings us to [https://stats.stackexchange.com/?tab=month](https://stats.stackexchange.com/?tab=month)
+
++ More than 14, but doesn't have them all
+
++ At the bottom
+
+![](SOMonthMore.png)
+
+
+---
+# All Questions
+
++ Follow the "more questions" link and go to [https://stats.stackexchange.com/questions](https://stats.stackexchange.com/questions)
+
+
+![](SOQuestionsTop.png)
+
+![](SOQuestionsBottom.png)
+
+
++ Pages of results
+
+
+
+---
+# Next Page
+
++ Get Results from Page - as before
+
++ URL for next page
+
+```r
+u = "https://stats.stackexchange.com/questions"
+txt = getURLContent(u)
+doc2 = htmlParse(txt)
+nxt = getNodeSet(doc2, "//a[. = 'Next']")
+```
+
++ No value.
+
++ Check HTML source and look for "Go to page 2" or "page=2"
+
+   + Text is " Next", not "Next" - extra space.
+
+```r
+nxt = getNodeSet(doc2, "//a[. = ' Next']/@href")
+```
+
++ Could also use
+```r
+getNodeSet(doc2, "//a[@rel = 'next']/@href")
+
+```
+
+
+---
+# Number of Questions/Resuls Per Page
+
++ Choice of 15, 30, 50
+
++ Click on 50
+
+   +  Brings us to [https://stats.stackexchange.com/questions?tab=newest&pagesize=50](https://stats.stackexchange.com/questions?tab=newest&pagesize=50)
+
++ So we can start there.
+
+
+---
+# "Algorithm"
+
++ Get initial page
+
++ Process results on page
+
+```r
+while( nextPage )
+{
+    next = getNextPageURL(curPage)
+    Fetch next page
+    Parse HTML
+    process Results
+    append to previous results
+}
+```
+
+---
+# Information and Code
+
++ [SOScrape.R](SOScrape.R)
++ [R session transcript](RSession_May24)  
+
+---
+# Updating
+
++ Don't want to do this each time
+
++ Fetch only the new ones.
+
+
+
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
