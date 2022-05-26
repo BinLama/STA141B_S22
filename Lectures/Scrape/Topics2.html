@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>STA141B Spring 2022 - Day 1 Challenge </title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# STA141B Spring 2022
+
+## Web Scraping
+
+### Duncan Temple Lang
+### Professor, Statistics
+### Associate Dean, Graduate Studies
+
+
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+layout: true
+<div style="float:right"><i>STA141B-S22</i></div>
+
+
+---
+
+XPath
+
+
++ Path is a sequence of steps.
+
++ Each step
+
+   + Axis - direction
+   + node test - node name or type, e.g., a or text()
+   + optional predicate - `[condition]`
+
+
+---
+# Axes
+
++ [Axes](https://www.w3schools.com/xml/xpath_axes.asp)
+
++ descendant-or-self  //
+
++ child 
+
++ parent  ..
+
++ self  (current node) .
+
++ following-sibling, preceding sibling
+
++ ancestor, ancestor-or-self
+
+
++ attribute  @
+
+---
+# Predicates
+
++  inside []
+
++  . - current node
+
++  @ - attributes of current node
+
++ can refer to other nodes
+```
+   table[./tr[@class='header']]
+```
+
+---
+# Paths
+
++ `step1/step2/step3`
+
+```
+//table//tr[@class='header']/th[@id='data']
+```
+
+
+---
+# OR  |
+
++ Can match two or more paths
+
+```
+//h1 | //h2
+```
+
++ Cannot (easily) do //...//(H1|H2)//...
+
++  Can do generic comparisons
+```
+//*[local-name(.) = 'a' or local-name(.) = 'i']
+```
+
+---
+# JSON
+
+
++ [https://www.flightradar24.com/](https://www.flightradar24.com/)
+
+
+![](flightradar.png)
+
+
+---
+# JSON (2)
+
++ Access the data about each 'plane
+
++ Not in the HTML
+
++ Gets updated regularly
+
++ Look at the network requests
+
+---
+# Developer Tools
+
++  Open developer tools 
+  
+     + Tools -> Browser Tools -> Web Developer Tools
+	 
++ Select Network tab
+
++ See the initial requests
+   +  Shift- Reload to force avoid using Web browser's cache
+
+---
+# Network Requests
+
+![](FlightRadar24.png)
+
+---
+# Request for JSON Data
+
+![](FlightRadarDeveloperTools1.png)
+
+
+---
+# JSON Response in Developer Tools
+
+![](FlightRadarDeveloperTools.Request1.png)
+
+
+
+---
+
++ Make HTTP(S) requests
+
++ Parse JSON
+
+```r
+library(RCurl)
+library(RJSONIO)
+```
+
+```
+u ="https://data-cloud.flightradar24.com/zones/fcgi/feed.js?faa=1&bounds=37.73,36.807,-124.03,-120.35&satellite=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=14400&gliders=1&stats=1"
+
+txt = getURLContent(u)
+vals = fromJSON(txt)
+```
+
+
+---
+# Exploring Result
+
+```r
+class(vals)
+length(vals)
+names(vals)
+table(sapply(vals, class))
+```
+
+```r
+vals$version
+vals$full_count
+```
+
+---
+# Individual Flight
+
+```
+vals[[3]]
+```
+
++ item 14 seems to be the flight identifier, e.g., UA435.
+
+   + some have ""
+
++ items 2 and 3 seem to be latitude and longitude
+
+
+
+---
+# Click on a Plane
+
++ See what request gets made when click on a plane.
+
+```
+https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=2bff57df
+```
+
++  The flight argument is one of the names(vals)
+
++ So can get information w/o clicking but requesting
+
+
+```
+f = fromJSON(getForm("https://data-live.flightradar24.com/clickhandler/", version = 1.5, flight= "2bff52d5"))
+```
+
+---
+# "All" Flights
+```
+info = lapply(names(vals)[-c(1, 2, length(vals))],
+              function(f)
+                  getForm("https://data-live.flightradar24.com/clickhandler/", version = 1.5, flight= f)
+```
+
+
+---
+# Marine Traffic
+
++ [](https://www.marinetraffic.com)
+
+![](MarineTraffic.png)
+
+
++ Get the locations of all of the ships.
+
+
+---
+# Find the Data Requests
+
+
++ Developer tools
+
++ JSON
+
+```
+https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:0/Y:0/station:0
+```
+
+
+
+---
+# Mimic the Web Browser Request
+
+
++ Get the Header information from the browser
+
++ Mirror these in request from R.
+
++ Get minimal set to make this work
+
++ Cookie       (cookie)
++ User-Agent:  (useragent)
++ Accept       (httpheaders)
++ X-Auth, X-Auth-token  (httpheaders)
+
+
+---
+# Login
+
++ Often have to login to a site
+
++ Need to do similar from R
+
++ Login via Web browser
+
++ Copy cookie from browser
+
++ Use in requests
+
+```
+getURLContent(u, cookie = readLines("cookieFile", warn = FALSE)[1])
+```
+
+
+---
+# POST requests
+
++ idealist.org
+
+
+
+---
+
+```
+u = "https://nsv3auess7-dsn.algolia.net/1/indexes/idealist7-production/query?x-algolia-agent=Algolia for vanilla JavaScript 3.30.0&x-algolia-application-id=NSV3AUESS7&x-algolia-api-key=c2730ea10ab82787f2f3cc961e8c1e06"
+```
+
+
+
+```
+body = '{"params":"facets=*&hitsPerPage=20&page=0&attributesToSnippet=%5B%22description%3A20%22%5D&attributesToRetrieve=objectID%2Ctype%2Cpublished%2Cname%2Ccity%2Cstate%2CstateStr%2Ccountry%2Curl%2CorgID%2CorgUrl%2CorgName%2CorgType%2ClogoHandle%2CimageHandle%2Clogo%2CgroupID%2CgroupUrl%2CgroupName%2CisFullTime%2ClistingLocationType%2CremoteZone%2Cpaid%2Cpayment%2ClocalizedStarts%2ClocalizedEnds%2C_geoloc%2ChasPublishedListings%2CactionType%2CactionSubType%2Csource%2Ctimezone%2ChasAts%2CisPostedAnonymously%2Chiring&filters=type%3A\'INTERNSHIP\'&removeStopWords=true&ignorePlurals=true&advancedSyntax=true&queryLanguages=%5B%22en%22%2C%22es%22%2C%22pt%22%5D&getRankingInfo=true&clickAnalytics=true&analytics=true&query=data%20science"}'
+```
+
+```
+con = getCurlHandle( followlocation = TRUE, cookiejar = "", verbose = TRUE)
+tt = postForm(u, .opts = list(postfields = I(body),
+                              httpheader = c(Accept = "application/json",
+                                             referer = "https://www.idealist.org"
+                                             )),
+              curl = con, style = "HTTPPOST")
+```
+
+---
+# COVID Data
+
+![](NYT_COVID.png)
+
++ Data on many aspects of COVID
+   + national, state and county
+
++ Time-series, Maps, Tables
+
+---
+# COVID Data
+
++ Fetch the contents of the URL
+
+```r
+u = "https://www.nytimes.com/interactive/2021/us/covid-cases.html"
+```
+    + current data, not 2021
+
++ Parse the HTML
+
+```r
+doc = htmlParse(getURLContent(u))
+```
+
++ Read all the tables
+
+```r
+tbls = readHTMLTable(doc)
+```
+
+
+
+---
+# First 3 tables
+
+```
+               Daily Avg. on May 20 14-Day Change Total Reported
+1        Cases              107,952          +53%     83,130,959
+2        Tests              915,546          +31%              —
+3 Hospitalized               24,077          +30%              —
+4   In I.C.U.s                2,567          +24%              —
+5       Deaths                  301          –19%      1,000,410
+
+                     At least one dose Fully vaccinated
+1           All ages               78%              66%
+2           5 and up               83%              71%
+3          65 and up               95%              91%
+4 See more details ›                NA               NA
+
+
+                     At least one dose Fully vaccinated
+1           All ages               78%              66%
+2           5 and up               83%              71%
+3          65 and up               95%              91%
+4 See more details ›                NA              NA
+```
+
++ 2nd and 3rd seem to be the same.
+    
+---
+# 4th & 5th Tables
+
+```
+                Cases Daily Avg.\n Per 100,000\n 14-day change\n Hospitalized Daily Avg.\n Per 100,000 14-day change\n Deaths Daily Avg.\n Per 100,000\n FullyVaccinated
+1 United States            107,952            33            +53%                    24,077           7            +30%                 301          0.09             66%
+```
+
++ Only one row
+   + We can see other rows on the Web page
+
+
+
++ Has a "Show more"
+
+---
+# 5th table
+
++ But 5th table is as it appears on the Web page    
+
+```
+                    Cases Daily Avg.\n Per 100,000\n 14-day change\n \n\t\tHospitalizedAvg. Per 100,000 14-day change\n Deaths Daily Avg.\n Per 100,000\n FullyVaccinated
+1    Villalba, P.R.                 53           248             +7%                                  —               —                   —             —             91%
+2       Lares, P.R.                 58           238            +15%                                  —               —                   —             —             95%
+3       Coamo, P.R.                 86           227            +51%                                  —               —                   —             —             73%
+4  Guayanilla, P.R.                 37           210            +14%                                  —               —                   —             —             83%
+5    Patillas, P.R.                 33           202            +12%                                  —               —                   —             —             81%
+6    Adjuntas, P.R.                 35           201            +42%                                  —               —                   —             —             77%
+7       Ceiba, P.R.                 22           201            +55%                                  —               —                   —             —             78%
+8      Jayuya, P.R.                 28           200            –36%                                  —               —                   —             —             83%
+9    Orocovis, P.R.                 40           199            +50%                                  —               —                   —             —             86%
+10 Juana Díaz, P.R.                 89           199            +32%                                  —               —                   —             —             76%
+```
+
++ Also Has a "Show more"
+
+
+---
+#  State Trends  
+
+
++ 4th table
+
+```
+tr4 = getNodeSet(doc, "//table[contains(., 'United States')]//tr")
+```
+
++ 12 rows
+   + Expect 50 or more.
+   + 11 rows in table
+      + and the header row.
+
++ The "Show all" button suggets that other rows
+  + are hidden  (NO), or
+  + the data is in the page, or
+  + the button will do an HTTPS request to get the data.
+
+
+
+
+---
+# Map
+
+
+
+---
+# County Data
+
++ Searching through all the sub-requests
+  + Look for Type JSON
+
++ Lots of irrelevant requests
+
++ Then    
+```
+https://static01.nyt.com/newsgraphics/2021/coronavirus-tracking/data/counties.json    
+    ```
+
+![](AlabamaCounty.png)    
+
+
+<!--
+
+```
+https://api.mapbox.com/styles/v1/nytgraphics/ckmey0lx427nw17rwx2m7rmqm?access_token=pk.eyJ1Ijoibnl0Z3JhcGhpY3MiLCJhIjoiY2o5YTlyb3ptMTB5bDMybXF2ODRjdThlYyJ9.cytRa2y0Qt3Nedj4eUX67w
+    ```
+
+```
+https://api.mapbox.com/v4/mapbox.mapbox-streets-v8,nytgraphics.55yk5gqr,nytgraphics.csrp4dba,nytgraphics.8xai4qpe,nytgraphics.d9izjdtw,nytgraphics.6scqxx7y,nytgraphics.183yay8f.json?secure&access_token=pk.eyJ1Ijoibnl0Z3JhcGhpY3MiLCJhIjoiY2o5YTlyb3ptMTB5bDMybXF2ODRjdThlYyJ9.cytRa2y0Qt3Nedj4eUX67w
+```    
+-->
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
