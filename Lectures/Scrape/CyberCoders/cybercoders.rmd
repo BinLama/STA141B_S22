@@ -43,7 +43,8 @@ The parameters are part of a HTTPS GET request as part of a 'form'.
 
 We'll create a connection that can be used in multiple queries.
 and we'll have it follow redirects and also not concern itself with checking
-SSL certificates. We should fix this but we won't focus on that now. <!-- XXX Fix -->
+SSL certificates. We should fix this but we won't focus on that now.
+See below for how to deal with this.
 ```r
 BaseURL = "https://www.cybercoders.com/search/" 
 con = getCurlHandle(followlocation = TRUE, ssl.verifypeer = FALSE)
@@ -854,3 +855,104 @@ CA IN MA MI MN NY TX
 14  1  1  1  1  1  1 
 ```
 
+
+## SSL Certificate
+
+SSL stands for the Secure Socket Layer. There is FAQ [here](https://www.ssl.com/faqs/faq-what-is-ssl/).
+
+We used the option `ssl.verifypeer = FALSE` in our
+HTTP requests to cybercoders.com.
+This makes us vulnerable to "a man in the middle attack".
+Specifically, we cannot verify that the site to which we send the request
+is actually cybercoders.com.  This is not a big deal in our context
+as we are getting back results that make sense and we are not transmitting/sending
+private information in our requests.
+However, in general, we could be redirected to a different site
+masquerading as cybercoders.com.
+So we would like to fix this.
+
+The error message we get is
+```r
+a = getURLContent("https://www.cybercoders.com")
+Error in function (type, msg, asError = TRUE)  : 
+  SSL certificate problem: unable to get local issuer certificate
+```
+
+My initial reaction to this is that we need to specify a different set
+of certificates on our machine to recogize the SSL certificate provided by
+cybercoders.com. It could be that the cacert.pem file that RCurl
+uses by default is out of date. So we can fetch a newer version of this
+file from [https://curl.se/docs/caextract.html](https://curl.se/docs/caextract.html),
+specifically [here](https://curl.se/ca/cacert.pem)
+and use it in the requests with
+```r
+a = getURLContent("https://www.cybercoders.com", cainfo = "/Users/duncan/Downloads/cacert.pem")
+```
+That doesn't solve the problem, but still a good thing to do.
+
+The problem appears to be that the cybercoders.com SSL certificate
+is "self-signed".
+
+There is a good article [Get the CA cert for curl](https://daniel.haxx.se/blog/2018/11/07/get-the-ca-cert-for-curl/) describing solutions to this.
+We'll use option 4 - Get it with Firefox -  noting that it is still not ideal.
+
+The article provides screen shots of how to get this information.
+Here are corresponding screenshots from my older version of Firefox.
+
+Visit https://cybercoders.com and then click on the padlock in the URL text field.
+![](SSL1.png)
+
+Click the Connection secure to get
+
+![](SSL2.png)
+
+Click on the "More information" and we see
+
+![](SSL3.png)
+
+Click on "View Certificate" and we get  a new tab and Web page.
+
+![](SSL4.png)
+
+Scroll down to the Miscellaneous section to see
+
+![](SSL5.png)
+
+Click on the PEM (cert) and this will download the file www-cybercoders-com.pem.
+
+We now have the certificate and copy it to our current working directory (cwd)
+(or refer to it by full path)
+```r
+a = getURLContent("https://www.cybercoders.com", cainfo = "www-cybercoders-com.pem")
+```
+This works with no error.
+
+We can use the verbose option to see the SSL "handshake"
+```r
+a = getURLContent("https://www.cybercoders.com", cainfo = "www-cybercoders-com.pem", verbose = TRUE)
+```
+
+Note that this is not very secure. We are essentially asking the
+site "are you who you say you are" and we are not verifying it with any 3rd-party.
+But it is better than turning off all SSL peer verification (via `ssl.verifypeer = FALSE`).
+
+We should add this to all RCurl calls that make requests.
+Due to the way we wrote our functions, we can do this in one place,
+specifically the default value of the `con` parameter in the `cyberCoders()`
+function.
+We change this from
+```r
+cyberCoders =
+function(q, location = "",
+         con = getCurlHandle(followlocation = TRUE, ssl.verifypeer = FALSE),
+         maxNum = Inf)
+```
+to
+```r
+cyberCoders =
+function(q, location = "",
+         con = getCurlHandle(followlocation = TRUE, cainfo = "www-cybercoders-com.pem"),
+         maxNum = Inf)     
+```
+and it will be used throughout, but we can also override it by specifying a
+value for `con`.
