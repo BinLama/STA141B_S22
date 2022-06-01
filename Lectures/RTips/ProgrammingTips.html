@@ -534,8 +534,6 @@ tapply(indivfiledfs, varNames, rbind)
 ---
 # Read the Data, Don't Assert Values
 
-+ e.g. don't assume 72 files.
-
 ```
 d = as.Date("1995-01-16", origin = "1970-01-01", format = "%Y-%m-%d")
 idx=1
@@ -558,6 +556,12 @@ for(i in 1:72) {
   d <- add.months(d, 1)
 }
 ```
+--
+
++ Hard-coded
+
+  + the dates
+  + number of files
 
 ---
 # Questions when reading the code?
@@ -571,6 +575,35 @@ for(i in 1:72) {
    + 27
    + 50
    + 24387
+
+--
+
+---
+# Less code is often clearer
+
++ Code here is setting latitude and longitude to numbers e.g., 28 and 47
+  + not actual lat, long values.
+
++ Suspect confusion from thinking about how to loop, not what to insert into data.frame.
+
+
+---
+# Writing Functions & Software
+
++ Moved from writing lines of R code
+
++ Writing functions
+   + to break large functions into smaller ones
+
++ Reusable functions
+   + change arguments, does different things.
+
++ Software.
+
++ Read the solutions to assignments 1 and 2 (and 4.)
+
+   + Assignment 3 more SQL than R and few reusable functions.
+
 
 
     </textarea>
