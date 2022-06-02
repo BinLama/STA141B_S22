@@ -1,6 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>STA141B Spring 2022 - Day 1 Challenge </title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# STA141B Spring 2022
+
+## Web Scraping
+
+### Duncan Temple Lang
+### Professor, Statistics
+### Associate Dean, Graduate Studies
 
 
-https://hotpads.com/ca/houses-for-rent
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+layout: true
+<div style="float:right"><i>STA141B-S22</i></div>
+
+
+---
+# Post Example Exploration
+
+```r
+z = postForm("http://localhost/~duncan/cgi-bin/post.sh",
+                 name = "Duncan",
+                 role = "instructor",
+              style = "POST")
+```
+
++ Result
+```
+method: POST
+Body: name=Duncan&role=instructor
+```
+
+
+```
+x = postForm("http://localhost/~duncan/cgi-bin/post.sh",
+                  name = "Duncan",
+                  role = "instructor",
+              style = "HTTPPOST")
+```
+
++ Result
+```
+method: POST
+Body: --------------------------43ab33b943c18b3f
+Content-Disposition: form-data; name="name"
+
+Duncan
+--------------------------43ab33b943c18b3f
+Content-Disposition: form-data; name="role"
+
+instructor
+--------------------------43ab33b943c18b3f--
+```
+
+
+---
+# Send JSON in Body
+
++ Prepare body of request as JSON content
+```
+b = list(name = "Duncan", role = "instructor")
+json = toJSON(b)
+cat(json, "\n")
+
+{
+ "name": "Duncan",
+"role": "instructor" 
+} 
+```
+
++ Make Request
+```
+u = "http://localhost/~duncan/cgi-bin/post.sh"
+x = postForm(u, .opts = list(postfields = json))
+cat(x)
+```
+
+
+
+---
+# POST in  Web Pages
+
++ https://hotpads.com/ca/houses-for-rent
 
 In the Network tab of the Developer Tools
 
@@ -9,7 +114,7 @@ filter
 mime-type:application/json method:post
 ```
 
-+ Severa
++ Several
 
 https://hotpads.com/node/hotpads-api/api/v2/googlemaps/sign/url
 
@@ -21,10 +126,7 @@ Body of request is JSON
 ```
 
 
-fromJSON()
-
-
-
++ Conver
 
 
 
@@ -34,12 +136,7 @@ fromJSON()
 
 Login programmatically
 
-https://pems.dot.ca.gov/
-
-
-
-
-
++ https://pems.dot.ca.gov/
 
 
 ---
@@ -135,44 +232,18 @@ names(a[[1]])
 
 
 
----
 
 
-```r
-z = postForm("http://localhost/~duncan/cgi-bin/post.sh", name = "Duncan", role = "instructor", style = "POST")
-```
 
-```
-method: POST
-Body: name=Duncan&role=instructor
-```
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
 
-
-```
-x = postForm("http://localhost/~duncan/cgi-bin/post.sh", name = "Duncan", role = "instructor", style = "HTTPPOST")
-```
-
-```
-method: POST
-Body: --------------------------43ab33b943c18b3f
-Content-Disposition: form-data; name="name"
-
-Duncan
---------------------------43ab33b943c18b3f
-Content-Disposition: form-data; name="role"
-
-instructor
---------------------------43ab33b943c18b3f--
-```
-
-
----
-# Send JSON
-
-```
-u = "http://localhost/~duncan/cgi-bin/post.sh"
-b = list(name = "Duncan", role = "instructor")
-json = toJSON(b)
-x = postForm(u, .opts = list(postfields = json))
-cat(x)
-```
