@@ -629,7 +629,7 @@ We could do this by converting the template to an R object (just once)
 and manipulating the result list and converting this to JSON via `toJSON()` before making the call.
 This is probably a better approach.
 
-```{r}
+```r
 monsterQuery =
 function(q, radius, offset,
          con = getCurlHandle( followlocation = TRUE, cookiejar = "", verbose = FALSE),
