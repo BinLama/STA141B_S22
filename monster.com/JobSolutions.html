@@ -230,10 +230,25 @@
 <p class="author">Duncan Temple lang</p>
 <p class="date">June, 2022</p>
 </header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#do-not-share" id="toc-do-not-share"><em>DO NOT
+SHARE</em></a></li>
+<li><a href="#next-page" id="toc-next-page">Next Page</a></li>
+<li><a href="#changing-the-number-of-results"
+id="toc-changing-the-number-of-results">Changing the Number of
+Results</a></li>
+<li><a href="#changing-the-query" id="toc-changing-the-query">Changing
+the Query</a></li>
+<li><a href="#writing-the-functions"
+id="toc-writing-the-functions">Writing the Functions</a></li>
+</ul>
+</nav>
 <h2 id="do-not-share"><em>DO NOT SHARE</em></h2>
 <p>See <a
 href="https://github.com/duncantl/STA141B_S22/tree/main/monster.com">Git
-Repository for course</a> for files.</p>
+Repository for course</a> for files, including this write up and <a
+href="monsterFunctions.R">functions</a>.</p>
 <p><em>Note, the specific details will change each time we make a query
 to monster.com. For this reason, some of the images and text may not
 match. Importantly, we have to write our code to not hard-code the
@@ -606,48 +621,80 @@ don’t repeat this code to actually get the results. We write a function
 that performs these steps and repeats the requests for subsequent pages
 until we get not results.</p>
 <p>See <a href="monsterFuns.R">monsterFuns.R</a></p>
+<p>If you continue to scroll through the jobs in the Web page, you will
+notice that there is a limit. It will eventually display “No More
+Results”. If you had the Developer Tools open and the filters we applied
+above, you can see all of the requests for more job results. We can look
+at the final ones. If you explore the requests, you will see that this
+is about 361. THe body of the request has an offset value of 360 and the
+response has a totalSize of 1.</p>
+<h2 id="changing-the-number-of-results">Changing the Number of
+Results</h2>
+<p>We can experiment with changing the number of results we get for each
+request. Increasing this from 9 to a larger number will reduce the
+number of requests we have to make and increase the size of each
+response.</p>
+<p>We can try changing the <code>pageSize</code> element in the body of
+the POST request, say to 100 per page/request:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>b <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>b<span class="sc">$</span>pageSize <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">=</span> <span class="fu">postForm</span>(u, <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> <span class="fu">toJSON</span>(b), </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> <span class="st">&quot;application/json;charset=utf-8&quot;</span>) ))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>tmp2 <span class="ot">=</span> <span class="fu">fromJSON</span>(tmp)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(tmp2<span class="sc">$</span>jobResults)</span></code></pre></div>
+<p>This does give us 100 results. Again, we need to verify that they are
+the same as we get from the Web browser. We can examine the first 18 or
+27 that we have verified before.</p>
+<p>We can also check if any of these are duplicated.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(<span class="fu">sapply</span>(tmp2<span class="sc">$</span>jobResults, <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="st">&quot;jobId&quot;</span>)))</span></code></pre></div>
+<p>None are.</p>
+<p>Why did we pick 100 and not 1000? We can try 200 with the code above,
+changing the pageSize to 200. We get an error from the request. So the
+monster.com Web server rejects this.</p>
+<p>We can experiment with different values to find the maximum allowable
+pageSize. 100 seems to be the maximum.</p>
 <h2 id="changing-the-query">Changing the Query</h2>
 <p>Now we want to generalize our requests to allow for a different
 search string and search radius. We saw these in the body of the POST
 request.</p>
 <p>We had the body from the orignal request as JSON string from the
 browser. We can convert this to an R with</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span></code></pre></div>
 <p>The first element is named <code>jobQuery</code> and is</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>query</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;data scientist&quot;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>country</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;us&quot;</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>address</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;&quot;</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>unit</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;mi&quot;</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>value</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">20</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>query</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;data scientist&quot;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>country</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;us&quot;</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>address</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;&quot;</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>unit</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;mi&quot;</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>value</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">20</span></span></code></pre></div>
 <p>We can change the query string with</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery<span class="sc">$</span>query <span class="ot">=</span> <span class="st">&quot;Statistician&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery<span class="sc">$</span>query <span class="ot">=</span> <span class="st">&quot;Statistician&quot;</span></span></code></pre></div>
 <p>We can change the value of the radius field to change the 20 miles to
 4000 with</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery<span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>value <span class="ot">=</span> <span class="dv">4000</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery<span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>value <span class="ot">=</span> <span class="dv">4000</span></span></code></pre></div>
 <p>We can now convert this back to a JSON string that we can use as the
 body of our request with</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>b3 <span class="ot">=</span> <span class="fu">toJSON</span>(b1)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>b3 <span class="ot">=</span> <span class="fu">toJSON</span>(b1)</span></code></pre></div>
 <p>We can then get the first page of results for this new query with</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>response.sta <span class="ot">=</span> <span class="fu">postForm</span>(u, </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> b3, </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;application/json;charset=utf-8&quot;</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                    ))</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>ans.sta <span class="ot">=</span> <span class="fu">fromJSON</span>(response.sta)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>response.sta <span class="ot">=</span> <span class="fu">postForm</span>(u, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> b3, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;application/json;charset=utf-8&quot;</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                                    ))</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>ans.sta <span class="ot">=</span> <span class="fu">fromJSON</span>(response.sta)</span></code></pre></div>
 <p>Again, we need to examine these and confirm they are the same as in
 the Web browser. We can do it manually/visually and/or compare the JSON
 from the requests in R and the Web browser, making certain to compare
@@ -662,43 +709,43 @@ search string and optionally, a radius. This calls
 results for the query and then loops to get subsequent pages of results
 for the same query. It gets the <code>searchId</code> from the first
 request and uses that in subsequent requests for this query.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>monster <span class="ot">=</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(q, <span class="at">radius =</span> <span class="dv">3000</span>, </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">con =</span> <span class="fu">getCurlHandle</span>( <span class="at">followlocation =</span> <span class="cn">TRUE</span>, <span class="at">cookiejar =</span> <span class="st">&quot;&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>), </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">maxNum =</span> <span class="cn">Inf</span>, ...)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>     <span class="co"># make the initial request</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">=</span> <span class="fu">monsterQuery</span>(q, radius, <span class="at">offset =</span> <span class="dv">0</span>, con, ...)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    num <span class="ot">=</span> tmp<span class="sc">$</span>estimatedTotalSize</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(num <span class="sc">==</span> <span class="dv">0</span>) num <span class="ot">=</span> <span class="cn">Inf</span> <span class="co">#XXX</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    ans <span class="ot">=</span> tmp<span class="sc">$</span>jobResults</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>     <span class="co"># extract the searchId for subsequent requests.</span></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    searchId <span class="ot">=</span> tmp<span class="sc">$</span>searchId</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    offset <span class="ot">=</span> <span class="fu">length</span>(ans)    </span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(<span class="fu">length</span>(ans) <span class="sc">&lt;</span> maxNum <span class="sc">&amp;</span> <span class="fu">length</span>(ans) <span class="sc">&lt;</span> num) {</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%d of estimated %.0f&quot;</span>, <span class="fu">length</span>(ans), <span class="fu">as.numeric</span>(num)))</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        tmp <span class="ot">=</span> <span class="fu">monsterQuery</span>(q, radius, offset, con, <span class="at">searchId =</span> searchId, ...)</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="fu">length</span>(tmp<span class="sc">$</span>jobResults) <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">message</span>(<span class="st">&quot;no additional results&quot;</span>)</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>        ans <span class="ot">=</span> <span class="fu">append</span>(ans, tmp<span class="sc">$</span>jobResults)</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>        offset <span class="ot">=</span> <span class="fu">length</span>(ans)        </span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> <span class="fu">lapply</span>(ans, procMonsterJob)</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    nr <span class="ot">=</span> <span class="fu">sapply</span>(df, nrow)</span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(nr <span class="sc">==</span> <span class="dv">1</span>)) <span class="fu">browser</span>()</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">do.call</span>(rbind, df))</span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>monster <span class="ot">=</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(q, <span class="at">radius =</span> <span class="dv">3000</span>, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">con =</span> <span class="fu">getCurlHandle</span>( <span class="at">followlocation =</span> <span class="cn">TRUE</span>, <span class="at">cookiejar =</span> <span class="st">&quot;&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>), </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">maxNum =</span> <span class="cn">Inf</span>, ...)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>     <span class="co"># make the initial request</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">=</span> <span class="fu">monsterQuery</span>(q, radius, <span class="at">offset =</span> <span class="dv">0</span>, con, ...)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    num <span class="ot">=</span> tmp<span class="sc">$</span>estimatedTotalSize</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(num <span class="sc">==</span> <span class="dv">0</span>) num <span class="ot">=</span> <span class="cn">Inf</span> <span class="co">#XXX</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    ans <span class="ot">=</span> tmp<span class="sc">$</span>jobResults</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>     <span class="co"># extract the searchId for subsequent requests.</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    searchId <span class="ot">=</span> tmp<span class="sc">$</span>searchId</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    offset <span class="ot">=</span> <span class="fu">length</span>(ans)    </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(<span class="fu">length</span>(ans) <span class="sc">&lt;</span> maxNum <span class="sc">&amp;</span> <span class="fu">length</span>(ans) <span class="sc">&lt;</span> num) {</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%d of estimated %.0f&quot;</span>, <span class="fu">length</span>(ans), <span class="fu">as.numeric</span>(num)))</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>        tmp <span class="ot">=</span> <span class="fu">monsterQuery</span>(q, radius, offset, con, <span class="at">searchId =</span> searchId, ...)</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="fu">length</span>(tmp<span class="sc">$</span>jobResults) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">message</span>(<span class="st">&quot;no additional results&quot;</span>)</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>        ans <span class="ot">=</span> <span class="fu">append</span>(ans, tmp<span class="sc">$</span>jobResults)</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>        offset <span class="ot">=</span> <span class="fu">length</span>(ans)        </span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> <span class="fu">lapply</span>(ans, procMonsterJob)</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>    nr <span class="ot">=</span> <span class="fu">sapply</span>(df, nrow)</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(nr <span class="sc">==</span> <span class="dv">1</span>)) <span class="fu">browser</span>()</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">do.call</span>(rbind, df))</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p><code>monsterQuery</code> only focuses on making an individual
 request. If <code>searchId</code> is not passed in the call to
 <code>monsterQuery()</code>, i.e., the first call for a search query,
@@ -708,33 +755,33 @@ could do this by converting the template to an R object (just once) and
 manipulating the result list and converting this to JSON via
 <code>toJSON()</code> before making the call. This is probably a better
 approach.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>monsterQuery <span class="ot">=</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(q, radius, offset,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">con =</span> <span class="fu">getCurlHandle</span>( <span class="at">followlocation =</span> <span class="cn">TRUE</span>, <span class="at">cookiejar =</span> <span class="st">&quot;&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">body =</span> MonsterQueryTemplate, <span class="at">searchId =</span> <span class="cn">NA</span>, <span class="at">pageSize =</span> <span class="dv">100</span>,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">url =</span> <span class="st">&quot;https://appsapi.monster.io/jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2&quot;</span>)    </span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    body <span class="ot">=</span> <span class="fu">sprintf</span>(body, q, radius, offset, pageSize)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.na</span>(searchId)) {</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>        body[[<span class="dv">6</span>]] <span class="ot">=</span> searchId</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">names</span>(body)[<span class="dv">6</span>] <span class="ot">=</span> <span class="st">&quot;searchId&quot;</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">toJSON</span>(body)</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    tt <span class="ot">=</span> <span class="fu">postForm</span>(url, <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> <span class="fu">I</span>(body),</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="at">Accept =</span> <span class="st">&quot;application/json&quot;</span>,</span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&#39;Content-Type&#39;</span> <span class="ot">=</span> <span class="st">&quot;application/json; charset=utf-8&quot;</span>,</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">referer =</span> <span class="st">&quot;https://www.monster.com/&quot;</span></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>                                                 )),</span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>                              <span class="at">curl =</span> con, <span class="at">style =</span> <span class="st">&quot;POST&quot;</span>)</span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">=</span> <span class="fu">fromJSON</span>(tt)</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    tmp</span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>monsterQuery <span class="ot">=</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(q, radius, offset,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">con =</span> <span class="fu">getCurlHandle</span>( <span class="at">followlocation =</span> <span class="cn">TRUE</span>, <span class="at">cookiejar =</span> <span class="st">&quot;&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">body =</span> MonsterQueryTemplate, <span class="at">searchId =</span> <span class="cn">NA</span>, <span class="at">pageSize =</span> <span class="dv">100</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">url =</span> <span class="st">&quot;https://appsapi.monster.io/jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2&quot;</span>)    </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    body <span class="ot">=</span> <span class="fu">sprintf</span>(body, q, radius, offset, pageSize)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.na</span>(searchId)) {</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        body[[<span class="dv">6</span>]] <span class="ot">=</span> searchId</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">names</span>(body)[<span class="dv">6</span>] <span class="ot">=</span> <span class="st">&quot;searchId&quot;</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">toJSON</span>(body)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    tt <span class="ot">=</span> <span class="fu">postForm</span>(url, <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> <span class="fu">I</span>(body),</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="at">Accept =</span> <span class="st">&quot;application/json&quot;</span>,</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&#39;Content-Type&#39;</span> <span class="ot">=</span> <span class="st">&quot;application/json; charset=utf-8&quot;</span>,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">referer =</span> <span class="st">&quot;https://www.monster.com/&quot;</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>                                                 )),</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>                              <span class="at">curl =</span> con, <span class="at">style =</span> <span class="st">&quot;POST&quot;</span>)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">=</span> <span class="fu">fromJSON</span>(tt)</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    tmp</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>The final function is <code>procMonsterJob()</code> and that just
 manipulates the R list object for a given job result from the request
 response.</p>

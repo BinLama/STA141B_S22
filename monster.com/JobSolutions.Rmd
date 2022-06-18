@@ -11,7 +11,7 @@ author: Duncan Temple lang
 
 
 See [Git Repository for course](https://github.com/duncantl/STA141B_S22/tree/main/monster.com)
-for files.
+for files, including this write up and [functions](monsterFunctions.R).
 
 
 *Note, the specific details will change each time we make a query to monster.com.
@@ -503,6 +503,49 @@ requests for subsequent pages until we get not results.
 
 
 See [monsterFuns.R](monsterFuns.R)
+
+
+If you continue to scroll through the jobs in the Web page, you will notice that there is a limit.
+It will eventually display "No More Results".
+If you had the Developer Tools open and the filters we applied above, you can see
+all of the requests for more job results. We can look at the final ones.
+If you explore the requests, you will see that this is about 361.
+THe body of the request has an offset value of 360 and the response has a totalSize of 1.
+
+
+## Changing the Number of Results
+
+We can experiment with changing the number of results we get for each request.
+Increasing this from 9 to a larger number will reduce the number of requests
+we have to make and increase the size of each response.
+
+We can try changing the `pageSize` element in the body of the POST request, say to 100 per page/request:
+```r
+b = fromJSON(body)
+b$pageSize = 100
+tmp = postForm(u, .opts = list(postfields = toJSON(b), 
+                               httpheader = c("Content-Type" = "application/json;charset=utf-8") ))
+tmp2 = fromJSON(tmp)
+length(tmp2$jobResults)
+```
+This does give us 100 results.
+Again, we need to verify that they are the same as we get from the Web browser.
+We can examine the first 18 or 27 that we have verified before.
+
+We can also check if any of these are duplicated.
+```r
+any(duplicated(sapply(tmp2$jobResults, `[[`, "jobId")))
+```
+None are.
+
+
+Why did we pick 100 and not 1000?
+We can try 200 with the code above, changing the pageSize to 200.
+We get an error from the request.  So the monster.com Web server rejects this.
+
+We can experiment with different values to find the maximum allowable pageSize.
+100 seems to be the maximum.
+
 
 
 ## Changing the Query

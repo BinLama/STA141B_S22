@@ -20,6 +20,8 @@ function(q, radius = 3000, con = getCurlHandle( followlocation = TRUE, cookiejar
         tmp = monsterQuery(q, radius, offset, con, searchId = searchId, ...)
         
         if(length(tmp$jobResults) == 0) {
+            # or possible if the number of results is less than the page size we requested.
+            # that would indicate it couldn't provide that number.
             message("no additional results")
             break
         }
