@@ -158,7 +158,7 @@ request, but we have the basic elements and building blocks:
 + body of the request
 + Content-Type header
 
-```r
+```{r}
 u = "https://appsapi.monster.io/jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2"
 body = '{"jobQuery":{"query":"data scientist",
              "locations":[{"country":"us","address":"","radius":{"unit":"mi","value":20}}]},
@@ -174,7 +174,7 @@ body = '{"jobQuery":{"query":"data scientist",
 
 We can make the request
 
-```r
+```{r}
 library(RCurl)
 response = postForm(u, .opts = list(postfields = body, 
                                     httpheader = c("Content-Type" = "application/json;charset=utf-8"), 
@@ -235,13 +235,13 @@ We also see the header fields from the request.
 Then we see the headers from the response.
 
 The number of characters in the response is  197581
-```r
+```{r}
 nchar(response)
 ```
 This is a good sign that we got something substantial back.
 
 We can determine the type/format of the response with
-```r
+```{r}
 attributes(response)
 $`Content-Type`
 [1] "application/json"
@@ -249,26 +249,26 @@ $`Content-Type`
 So we verify this is JSON, as we knew from the Web browser (and our response headers above from R).
 
 Now we can convert this to an R object:
-```r
+```{r}
 library(RJSONIO)
 jobs = fromJSON(response)
 ```
 
 We explore this:
-```r
+```{r}
 names(jobs)
 [1] "totalSize"          "estimatedTotalSize" "jobResults"        
 [4] "jobRequest"         "searchId"          
 ```
 
 
-```r
+```{r}
 length(jobs$jobResults)
 [1] 9
 ```
 
 
-```r
+```{r}
 jobs$jobResults[[1]]$jobPosting$hiringOrganization
 
 $`@context`
@@ -363,13 +363,13 @@ It is a good idea to programmatically verify it is the same, or find the differe
 We switch to the "Raw" view of the JSON in the Request tab and copy the content of the bod and parse it in R.
 
 
-```r
+```{r}
 b1 = fromJSON(body)
 
 b2 = fromJSON('{"jobQuery":{"query":"data scientist","locations":[{"country":"us","address":"","radius":{"unit":"mi","value":20}}]},"jobAdsRequest":{"position":[1,2,3,4,5,6,7,8,9],"placement":{"channel":"WEB","location":"JobSearchPage","property":"monster.com","type":"JOB_SEARCH","view":"SPLIT"}},"fingerprintId":"c9d8c1165665f80fe368973b9634c7a6","offset":9,"pageSize":9,"searchId":"54ea027d-2e14-4270-80e0-54a8d40b78de"}')
 ```
 
-```r
+```{r}
 all.equal(b1, b2)
 [1] "Names: 1 string mismatch"                                         
 [2] "Component “offset”: Mean absolute difference: 9"                  
@@ -382,7 +382,7 @@ all.equal(b1, b2)
 There is only one element that is different.
 The first request has the final element named `includeJobs`, while the 
 second has `searchId`.
-```r
+```{r}
 all.equal(names(b1), names(b2))
 cbind(names(b1), names(b2))
 
@@ -410,14 +410,14 @@ Where do we get the searchId value from?
 
 While there is no obvious, a priori way to know this, it is in the Response from the first page of
 results. This was the variable `jobs`  above:
-```r
+```{r}
 names(jobs)
 [1] "totalSize"          "estimatedTotalSize" "jobResults"        
 [4] "jobRequest"         "searchId"          
 ```
 Note the `searchId` name at the end. 
 The value is 
-```r
+```{r}
 jobs$searchId
 [1] "807976f6-ddd9-46b7-a3d1-68b396dbcbf7"
 ```
@@ -448,7 +448,7 @@ request, we convert it to JSON via the `toJSON()` function.
 
 
 
-```r
+```{r}
 response = postForm(u, 
                 .opts = list(postfields = body, 
                              httpheader = c("Content-Type" = "application/json;charset=utf-8") 
@@ -476,7 +476,7 @@ copy it to R and compare it with the response we got.
 
 Also, we can do a simple check to ensure we are not getting 
 duplicates from the first page of results:
-```r
+```{r}
 jids = sapply(c(ans$jobResults, ans2$jobResults), `[[`, "jobId")
 any(duplicated(jids))
 ``
@@ -484,7 +484,7 @@ any(duplicated(jids))
 Given what we have done above,  we can get the third page 
 by changing the offset to 18 in `b` and making the HTTPS request by 
 converting `b` to JSON for the body of the request:
-```r
+```{r}
 b$offset = 18
 response = postForm(u, 
                 .opts = list(postfields = toJSON(b), 
@@ -510,11 +510,11 @@ We saw these in the body of the POST request.
 
 We had the body from the orignal request as JSON string from the browser.
 We can convert this to an R with
-```
+```{r}
 b1 = fromJSON(body)
 ```
 The first element is named `jobQuery` and is
-```
+```{r}
 b1$jobQuery
 
 $query
@@ -537,23 +537,23 @@ $locations[[1]]$radius$value
 ```
 
 We can change the query string with 
-```
+```{r}
 b1$jobQuery$query = "Statistician"
 ```
 
 We can change the value of the radius field to change the 20 miles to 4000 with 
-```
+```{r}
 b1$jobQuery$locations[[1]]$radius$value = 4000
 ```
 
 We can now convert this back to a JSON string that we can use as the body of
 our request with
-```
+```{r}
 b3 = toJSON(b1)
 ```
 
 We can then get the first page of results for this new query with
-```
+```{r}
 response.sta = postForm(u, 
                         .opts = list(postfields = b3, 
                                      httpheader = c("Content-Type" = 
@@ -580,7 +580,7 @@ It gets the `searchId`  from the first request and uses that in subsequent reque
 
 
 
-```r
+```{r}
 monster =
 function(q, radius = 3000, 
          con = getCurlHandle( followlocation = TRUE, cookiejar = "", verbose = FALSE), 
@@ -629,7 +629,7 @@ We could do this by converting the template to an R object (just once)
 and manipulating the result list and converting this to JSON via `toJSON()` before making the call.
 This is probably a better approach.
 
-```r
+```{r}
 monsterQuery =
 function(q, radius, offset,
          con = getCurlHandle( followlocation = TRUE, cookiejar = "", verbose = FALSE),
