@@ -1,6 +1,15 @@
 
+# Scraping Monster.com
 
-## Monster
+## Duncan Temple lang
+## *DO NOT SHARE*
+## June, 2022
+## STA141B
+
+
+See [Git Repository for course](https://github.com/duncantl/STA141B_S22/tree/main/monster.com)
+for files.
+
 
 *Note, the specific details will change each time we make a query to monster.com.
 For this reason, some of the images and text may not match.
@@ -650,3 +659,6 @@ function(q, radius, offset,
 }
 
 ```
+
+The final function is `procMonsterJob()` and  that just manipulates the 
+R list object for a given job result from the request response.
