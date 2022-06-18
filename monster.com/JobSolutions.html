@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Duncan Temple lang" />
+  <title>Scraping Monster.com</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Scraping Monster.com</h1>
+<p class="subtitle">STA141B</p>
+<p class="author">Duncan Temple lang</p>
+<p class="date">June, 2022</p>
+</header>
+<h2 id="do-not-share"><em>DO NOT SHARE</em></h2>
+<p>See <a
+href="https://github.com/duncantl/STA141B_S22/tree/main/monster.com">Git
+Repository for course</a> for files.</p>
+<p><em>Note, the specific details will change each time we make a query
+to monster.com. For this reason, some of the images and text may not
+match. Importantly, we have to write our code to not hard-code the
+elements that will change. Instead, we have to abstract those aspects
+and ensure we compute the relevant information. </em></p>
+<p>We start in the Web browser and perform a search for a job
+description in the monster.com Web page as shown here:</p>
+<p><img src="monster2a.png" /></p>
+<p>The first result is for a company named <code>CHRISTUS Health</code>.
+( It will be different when you do this.)</p>
+<p>We view the page source in the browser and look for one of the words,
+e.g., CHRISTUS. (Again, it will be different when you do this.) It is
+not in the HTML. This suggests the content is not static, but
+dynamic.</p>
+<p>We’ll look at all the HTTP(S) requests for this page and search
+through them to see which, if any, have information/data for these
+results.</p>
+<p>We open the developer tools and its <a
+href="https://firefox-source-docs.mozilla.org/devtools-user/network_monitor/request_list/index.html">Network
+tab</a>, and repeat the query, e.g., reload the page.</p>
+<p>There are a lot of requests</p>
+<p><img src="monster3.png" /></p>
+<p>We have to go through each one looking for a response that may
+contain the job descriptions. This is a slow, tedious, manual task.</p>
+<p>The Type column shows HTML, JavaScript (js), plain (text), json,
+wolf2.</p>
+<p>We might look for all the requests that return data as JSON. One way
+to do this is to filter just those requests that return JSON, i.e., have
+a type json.</p>
+<p>See <a
+href="https://firefox-source-docs.mozilla.org/devtools-user/network_monitor/request_list/index.html">Filtering
+requests in the Developer Tools</a></p>
+<p>In the filter text box, we enter
+<code>mime-type:application/json</code> We get the following in the
+browser</p>
+<p><img src="monsterFilter.png" /></p>
+<p>We have 10 requests returning JSON. This helps filter the
+requests.</p>
+<p>For some Web sites, there will be still be a lot of these requests.
+We might want to ignore those that have only a few bytes (the B at the
+end of the Size column). So we add to the filter criteria</p>
+<pre><code>mime-type:application/json  larger-than:1000</code></pre>
+<p>This gives us <img src="monsterFilter2.png" /> leaving only 2
+requests.</p>
+<p>We can click on each of these and then look at the Response tab in
+the details for the request.</p>
+<p><img src="monsterJSONResponse.png" /></p>
+<p>This is JSON and has several top-level elements in the result -
+totalSize, estimatedTotalSize, jobResults, jobRequest.</p>
+<p>Let’s expand the jobResults and its first element:</p>
+<p><img src="monsterJobResult1.png" /></p>
+<p>Scanning the content, we see <code>CHRISTUS</code> in the provider
+field. This does appear to be the first job result we see in the actual
+Web page.</p>
+<p>The second element in the JSON is from Intuit, corresponding to the
+second result we see on the Web page.</p>
+<p>We have found the request that gives us the results.</p>
+<p>We could copy the JSON (via the Raw and copy) and then process this
+in R to verify the results are what we expect. However, we are pretty
+certain this is the request we want.</p>
+<p>So let’s examine this request. We look at the
+<strong>Headers</strong> tab to identify the details of the request.</p>
+<p><img src="monsterRequestHeaders.png" /></p>
+<ul>
+<li>This is a POST request,</li>
+<li>the URL is
+<code>https://appsapi.monster.io/jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2</code></li>
+<li>the headers include
+<ul>
+<li><code>Accept: application/json</code></li>
+<li><code>Content-Type: application/json; charset=utf-8</code></li>
+<li>and many others.</li>
+</ul></li>
+</ul>
+<p>There is no cookie in the request header.</p>
+<p>Since this is a POST request, we need to examine the body of the
+request, i.e., in the <code>Request</code> tab.</p>
+<p><img src="monsterRequestBody.png" /></p>
+<p>The raw JSON string is</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">&quot;jobQuery&quot;</span><span class="fu">:{</span><span class="dt">&quot;query&quot;</span><span class="fu">:</span><span class="st">&quot;data scientist&quot;</span><span class="fu">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             <span class="dt">&quot;locations&quot;</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">&quot;country&quot;</span><span class="fu">:</span><span class="st">&quot;us&quot;</span><span class="fu">,</span><span class="dt">&quot;address&quot;</span><span class="fu">:</span><span class="st">&quot;&quot;</span><span class="fu">,</span><span class="dt">&quot;radius&quot;</span><span class="fu">:{</span><span class="dt">&quot;unit&quot;</span><span class="fu">:</span><span class="st">&quot;mi&quot;</span><span class="fu">,</span><span class="dt">&quot;value&quot;</span><span class="fu">:</span><span class="dv">20</span><span class="fu">}}</span><span class="ot">]</span><span class="fu">},</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">&quot;jobAdsRequest&quot;</span><span class="fu">:{</span><span class="dt">&quot;position&quot;</span><span class="fu">:</span><span class="ot">[</span><span class="dv">1</span><span class="ot">,</span><span class="dv">2</span><span class="ot">,</span><span class="dv">3</span><span class="ot">,</span><span class="dv">4</span><span class="ot">,</span><span class="dv">5</span><span class="ot">,</span><span class="dv">6</span><span class="ot">,</span><span class="dv">7</span><span class="ot">,</span><span class="dv">8</span><span class="ot">,</span><span class="dv">9</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                  <span class="dt">&quot;placement&quot;</span><span class="fu">:{</span><span class="dt">&quot;channel&quot;</span><span class="fu">:</span><span class="st">&quot;WEB&quot;</span><span class="fu">,</span><span class="dt">&quot;location&quot;</span><span class="fu">:</span><span class="st">&quot;JobSearchPage&quot;</span><span class="fu">,</span><span class="dt">&quot;property&quot;</span><span class="fu">:</span><span class="st">&quot;monster.com&quot;</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">&quot;type&quot;</span><span class="fu">:</span><span class="st">&quot;JOB_SEARCH&quot;</span><span class="fu">,</span><span class="dt">&quot;view&quot;</span><span class="fu">:</span><span class="st">&quot;SPLIT&quot;</span><span class="fu">}},</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;fingerprintId&quot;</span><span class="fu">:</span><span class="st">&quot;c9d8c1165665f80fe368973b9634c7a6&quot;</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;offset&quot;</span><span class="fu">:</span><span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;pageSize&quot;</span><span class="fu">:</span><span class="dv">9</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;includeJobs&quot;</span><span class="fu">:</span><span class="ot">[]</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>We can see our query string “data scientist”. If we want to perform a
+different search, we can probably replace that value with a different
+query and submit the request. We have to verify this by doing a
+different search in the Web browser and inspecting the body of the
+resulting POST request in the Web browser’s developer tools.</p>
+<p>In the JSON for the body of the request, the search is limited to 20
+miles in the radius field of the locations element. We should change
+this to something very large to include the US.</p>
+<p>Alternatively, we could change the query in the Web browser and see
+how the body of the Request changes.</p>
+<p>The pageSize with a value of 9 is something we may want to change. If
+we do, we may want to change the related array of
+<code>[1, 2, 3, ... 9]</code> or see if that matters.</p>
+<p>Let’s replicate this HTTPS request from R to verify we are on the
+right track. This can potentially be somewhat trial and error as we find
+we need to add more headers in the request, but we have the basic
+elements and building blocks:</p>
+<ul>
+<li>URL</li>
+<li>POST request</li>
+<li>body of the request</li>
+<li>Content-Type header</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">=</span> <span class="st">&quot;https://appsapi.monster.io/jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>body <span class="ot">=</span> <span class="st">&#39;{&quot;jobQuery&quot;:{&quot;query&quot;:&quot;data scientist&quot;,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">             &quot;locations&quot;:[{&quot;country&quot;:&quot;us&quot;,&quot;address&quot;:&quot;&quot;,&quot;radius&quot;:{&quot;unit&quot;:&quot;mi&quot;,&quot;value&quot;:20}}]},</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">         &quot;jobAdsRequest&quot;:{&quot;position&quot;:[1,2,3,4,5,6,7,8,9],</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">                          &quot;placement&quot;:{&quot;channel&quot;:&quot;WEB&quot;,&quot;location&quot;:&quot;JobSearchPage&quot;,&quot;property&quot;:&quot;monster.com&quot;,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">                               &quot;type&quot;:&quot;JOB_SEARCH&quot;,&quot;view&quot;:&quot;SPLIT&quot;}},</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;fingerprintId&quot;:&quot;c9d8c1165665f80fe368973b9634c7a6&quot;,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;offset&quot;:0,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;pageSize&quot;:9,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;includeJobs&quot;:[]</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">}&#39;</span></span></code></pre></div>
+<p>We can make the request</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RCurl)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>response <span class="ot">=</span> <span class="fu">postForm</span>(u, <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> body, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> <span class="st">&quot;application/json;charset=utf-8&quot;</span>), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">verbose =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>*   Trying 52.84.162.109:443...
+* Connected to appsapi.monster.io (52.84.162.109) port 443 (#0)
+* ALPN: offers h2
+* ALPN: offers http/1.1
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=*.monster.io
+*  start date: Sep  6 00:00:00 2021 GMT
+*  expire date: Oct  5 23:59:59 2022 GMT
+*  subjectAltName: host &quot;appsapi.monster.io&quot; matched cert&#39;s &quot;*.monster.io&quot;
+*  issuer: C=US; O=Amazon; OU=Server CA 1B; CN=Amazon
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multiplexing
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* h2h3 [:method: POST]
+* h2h3 [:path: /jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2]
+* h2h3 [:scheme: https]
+* h2h3 [:authority: appsapi.monster.io]
+* h2h3 [accept: */*]
+* h2h3 [content-type: application/json;charset=utf-8]
+* h2h3 [content-length: 439]
+* Using Stream ID: 1 (easy handle 0x14486dc00)
+&gt; POST /jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2 HTTP/2
+Host: appsapi.monster.io
+accept: */*
+content-type: application/json;charset=utf-8
+content-length: 439
+
+* We are completely uploaded and fine
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+&lt; HTTP/2 200 
+&lt; content-type: application/json
+&lt; date: Sat, 18 Jun 2022 02:22:00 GMT
+&lt; vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+&lt; user-client-ip: 73.71.67.172
+&lt; x-envoy-upstream-service-time: 1014
+&lt; server: istio-envoy
+&lt; x-cache: Miss from cloudfront
+&lt; via: 1.1 d15b6a95f7c8298444f59a99d8027cec.cloudfront.net (CloudFront)
+&lt; x-amz-cf-pop: SEA19-C3
+&lt; x-amz-cf-id: aKnvF3IH14bvGdAZLeaXn5hhestwVz-t3Ev3t1cspXtZqhlh7xu8QQ==
+&lt; 
+* Connection #0 to host appsapi.monster.io left intact</code></pre>
+<p>This all looks good. We get a 200 response indicating success. We can
+see the path in the URL in the POST request. We also see the header
+fields from the request. Then we see the headers from the response.</p>
+<p>The number of characters in the response is 197581</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(response)</span></code></pre></div>
+<p>This is a good sign that we got something substantial back.</p>
+<p>We can determine the type/format of the response with</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(response)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span><span class="st">`</span><span class="at">Content-Type</span><span class="st">`</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;application/json&quot;</span></span></code></pre></div>
+<p>So we verify this is JSON, as we knew from the Web browser (and our
+response headers above from R).</p>
+<p>Now we can convert this to an R object:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RJSONIO)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>jobs <span class="ot">=</span> <span class="fu">fromJSON</span>(response)</span></code></pre></div>
+<p>We explore this:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(jobs)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;totalSize&quot;</span>          <span class="st">&quot;estimatedTotalSize&quot;</span> <span class="st">&quot;jobResults&quot;</span>        </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">4</span>] <span class="st">&quot;jobRequest&quot;</span>         <span class="st">&quot;searchId&quot;</span>          </span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(jobs<span class="sc">$</span>jobResults)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">9</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>jobs<span class="sc">$</span>jobResults[[<span class="dv">1</span>]]<span class="sc">$</span>jobPosting<span class="sc">$</span>hiringOrganization</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span><span class="st">`</span><span class="at">@context</span><span class="st">`</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;http://schema.org&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span><span class="st">`</span><span class="at">@type</span><span class="st">`</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;Organization&quot;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>description</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;&lt;p&gt;In 1999, two historic Catholic charities became one, forming CHRISTUS Health and creating a unique purpose in the modern health care market - to take better care of people. &lt;/p&gt; &lt;p&gt;To extend the healing ministry of Jesus Christ, the mission that the Sisters of Charity Health Care system and Incarnate Word Health system shared for more than a century, is now also the mission of CHRISTUS Health. &lt;/p&gt; &lt;p&gt;Ranked among the top 10 Catholic health systems in the United States by size, the CHRISTUS Health system includes more than 40 hospitals and facilities in seven U.S. states, Chile and six states in Mexico, with assets of more than $4.6 billion. &lt;/p&gt; &lt;p&gt;Whether seeking care in Alexandria Louisiana, or Coahuila, Mexico, patients discover that the healing spirit is alive at CHRISTUS Health. &lt;/p&gt;&quot;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>sameAs</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;http://www.christushealth.org/&quot;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>name</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;CHRISTUS Health&quot;</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>foundingDate</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;1999&quot;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>numberOfEmployees</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">@</span>context                      <span class="sc">@</span>type </span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>       <span class="st">&quot;http://schema.org&quot;</span>        <span class="st">&quot;QuantitativeValue&quot;</span> </span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>                  unitText </span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;10,000 employees or more&quot;</span> </span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>logo</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;//media.newjobs.com/mm/x695205hjsx/cp/christushealth.png&quot;</span></span></code></pre></div>
+<p>So we have the results from the first page of this query.</p>
+<p>At this point, we have two separate/orthogonal directions to
+explore</p>
+<ul>
+<li>how to find the next page of results</li>
+<li>how to change the request for a different search string (other than
+data scientist) and change the radius of the search.</li>
+</ul>
+<p>Additionally, we can explore how to change the page size, i.e., the
+number of results per page. This is not essential. However, if we can
+get, for example, 100 results per request, we will have to do fewer
+requests to get the total number of jobs for a given query.</p>
+<p>We can do these in either order.</p>
+<h2 id="next-page">Next Page</h2>
+<p>We start by looking at how to get the next set of results. There is
+no “Next” or “Next Page” button. Instead, one just scrolls through the
+list of jobs and when you get to the end of the list, the Web page
+displays the next set of results. The page may already have the next set
+of results, or alternatively it may make an HTTPS request to get them
+and then display them. So we want to see if there is a second request
+and then subsequent requests.</p>
+<p>We have already set our filter for
+<code>mime-type:application/json larger-than:1000</code>. We can also
+add <code>domain:appsapi.monster.io</code> as that is the domain of the
+URL for the request that gets the results. This is assuming the requests
+for the next set of results will go to that domain. We don’t have to
+make that assumption, and can instead examine all requests with JSON
+responses, or indeed all requests.</p>
+<p>After this, we scroll through the list of job results. As we move
+past 9, the browser requests the next page.</p>
+<p><img src="monsterNextPageRequests.png" /></p>
+<p>This shows 3 pages of requests - the first, second and third. They
+have approximately the same size 180K to 194K bytes.</p>
+<p>If you are paying close attention to the Web browser, you will notice
+that as we get the next set of results, the URL in the location/URL text
+field changes to</p>
+<pre><code>https://www.monster.com/jobs/search?q=data+scientist&amp;where=&amp;page=2&amp;so=m.h.sh</code></pre>
+<p>However, this is not the URL from which we are getting the next set
+of results.</p>
+<p>We check the JSON for the response for each page and check it agrees
+with what we see in the Web page. Confirming this, we move on.</p>
+<p>We’ll look at the JSON for body of the second request:</p>
+<p><img src="monsterRequestBodyPage2.png" /></p>
+<p>This looks very similar to the body for the first page we received.
+We might think it is the same.</p>
+<p>It is a good idea to programmatically verify it is the same, or find
+the differences.</p>
+<p>We switch to the “Raw” view of the JSON in the Request tab and copy
+the content of the bod and parse it in R.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">=</span> <span class="fu">fromJSON</span>(<span class="st">&#39;{&quot;jobQuery&quot;:{&quot;query&quot;:&quot;data scientist&quot;,&quot;locations&quot;:[{&quot;country&quot;:&quot;us&quot;,&quot;address&quot;:&quot;&quot;,&quot;radius&quot;:{&quot;unit&quot;:&quot;mi&quot;,&quot;value&quot;:20}}]},&quot;jobAdsRequest&quot;:{&quot;position&quot;:[1,2,3,4,5,6,7,8,9],&quot;placement&quot;:{&quot;channel&quot;:&quot;WEB&quot;,&quot;location&quot;:&quot;JobSearchPage&quot;,&quot;property&quot;:&quot;monster.com&quot;,&quot;type&quot;:&quot;JOB_SEARCH&quot;,&quot;view&quot;:&quot;SPLIT&quot;}},&quot;fingerprintId&quot;:&quot;c9d8c1165665f80fe368973b9634c7a6&quot;,&quot;offset&quot;:9,&quot;pageSize&quot;:9,&quot;searchId&quot;:&quot;54ea027d-2e14-4270-80e0-54a8d40b78de&quot;}&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(b1, b2)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;Names: 1 string mismatch&quot;</span>                                         </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">2</span>] <span class="st">&quot;Component “offset”: Mean absolute difference: 9&quot;</span>                  </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">3</span>] <span class="st">&quot;Component 6: Modes: list, character&quot;</span>                              </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">4</span>] <span class="st">&quot;Component 6: Attributes: &lt; Modes: list, NULL &gt;&quot;</span>                   </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">5</span>] <span class="st">&quot;Component 6: Attributes: &lt; names for target but not for current &gt;&quot;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">6</span>] <span class="st">&quot;Component 6: Attributes: &lt; current is not list-like &gt;&quot;</span>            </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>[<span class="dv">7</span>] <span class="st">&quot;Component 6: Length mismatch: comparison on first 0 components&quot;</span>   </span></code></pre></div>
+<p>There is only one element that is different. The first request has
+the final element named <code>includeJobs</code>, while the second has
+<code>searchId</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">names</span>(b1), <span class="fu">names</span>(b2))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">names</span>(b1), <span class="fu">names</span>(b2))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     [,<span class="dv">1</span>]            [,<span class="dv">2</span>]           </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>,] <span class="st">&quot;jobQuery&quot;</span>      <span class="st">&quot;jobQuery&quot;</span>     </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">2</span>,] <span class="st">&quot;jobAdsRequest&quot;</span> <span class="st">&quot;jobAdsRequest&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">3</span>,] <span class="st">&quot;fingerprintId&quot;</span> <span class="st">&quot;fingerprintId&quot;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>[<span class="dv">4</span>,] <span class="st">&quot;offset&quot;</span>        <span class="st">&quot;offset&quot;</span>       </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">5</span>,] <span class="st">&quot;pageSize&quot;</span>      <span class="st">&quot;pageSize&quot;</span>     </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>[<span class="dv">6</span>,] <span class="st">&quot;includeJobs&quot;</span>   <span class="st">&quot;searchId&quot;</span>     </span></code></pre></div>
+<p>The second difference is in line 2 of the output from all.equal()
+above. The value of the <code>offset</code> element is not 0 but 9 for
+this request. This indicates the index/offset from where to start the
+next set of results. When we look at the request for the third page of
+results, we see offset is 18. There were 18 results obtained before this
+set.</p>
+<p>To faithfully make this request, we need to get the body for the 2nd
+and hopefully 3rd, 4th, … pages to look like this.</p>
+<p>Where do we get the searchId value from?</p>
+<p>While there is no obvious, a priori way to know this, it is in the
+Response from the first page of results. This was the variable
+<code>jobs</code> above:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(jobs)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;totalSize&quot;</span>          <span class="st">&quot;estimatedTotalSize&quot;</span> <span class="st">&quot;jobResults&quot;</span>        </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">4</span>] <span class="st">&quot;jobRequest&quot;</span>         <span class="st">&quot;searchId&quot;</span>          </span></code></pre></div>
+<p>Note the <code>searchId</code> name at the end. The value is</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>jobs<span class="sc">$</span>searchId</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;807976f6-ddd9-46b7-a3d1-68b396dbcbf7&quot;</span></span></code></pre></div>
+<p>We had to find this out by examining the body + of the first request,
++ of the response of the first request, + the body of the second
+request</p>
+<p>We are now in position to get the second and subsequent set of search
+results.</p>
+<p>The basic steps are + use the JSON from the body of the first request
+as the template for the body of the request. Call this
+<code>body</code>. + make the POST request + convert the resulting JSON
+to an R list + extract the jobResults + extract the searchId + replace
+the final element of <code>body</code> with the <code>searchId</code> +
+change the offset</p>
+<p>Rather than working with the <code>body</code> as a JSON string,
+we’ll convert it from JSON to R and manipulate the elements directly.
+Then when we want to send it as the body of the POST request, we convert
+it to JSON via the <code>toJSON()</code> function.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>response <span class="ot">=</span> <span class="fu">postForm</span>(u, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> body, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> <span class="st">&quot;application/json;charset=utf-8&quot;</span>) </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                    ))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>ans <span class="ot">=</span> <span class="fu">fromJSON</span>(response)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>jobs <span class="ot">=</span> ans<span class="sc">$</span>jobResults</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>b <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>b[[<span class="dv">6</span>]] <span class="ot">=</span> ans<span class="sc">$</span>searchId</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(b)[<span class="dv">6</span>] <span class="ot">=</span> <span class="st">&quot;searchId&quot;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>b<span class="sc">$</span>offset <span class="ot">=</span> <span class="dv">9</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>response <span class="ot">=</span> <span class="fu">postForm</span>(u, </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> <span class="fu">toJSON</span>(b), </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                             <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> <span class="st">&quot;application/json;charset=utf-8&quot;</span>) </span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                    ))</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>ans2 <span class="ot">=</span> <span class="fu">fromJSON</span>(response)</span></code></pre></div>
+<p>We need to verify the results are the same as we see in the Web
+browser. We do this manually. We can also get the JSON from the Response
+in the Web browser and copy it to R and compare it with the response we
+got.</p>
+<p>Also, we can do a simple check to ensure we are not getting
+duplicates from the first page of results:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>jids <span class="ot">=</span> <span class="fu">sapply</span>(<span class="fu">c</span>(ans<span class="sc">$</span>jobResults, ans2<span class="sc">$</span>jobResults), <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="st">&quot;jobId&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(jids))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="st">``</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>Given what we have done above,  we can get the third page </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>by changing the offset to <span class="dv">18</span> <span class="cf">in</span> <span class="st">`</span><span class="at">b</span><span class="st">`</span> and making the HTTPS request by </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>converting <span class="st">`</span><span class="at">b</span><span class="st">`</span> to JSON <span class="cf">for</span> the body of the request<span class="sc">:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">r</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="at">b$offset = 18</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="at">response = postForm(u, </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="at">                .opts = list(postfields = toJSON(b), </span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="at">                             httpheader = c(&quot;Content-Type&quot; = &quot;application/json;charset=utf-8&quot;) </span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="at">                    ))</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="at">ans3 = fromJSON(response)</span></span></code></pre></div>
+<p>We are only repeating code to verify that our approach is working. We
+don’t repeat this code to actually get the results. We write a function
+that performs these steps and repeats the requests for subsequent pages
+until we get not results.</p>
+<p>See <a href="monsterFuns.R">monsterFuns.R</a></p>
+<h2 id="changing-the-query">Changing the Query</h2>
+<p>Now we want to generalize our requests to allow for a different
+search string and search radius. We saw these in the body of the POST
+request.</p>
+<p>We had the body from the orignal request as JSON string from the
+browser. We can convert this to an R with</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span></code></pre></div>
+<p>The first element is named <code>jobQuery</code> and is</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>query</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;data scientist&quot;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>country</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;us&quot;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>address</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;&quot;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>unit</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">&quot;mi&quot;</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>value</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">20</span></span></code></pre></div>
+<p>We can change the query string with</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery<span class="sc">$</span>query <span class="ot">=</span> <span class="st">&quot;Statistician&quot;</span></span></code></pre></div>
+<p>We can change the value of the radius field to change the 20 miles to
+4000 with</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>b1<span class="sc">$</span>jobQuery<span class="sc">$</span>locations[[<span class="dv">1</span>]]<span class="sc">$</span>radius<span class="sc">$</span>value <span class="ot">=</span> <span class="dv">4000</span></span></code></pre></div>
+<p>We can now convert this back to a JSON string that we can use as the
+body of our request with</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>b3 <span class="ot">=</span> <span class="fu">toJSON</span>(b1)</span></code></pre></div>
+<p>We can then get the first page of results for this new query with</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>response.sta <span class="ot">=</span> <span class="fu">postForm</span>(u, </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> b3, </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="st">&quot;Content-Type&quot;</span> <span class="ot">=</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">&quot;application/json;charset=utf-8&quot;</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                    ))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>ans.sta <span class="ot">=</span> <span class="fu">fromJSON</span>(response.sta)</span></code></pre></div>
+<p>Again, we need to examine these and confirm they are the same as in
+the Web browser. We can do it manually/visually and/or compare the JSON
+from the requests in R and the Web browser, making certain to compare
+them for the same body of the POST request.</p>
+<h2 id="writing-the-functions">Writing the Functions</h2>
+<p>We write three primary functions which you can see in <a
+href="monsterFuns.R">monsterFuns.R</a>.</p>
+<p>One is the top-level <code>monster()</code> function which takes a
+search string and optionally, a radius. This calls
+<code>monsterQuery()</code> which performs the actual request.
+<code>monster()</code> does the initial request for the first page of
+results for the query and then loops to get subsequent pages of results
+for the same query. It gets the <code>searchId</code> from the first
+request and uses that in subsequent requests for this query.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>monster <span class="ot">=</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(q, <span class="at">radius =</span> <span class="dv">3000</span>, </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">con =</span> <span class="fu">getCurlHandle</span>( <span class="at">followlocation =</span> <span class="cn">TRUE</span>, <span class="at">cookiejar =</span> <span class="st">&quot;&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>), </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">maxNum =</span> <span class="cn">Inf</span>, ...)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>     <span class="co"># make the initial request</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">=</span> <span class="fu">monsterQuery</span>(q, radius, <span class="at">offset =</span> <span class="dv">0</span>, con, ...)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    num <span class="ot">=</span> tmp<span class="sc">$</span>estimatedTotalSize</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(num <span class="sc">==</span> <span class="dv">0</span>) num <span class="ot">=</span> <span class="cn">Inf</span> <span class="co">#XXX</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    ans <span class="ot">=</span> tmp<span class="sc">$</span>jobResults</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>     <span class="co"># extract the searchId for subsequent requests.</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    searchId <span class="ot">=</span> tmp<span class="sc">$</span>searchId</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    offset <span class="ot">=</span> <span class="fu">length</span>(ans)    </span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(<span class="fu">length</span>(ans) <span class="sc">&lt;</span> maxNum <span class="sc">&amp;</span> <span class="fu">length</span>(ans) <span class="sc">&lt;</span> num) {</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%d of estimated %.0f&quot;</span>, <span class="fu">length</span>(ans), <span class="fu">as.numeric</span>(num)))</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        tmp <span class="ot">=</span> <span class="fu">monsterQuery</span>(q, radius, offset, con, <span class="at">searchId =</span> searchId, ...)</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(<span class="fu">length</span>(tmp<span class="sc">$</span>jobResults) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">message</span>(<span class="st">&quot;no additional results&quot;</span>)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>        ans <span class="ot">=</span> <span class="fu">append</span>(ans, tmp<span class="sc">$</span>jobResults)</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>        offset <span class="ot">=</span> <span class="fu">length</span>(ans)        </span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> <span class="fu">lapply</span>(ans, procMonsterJob)</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    nr <span class="ot">=</span> <span class="fu">sapply</span>(df, nrow)</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(nr <span class="sc">==</span> <span class="dv">1</span>)) <span class="fu">browser</span>()</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">do.call</span>(rbind, df))</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><code>monsterQuery</code> only focuses on making an individual
+request. If <code>searchId</code> is not passed in the call to
+<code>monsterQuery()</code>, i.e., the first call for a search query,
+then it uses the template JSON for the body of the POST request. It
+inserts the query string (e.g., “data scientist”) and the radius. We
+could do this by converting the template to an R object (just once) and
+manipulating the result list and converting this to JSON via
+<code>toJSON()</code> before making the call. This is probably a better
+approach.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>monsterQuery <span class="ot">=</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span>(q, radius, offset,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">con =</span> <span class="fu">getCurlHandle</span>( <span class="at">followlocation =</span> <span class="cn">TRUE</span>, <span class="at">cookiejar =</span> <span class="st">&quot;&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">body =</span> MonsterQueryTemplate, <span class="at">searchId =</span> <span class="cn">NA</span>, <span class="at">pageSize =</span> <span class="dv">100</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">url =</span> <span class="st">&quot;https://appsapi.monster.io/jobs-svx-service/v2/monster/search-jobs/samsearch/en-US?apikey=ulBrClvGP6BGnOopklreIIPentd101O2&quot;</span>)    </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    body <span class="ot">=</span> <span class="fu">sprintf</span>(body, q, radius, offset, pageSize)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.na</span>(searchId)) {</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">fromJSON</span>(body)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>        body[[<span class="dv">6</span>]] <span class="ot">=</span> searchId</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">names</span>(body)[<span class="dv">6</span>] <span class="ot">=</span> <span class="st">&quot;searchId&quot;</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        body <span class="ot">=</span> <span class="fu">toJSON</span>(body)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    tt <span class="ot">=</span> <span class="fu">postForm</span>(url, <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">postfields =</span> <span class="fu">I</span>(body),</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">httpheader =</span> <span class="fu">c</span>(<span class="at">Accept =</span> <span class="st">&quot;application/json&quot;</span>,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">&#39;Content-Type&#39;</span> <span class="ot">=</span> <span class="st">&quot;application/json; charset=utf-8&quot;</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>                                                 <span class="at">referer =</span> <span class="st">&quot;https://www.monster.com/&quot;</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>                                                 )),</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>                              <span class="at">curl =</span> con, <span class="at">style =</span> <span class="st">&quot;POST&quot;</span>)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">=</span> <span class="fu">fromJSON</span>(tt)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    tmp</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>The final function is <code>procMonsterJob()</code> and that just
+manipulates the R list object for a given job result from the request
+response.</p>
+</body>
+</html>
